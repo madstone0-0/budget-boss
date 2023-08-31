@@ -1,25 +1,71 @@
+// {
+//     "compilerOptions": {
+//         "target": "ES2020",
+//         "useDefineForClassFields": true,
+//         "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//         // "module": "esnext",
+//         "module": "CommonJS",
+//         "skipLibCheck": true,
+//         "esModuleInterop": true,
+//
+//         /* Bundler mode */
+//         "moduleResolution": "bundler",
+//         // "moduleResolution": "node",
+//         "allowImportingTsExtensions": true,
+//         "resolveJsonModule": true,
+//         "isolatedModules": true,
+//         "noEmit": true,
+//         "jsx": "react-jsx",
+//
+//         /* Linting */
+//         "strict": true,
+//         "noUnusedLocals": false,
+//         "noUnusedParameters": true,
+//         "noFallthroughCasesInSwitch": true
+//     },
+//     "ts-node": {
+//         "esm": true
+//     },
+//     "include": ["src/**/*"],
+//     "references": [{ "path": "./tsconfig.node.json" }]
+// }
+
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
+    "compilerOptions": {
+        "lib": ["es2020", "DOM", "DOM.Iterable"],
+        // "module": "esnext",
+        "module": "commonjs",
+        "esModuleInterop": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+        /* Bundler mode */
+        // "moduleResolution": "nodenext",
+        // "moduleResolution": "bundler",
+        "moduleResolution": "node",
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        // "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+        /* Linting */
+        "strict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        "target": "ES2020"
+    },
+
+    // "ts-node": {
+    //     "esm": true
+    // },
+    "ts-node": {
+        "transpileOnly": true,
+        // "esm": true,
+        "swc": true,
+        "experimentalSpecifierResolution": "node",
+    },
+
+    "include": ["src"],
+    "references": [{ "path": "./tsconfig.node.json" }]
 }

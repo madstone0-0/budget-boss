@@ -2,25 +2,34 @@
     "name": "budget-boss",
     "private": true,
     "version": "0.0.0",
-    "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "preview": "vite preview"
+        "dev": "yarn run server:dev",
+        "prod": "yarn run lint && yarn run build && yarn run server:prod",
+        "build": "vite build",
+        "server": "ts-node ./src/server/index.ts",
+        "server:dev": "yarn run server",
+        "server:prod": "cross-env NODE_ENV=production yarn run server",
+        "lint": "eslint . --max-warnings 0"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "@mui/joy": "^5.0.0-beta.3",
         "axios": "^1.5.0",
+        "compression": "^1.7.4",
+        "express": "^4.18.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-icons": "^4.10.1",
         "react-router": "^6.15.0",
-        "react-router-dom": "^6.15.0"
+        "react-router-dom": "^6.15.0",
+        "sirv": "^2.0.3",
+        "vite-plugin-ssr": "^0.4.139"
     },
     "devDependencies": {
+        "@types/compression": "^1.7.2",
+        "@types/express": "^4.17.17",
+        "@types/node": "^20.5.7",
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -33,6 +42,7 @@
         "prettier": "^3.0.2",
         "prettier-plugin-tailwindcss": "^0.5.3",
         "tailwindcss": "^3.3.3",
+        "ts-node": "^10.9.1",
         "typescript": "^5.0.2",
         "vite": "^4.4.5"
     }
