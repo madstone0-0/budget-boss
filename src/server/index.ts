@@ -1,6 +1,6 @@
 import express from "express";
 import compression from "compression";
-import { root } from "./root";
+import { root } from "./root.ts";
 import { renderPage } from "vite-plugin-ssr/server";
 
 const isProduction = process.env.NODE_ENV == "production";

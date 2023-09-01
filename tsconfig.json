@@ -33,14 +33,13 @@
 {
     "compilerOptions": {
         "lib": ["es2020", "DOM", "DOM.Iterable"],
-        // "module": "esnext",
+        // "module": "ESNext",
         "module": "commonjs",
         "esModuleInterop": true,
 
         /* Bundler mode */
         // "moduleResolution": "nodenext",
-        // "moduleResolution": "bundler",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         // "isolatedModules": true,
@@ -63,9 +62,35 @@
         "transpileOnly": true,
         // "esm": true,
         "swc": true,
-        "experimentalSpecifierResolution": "node",
+        "experimentalSpecifierResolution": "node"
     },
 
-    "include": ["src"],
-    "references": [{ "path": "./tsconfig.node.json" }]
+    "include": ["src"]
+    // "references": [{ "path": "./tsconfig.node.json" }]
 }
+// {
+//     "ts-node": {
+//         // "esm": true,
+//         "experimentalSpecifierResolution": "node"
+//     },
+//     "compilerOptions": {
+//         "lib": ["es2020", "DOM", "DOM.Iterable"],
+//         "moduleResolution": "node",
+//         "module": "esnext",
+//         "target": "esnext",
+//         "types": ["node"],
+//         "esModuleInterop": true,
+//
+//         "allowImportingTsExtensions": true,
+//         "resolveJsonModule": true,
+//         "isolatedModules": true,
+//         "noEmit": true,
+//         "jsx": "react-jsx",
+//
+//         /* Linting */
+//         "strict": true,
+//         "noUnusedLocals": false,
+//         "noUnusedParameters": true,
+//         "noFallthroughCasesInSwitch": true
+//     }
+// }

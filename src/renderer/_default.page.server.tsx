@@ -1,5 +1,6 @@
 import ReactDOMServer from "react-dom/server";
 import React from "react";
+import { getInitColorSchemeScript } from "@mui/joy/styles";
 import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr/server";
 import { PageContextServer } from "./types";
 import { PageShell } from "./PageShell";
@@ -17,9 +18,12 @@ async function render(pageContext: PageContextServer) {
         );
 
     const pageHtml = ReactDOMServer.renderToString(
-        <PageShell pageContext={pageContext}>
-            <Page {...pageProps} />
-        </PageShell>,
+        <>
+            <PageShell pageContext={pageContext}>
+                <Page {...pageProps} />
+            </PageShell>
+            ,
+        </>,
     );
 
     const { documentProps } = pageContext.exports;
