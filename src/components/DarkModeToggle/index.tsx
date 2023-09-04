@@ -14,7 +14,7 @@ const DarkModeToggle = () => {
             <Button
                 variant="outlined"
                 color="neutral"
-                sx={{ width: 120 }}
+                sx={{ width: 90 }}
             ></Button>
         );
     }
@@ -26,7 +26,7 @@ const DarkModeToggle = () => {
             color="neutral"
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
         >
-            {mode === "dark" ? "Light" : "Dark"}
+            {mode === "dark" ? "Turn light" : "Turn dark"}
         </Button>
     );
 };
