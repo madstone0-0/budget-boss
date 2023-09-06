@@ -46,13 +46,14 @@ const theme = extendTheme({
                 color: "neutral",
             },
         },
-        JoyButton: {
+        JoyLink: {
             defaultProps: {
-                variant: "solid",
-                color: "primary",
-                style: {
-                    color: "#171D22",
-                },
+                underline: "none",
+            },
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    color: theme.vars.palette.primary[600],
+                }),
             },
         },
     },
@@ -70,7 +71,7 @@ const Header = () => {
     };
 
     const headerItems = [
-        { name: "Sign In", href: "/signin" },
+        { name: "Sign Up", href: "/signup" },
         { name: "Login", href: "/login" },
     ];
 

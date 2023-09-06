@@ -577,9 +577,9 @@ video {
   margin-right: 2.5rem;
 }
 
-.my-28 {
-  margin-top: 7rem;
-  margin-bottom: 7rem;
+.my-20 {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 
 .mr-5 {
@@ -654,6 +654,10 @@ video {
   align-self: center;
 }
 
+.p-3 {
+  padding: 0.75rem;
+}
+
 .p-5 {
   padding: 1.25rem;
 }
@@ -680,6 +684,10 @@ video {
   font-weight: 500;
 }
 
+.underline {
+  text-decoration-line: underline;
+}
+
 #root {
   display: flex;
   justify-content: center;
@@ -700,6 +708,11 @@ video {
         "Open Sans",
         "Helvetica Neue",
         sans-serif;
+}
+
+a {
+  /* Links */
+  color: #5ED5A8
 }
 
 html {

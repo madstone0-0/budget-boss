@@ -1,110 +1,41 @@
-// {
-//     "compilerOptions": {
-//         "target": "ES2020",
-//         "useDefineForClassFields": true,
-//         "lib": ["ES2020", "DOM", "DOM.Iterable"],
-//         // "module": "esnext",
-//         "module": "CommonJS",
-//         "skipLibCheck": true,
-//         "esModuleInterop": true,
-//
-//         /* Bundler mode */
-//         "moduleResolution": "bundler",
-//         // "moduleResolution": "node",
-//         "allowImportingTsExtensions": true,
-//         "resolveJsonModule": true,
-//         "isolatedModules": true,
-//         "noEmit": true,
-//         "jsx": "react-jsx",
-//
-//         /* Linting */
-//         "strict": true,
-//         "noUnusedLocals": false,
-//         "noUnusedParameters": true,
-//         "noFallthroughCasesInSwitch": true
-//     },
-//     "ts-node": {
-//         "esm": true
-//     },
-//     "include": ["src/**/*"],
-//     "references": [{ "path": "./tsconfig.node.json" }]
-// }
 {
-  "compilerOptions": {
-    "lib": [
-      "es2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    // "module": "ESNext",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    /* Bundler mode */
-    // "moduleResolution": "nodenext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    // "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "target": "ES2020",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "incremental": true,
-    "isolatedModules": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  },
-  // "ts-node": {
-  //     "esm": true
-  // },
-  "ts-node": {
-    "transpileOnly": true,
-    // "esm": true,
-    "swc": true,
-    "experimentalSpecifierResolution": "node"
-  },
-  "include": [
-    "src",
-    ".next/types/**/*.ts"
-  ]
-  // "references": [{ "path": "./tsconfig.node.json" }]
-  ,
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "lib": ["es2020", "DOM", "DOM.Iterable"],
+        // "module": "ESNext",
+        "module": "commonjs",
+        "esModuleInterop": true,
+
+        /* Bundler mode */
+        // "moduleResolution": "nodenext",
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        // "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "preserve",
+
+        /* Linting */
+        "strict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "target": "ES2020",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "incremental": true,
+        "isolatedModules": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ]
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        // "esm": true,
+        "swc": true,
+        "experimentalSpecifierResolution": "node"
+    },
+    "include": ["src", ".next/types/**/*.ts"],
+    "exclude": ["node_modules"]
 }
-// {
-//     "ts-node": {
-//         // "esm": true,
-//         "experimentalSpecifierResolution": "node"
-//     },
-//     "compilerOptions": {
-//         "lib": ["es2020", "DOM", "DOM.Iterable"],
-//         "moduleResolution": "node",
-//         "module": "esnext",
-//         "target": "esnext",
-//         "types": ["node"],
-//         "esModuleInterop": true,
-//
-//         "allowImportingTsExtensions": true,
-//         "resolveJsonModule": true,
-//         "isolatedModules": true,
-//         "noEmit": true,
-//         "jsx": "react-jsx",
-//
-//         /* Linting */
-//         "strict": true,
-//         "noUnusedLocals": false,
-//         "noUnusedParameters": true,
-//         "noFallthroughCasesInSwitch": true
-//     }
-// }

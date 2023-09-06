@@ -24,6 +24,11 @@
         sans-serif;
 }
 
+a {
+    /* Links */
+    color: #5ED5A8
+}
+
 html {
     height: 100%;
     width: 100%;

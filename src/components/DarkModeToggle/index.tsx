@@ -19,7 +19,6 @@ const DarkModeToggle = () => {
         );
     }
 
-    console.log({ mode });
     return (
         <Button
             variant="outlined"
