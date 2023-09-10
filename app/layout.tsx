@@ -9,7 +9,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html suppressHydrationWarning={true} lang="en">
             <head>
                 <meta
                     name="viewport"
@@ -31,7 +31,7 @@ export default function RootLayout({
                 />
                 <title>INVEBB</title>
             </head>
-            <body>
+            <body suppressHydrationWarning={true}>
                 <Theme>{children}</Theme>
             </body>
         </html>

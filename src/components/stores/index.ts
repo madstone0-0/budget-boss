@@ -8,6 +8,7 @@ type State = {
     updateId: (id: string) => void;
     clearEmail: () => void;
     clearId: () => void;
+    setAuth: (value: boolean) => void;
 };
 
 const useStore = create<State>()(
@@ -45,6 +46,13 @@ const useStore = create<State>()(
                         user: {
                             ...state.user,
                             id: null,
+                        },
+                    })),
+                setAuth: (value) =>
+                    set((state) => ({
+                        user: {
+                            ...state.user,
+                            isAuthed: value,
                         },
                     })),
             }),

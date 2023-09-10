@@ -20,7 +20,7 @@ const FormWrapper = ({
         >
             <Box sx={{ maxWidth: "inherit", minWidth: "inherit" }}>
                 <form onSubmit={onSubmit}>
-                    <Stack spacing={5}>{children}</Stack>
+                    <Stack spacing={3}>{children}</Stack>
                 </form>
             </Box>
         </div>

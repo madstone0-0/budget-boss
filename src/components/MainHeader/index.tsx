@@ -1,25 +1,14 @@
 "use client";
-import { Box, Button, Dropdown, IconButton, MenuButton } from "@mui/joy";
-
-import React, { useEffect, useState } from "react";
+import { Box, Dropdown, IconButton, MenuButton } from "@mui/joy";
+import React, { useState } from "react";
 import DarkModeToggle from "../DarkModeToggle";
 import { AiOutlineMenu } from "react-icons/ai";
 import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import PageLink from "../PageLink";
-import useStore from "../stores/index.ts";
-import { NextRouter, useRouter } from "next/router";
-import { ButtonChangeHandler } from "../types.ts";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
-const Header = ({ router }: { router: AppRouterInstance }) => {
+const MainHeader = () => {
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
-    const [mounted, setMounted] = useState<boolean>(false);
-
-    const userId = useStore((state) => state.user.id);
-    const clearEmail = useStore((state) => state.clearEmail);
-    const clearId = useStore((state) => state.clearId);
-    const setAuth = useStore((state) => state.setAuth);
 
     const handleOpenNavMenu = (e: React.MouseEvent) => {
         setAnchorElNav(e.currentTarget as HTMLElement);
@@ -29,39 +18,13 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
         setAnchorElNav(null);
     };
 
-    const handleLogout: ButtonChangeHandler = (e) => {
-        e.preventDefault();
-        router.push("/");
-        clearEmail();
-        clearId();
-        setAuth(false);
-    };
-
-    useEffect(() => {
-        setMounted(true);
-    });
-    let headerItems;
-
-    if (!mounted) {
-        headerItems = [
-            { name: "Portfolio", href: `/home/#/portfolio` },
-            { name: "Budget", href: `/home/#/budget` },
-            { name: "Home", href: `/home/#` },
-            { name: "Investment", href: `/home/#/invest` },
-            { name: "Game", href: `/home/#/game` },
-        ];
-    } else {
-        headerItems = [
-            { name: "Portfolio", href: `/home/${userId}/portfolio` },
-            { name: "Budget", href: `/home/${userId}/budget` },
-            { name: "Home", href: `/home/${userId}` },
-            { name: "Investment", href: `/home/${userId}/invest` },
-            { name: "Game", href: `/home/${userId}/game` },
-        ];
-    }
+    const headerItems = [
+        { name: "Sign Up", href: "/signup" },
+        { name: "Login", href: "/login" },
+    ];
 
     return (
-        <div className="md:py-5 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+        <div className="p-5 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
             <h1 className="font-bold sm:text-2xl md:text-3xl">INVEBB</h1>
             <Box
                 sx={{
@@ -113,13 +76,10 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
                         {item.name}
                     </PageLink>
                 ))}
-                <Button className="mr-5" onClick={handleLogout}>
-                    Logout
-                </Button>
                 <DarkModeToggle />
             </Box>
         </div>
     );
 };
 
-export default Header;
+export default MainHeader;

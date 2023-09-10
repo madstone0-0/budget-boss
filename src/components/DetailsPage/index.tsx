@@ -2,7 +2,7 @@
 import { Button, FormControl, FormLabel, Input } from "@mui/joy";
 import React, { useState, useEffect, useReducer } from "react";
 import FormWrapper from "../FormWrapper";
-import { InputChangeHandler, NewUser } from "../types";
+import { InputChangeHandler, NewUser, ValidationResponse } from "../types";
 import useStore from "../stores";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -59,9 +59,23 @@ const Shared = ({
             placeholder="Enter your password"
             type="password"
         />
-        <a href="#">Forgot Password</a>
     </>
 );
+
+const ValidationFeedback = ({ errors }: { errors: ValidationResponse[] }) => {
+    if (!errors) {
+        return <></>;
+    }
+    return (
+        <div className="p-5 w-fit min-h-fit">
+            <ul>
+                {errors.map((error) => (
+                    <li>{error.msg}</li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const router = useRouter();
@@ -70,6 +84,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const updateId = useStore((state) => state.updateId);
     const clearEmail = useStore((state) => state.clearEmail);
     const clearId = useStore((state) => state.clearId);
+    const setAuth = useStore((state) => state.setAuth);
 
     const userEmail = useStore((state) => state.user.email);
     const userId = useStore((state) => state.user.id);
@@ -78,6 +93,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const [password, updatePassword] = useState<string>("");
     const [rememberMe, updateRemeberState] = useState<boolean>(false);
     const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, false);
+    const [errors, updateErrors] = useState<ValidationResponse[]>([]);
 
     const onSubmitDetails = (e: React.FormEvent, type: "login" | "signup") => {
         e.preventDefault();
@@ -94,18 +110,29 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         clearEmail();
                         clearId();
                         updatePassword("");
+                        updateErrors([]);
 
                         writeToLocalStore("token", res.data.accessToken);
                         writeToLocalStore(
                             "refreshToken",
                             res.data.refreshToken,
                         );
+                        setAuth(true);
                         updateEmail(res.data.email);
                         updateId(res.data.id);
                         router.push(`/home/${res.data.id}`);
                     }
                 })
-                .catch((err) => console.log({ err }));
+                .catch((err) => {
+                    setAuth(true);
+                    const msg = err.response.data.msg;
+                    console.log({ msg });
+                    if (Array.isArray(msg)) {
+                        updateErrors(msg);
+                    } else {
+                        console.log({ err });
+                    }
+                });
         } else {
             axios
                 .post(`${API_BASE}${API_SIGN_UP}`, user)
@@ -114,7 +141,15 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         router.push("/login");
                     }
                 })
-                .catch((err) => console.log({ err }));
+                .catch((err) => {
+                    const msg = err.response.data.msg;
+                    console.log({ msg });
+                    if (Array.isArray(msg)) {
+                        updateErrors(msg);
+                    } else {
+                        console.log({ err });
+                    }
+                });
         }
     };
 
@@ -138,9 +173,11 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                     onPasswordChange={onPasswordChange}
                     onEmailChange={onEmailChange}
                 />
+                <a href="#">Forgot Password</a>
                 <Button variant="solid" className="text-xl" type="submit">
                     Login
                 </Button>
+                <ValidationFeedback errors={errors} />
             </FormWrapper>
         );
     } else {
@@ -158,6 +195,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 <Button variant="solid" className="text-xl" type="submit">
                     Sign Up
                 </Button>
+                <ValidationFeedback errors={errors} />
             </FormWrapper>
         );
     }
