@@ -1,5 +1,12 @@
 "use client";
-import { Button, FormControl, FormLabel, Input } from "@mui/joy";
+import {
+    Button,
+    FormControl,
+    FormLabel,
+    IconButton,
+    Input,
+    Typography,
+} from "@mui/joy";
 import React, { useState, useEffect, useReducer } from "react";
 import FormWrapper from "../FormWrapper";
 import { InputChangeHandler, NewUser, ValidationResponse } from "../types";
@@ -8,6 +15,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API_BASE, API_LOG_IN, API_SIGN_UP } from "../constants";
 import { writeToLocalStore } from "../utils";
+import { useSnackbar } from "notistack";
+import { EyeOffIcon, EyeIcon } from "lucide-react";
 
 const InputWrapper = ({
     label,
@@ -21,18 +30,57 @@ const InputWrapper = ({
     type?: string;
     value: string | number;
     onChange: InputChangeHandler;
-}) => (
-    <FormControl>
-        <FormLabel className="text-xl font-medium">{label}</FormLabel>
-        <Input
-            value={value}
-            onChange={onChange}
-            className="min-w-[50%] p-3 min-h-[2.5rem]"
-            type={type}
-            placeholder={placeholder}
-        />
-    </FormControl>
-);
+}) => {
+    const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, true);
+    const [mounted, setMounted] = useState<boolean>(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    if (!mounted) {
+        return (
+            <>
+                <FormControl>
+                    <FormLabel className="text-xl font-medium">Label</FormLabel>
+                    <Input type="text" />
+                </FormControl>
+            </>
+        );
+    }
+    return (
+        <FormControl>
+            <FormLabel className="text-xl font-medium">{label}</FormLabel>
+            {type === "password" ? (
+                <Input
+                    value={value}
+                    onChange={onChange}
+                    className="min-w-[50%] p-3 min-h-[2.5rem]"
+                    type={pwdHidden ? "password" : "text"}
+                    endDecorator={
+                        <IconButton
+                            sx={(theme) => ({
+                                color: theme.palette.text.primary,
+                                backgroundColor: theme.palette.background.body,
+                            })}
+                            variant="plain"
+                            onClick={updatePwdState}
+                        >
+                            {pwdHidden ? <EyeIcon /> : <EyeOffIcon />}
+                        </IconButton>
+                    }
+                    placeholder={placeholder}
+                />
+            ) : (
+                <Input
+                    value={value}
+                    onChange={onChange}
+                    className="min-w-[50%] p-3 min-h-[2.5rem]"
+                    type={type}
+                    placeholder={placeholder}
+                />
+            )}
+        </FormControl>
+    );
+};
 
 const Shared = ({
     onPasswordChange,
@@ -79,6 +127,7 @@ const ValidationFeedback = ({ errors }: { errors: ValidationResponse[] }) => {
 
 const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
 
     const updateEmail = useStore((state) => state.updateEmail);
     const updateId = useStore((state) => state.updateId);
@@ -92,7 +141,6 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
 
     const [password, updatePassword] = useState<string>("");
     const [rememberMe, updateRemeberState] = useState<boolean>(false);
-    const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, false);
     const [errors, updateErrors] = useState<ValidationResponse[]>([]);
 
     const onSubmitDetails = (e: React.FormEvent, type: "login" | "signup") => {
@@ -107,30 +155,30 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 .post(`${API_BASE}${API_LOG_IN}`, user)
                 .then((res) => {
                     if (res.status == 200) {
+                        updatePassword("");
                         clearEmail();
                         clearId();
-                        updatePassword("");
+                        const { email, id, refreshToken, accessToken } =
+                            res.data.userDetails;
                         updateErrors([]);
 
-                        writeToLocalStore("token", res.data.accessToken);
-                        writeToLocalStore(
-                            "refreshToken",
-                            res.data.refreshToken,
-                        );
+                        writeToLocalStore("token", accessToken);
+                        writeToLocalStore("refreshToken", refreshToken);
                         setAuth(true);
-                        updateEmail(res.data.email);
-                        updateId(res.data.id);
-                        router.push(`/home/${res.data.id}`);
+                        updateEmail(email);
+                        updateId(id);
+                        router.push(`/home/${id}`);
                     }
                 })
                 .catch((err) => {
                     setAuth(true);
+                    console.log({ err });
                     const msg = err.response.data.msg;
                     console.log({ msg });
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {
-                        console.log({ err });
+                        enqueueSnackbar(`${msg}`, { variant: "error" });
                     }
                 });
         } else {
@@ -147,7 +195,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {
-                        console.log({ err });
+                        enqueueSnackbar(`${msg}`, { variant: "error" });
                     }
                 });
         }
