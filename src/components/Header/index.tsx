@@ -61,8 +61,8 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
     }
 
     return (
-        <div className="md:py-5 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
-            <h1 className="font-bold sm:text-2xl md:text-3xl">INVEBB</h1>
+        <div className="sm:py-5 p-2 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+            <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
             <Box
                 sx={{
                     flexGrow: 0,

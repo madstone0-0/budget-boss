@@ -24,8 +24,8 @@ const MainHeader = () => {
     ];
 
     return (
-        <div className="p-5 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
-            <h1 className="font-bold sm:text-2xl md:text-3xl">INVEBB</h1>
+        <div className="sm:py-5 p-2 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+            <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
             <Box
                 sx={{
                     flexGrow: 0,
@@ -35,6 +35,7 @@ const MainHeader = () => {
                 <DarkModeToggle />
                 <Dropdown>
                     <MenuButton
+                        className="ml-2"
                         slots={{ root: IconButton }}
                         slotProps={{
                             root: { variant: "outlined", color: "neutral" },
