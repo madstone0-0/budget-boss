@@ -36,6 +36,6 @@
         "swc": true,
         "experimentalSpecifierResolution": "node"
     },
-    "include": ["src", ".next/types/**/*.ts"],
+    "include": ["src", ".next/types/**/*.ts", "app"],
     "exclude": ["node_modules"]
 }
