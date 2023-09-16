@@ -10,19 +10,12 @@ const DarkModeToggle = () => {
         setMounted(true);
     }, []);
     if (!mounted) {
-        return (
-            <Button
-                variant="outlined"
-                color="neutral"
-                sx={{ width: 90 }}
-            ></Button>
-        );
+        return <Button variant="outlined" sx={{ width: 90 }}></Button>;
     }
 
     return (
         <Button
             variant="outlined"
-            color="neutral"
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
         >
             {mode === "dark" ? "Turn light" : "Turn dark"}

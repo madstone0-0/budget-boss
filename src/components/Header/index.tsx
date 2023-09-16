@@ -12,7 +12,7 @@ import { NextRouter, useRouter } from "next/router";
 import { ButtonChangeHandler } from "../types.ts";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
-const Header = ({ router }: { router: AppRouterInstance }) => {
+const Header = ({ router }: { router?: AppRouterInstance }) => {
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
     const [mounted, setMounted] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
 
     const handleLogout: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        router.push("/");
+        router!.push("/");
         clearEmail();
         clearId();
         setAuth(false);
@@ -83,6 +83,7 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
                         }
                         color="neutral"
                         size="md"
+                        className="ml-2"
                     >
                         <AiOutlineMenu />
                     </MenuButton>
@@ -103,6 +104,9 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
                                 </PageLink>
                             </MenuItem>
                         ))}
+                        <MenuItem onClick={handleLogout as MouseEventHandler}>
+                            Logout
+                        </MenuItem>
                     </Menu>
                 </Dropdown>
             </Box>
@@ -113,7 +117,11 @@ const Header = ({ router }: { router: AppRouterInstance }) => {
                         {item.name}
                     </PageLink>
                 ))}
-                <Button className="mr-5" onClick={handleLogout}>
+                <Button
+                    sx={(theme) => ({ color: theme.palette.text.primary })}
+                    className="mr-5"
+                    onClick={handleLogout}
+                >
                     Logout
                 </Button>
                 <DarkModeToggle />
