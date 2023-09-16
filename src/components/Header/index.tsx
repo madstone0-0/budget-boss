@@ -1,9 +1,9 @@
 "use client";
 import { Box, Button, Dropdown, IconButton, MenuButton } from "@mui/joy";
 
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import DarkModeToggle from "../DarkModeToggle";
-import { AiOutlineMenu } from "react-icons/ai";
+import { MenuIcon } from "lucide-react";
 import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import PageLink from "../PageLink";
@@ -44,11 +44,11 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
 
     if (!mounted) {
         headerItems = [
-            { name: "Portfolio", href: `/home/#/portfolio` },
-            { name: "Budget", href: `/home/#/budget` },
-            { name: "Home", href: `/home/#` },
-            { name: "Investment", href: `/home/#/invest` },
-            { name: "Game", href: `/home/#/game` },
+            { name: "Portfolio", href: "/home/#/portfolio" },
+            { name: "Budget", href: "/home/#/budget" },
+            { name: "Home", href: "/home/#" },
+            { name: "Investment", href: "/home/#/invest" },
+            { name: "Game", href: "/home/#/game" },
         ];
     } else {
         headerItems = [
@@ -85,7 +85,7 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
                         size="md"
                         className="ml-2"
                     >
-                        <AiOutlineMenu />
+                        <MenuIcon />
                     </MenuButton>
                     <Menu
                         open={Boolean(anchorElNav)}

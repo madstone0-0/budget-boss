@@ -2,7 +2,7 @@
 import { Box, Dropdown, IconButton, MenuButton } from "@mui/joy";
 import React, { useState } from "react";
 import DarkModeToggle from "../DarkModeToggle";
-import { AiOutlineMenu } from "react-icons/ai";
+import { MenuIcon } from "lucide-react";
 import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import PageLink from "../PageLink";
@@ -41,14 +41,12 @@ const MainHeader = () => {
                             root: { variant: "outlined", color: "neutral" },
                         }}
                         onClick={
-                            Boolean(anchorElNav)
-                                ? handleCloseNavMenu
-                                : handleOpenNavMenu
+                            anchorElNav ? handleCloseNavMenu : handleOpenNavMenu
                         }
                         color="neutral"
                         size="md"
                     >
-                        <AiOutlineMenu />
+                        <MenuIcon />
                     </MenuButton>
                     <Menu
                         open={Boolean(anchorElNav)}
