@@ -1,7 +1,7 @@
 import React from "react";
 import "./layout.css";
 import "./output.css";
-import Theme from "./Theme";
+import Theme from "../src/components/Theme";
 
 export default function RootLayout({
     children,

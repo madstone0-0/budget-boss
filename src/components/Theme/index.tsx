@@ -1,6 +1,6 @@
 "use client";
 import React, { Suspense } from "react";
-import Loading from "./loading";
+import LoadingBar from "../LoadingBar";
 import {
     CssVarsProvider,
     extendTheme,
@@ -189,6 +189,7 @@ const Background = styled("div")(({ theme }) => {
 const Theme = ({ children }: ThemeProps) => {
     return (
         <>
+            {getInitColorSchemeScript()}
             <CssBaseline />
             <CssVarsProvider
                 modeStorageKey="dark-mode-toggle"
@@ -199,11 +200,9 @@ const Theme = ({ children }: ThemeProps) => {
             >
                 <SnackbarProvider maxSnack={4}>
                     <Background id="container">
-                        <Suspense fallback={<Loading />}>
-                            <div className="flex flex-col mx-5 sm:mx-10">
-                                {children}
-                            </div>
-                        </Suspense>
+                        <div className="flex flex-col mx-5 sm:mx-10">
+                            {children}
+                        </div>
                     </Background>
                 </SnackbarProvider>
             </CssVarsProvider>
