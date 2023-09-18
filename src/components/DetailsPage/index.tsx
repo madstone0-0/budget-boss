@@ -134,6 +134,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const clearEmail = useStore((state) => state.clearEmail);
     const clearId = useStore((state) => state.clearId);
     const setAuth = useStore((state) => state.setAuth);
+    const setHasCreatedBudget = useStore((state) => state.setHasCreatedBudget);
 
     const userEmail = useStore((state) => state.user.email);
     const userId = useStore((state) => state.user.id);
@@ -158,13 +159,19 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         updatePassword("");
                         clearEmail();
                         clearId();
-                        const { email, id, refreshToken, accessToken } =
-                            res.data.userDetails;
+                        const {
+                            email,
+                            id,
+                            refreshToken,
+                            accessToken,
+                            hasCreatedBudget,
+                        } = res.data.userDetails;
                         updateErrors([]);
 
                         writeToLocalStore("token", accessToken);
                         writeToLocalStore("refreshToken", refreshToken);
                         setAuth(true);
+                        setHasCreatedBudget(hasCreatedBudget);
                         updateEmail(email);
                         updateId(id);
                         router.push(`/home/${id}`);

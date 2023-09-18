@@ -12,6 +12,7 @@ export interface User {
     email: string;
     id: string | null;
     isAuthed: boolean;
+    hasCreatedBudget: boolean;
 }
 
 export interface ValidationResponse {

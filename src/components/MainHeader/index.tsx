@@ -24,7 +24,7 @@ const MainHeader = () => {
     ];
 
     return (
-        <div className="sm:py-5 p-2 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+        <div className="sm:py-5 py-2 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
             <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
             <Box
                 sx={{
