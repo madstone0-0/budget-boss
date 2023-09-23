@@ -13,6 +13,25 @@ export interface User {
     id: string | null;
     isAuthed: boolean;
     hasCreatedBudget: boolean;
+    categories: Category[];
+    budgets: Budget[];
+}
+
+export interface Budget {
+    name: string;
+    id: number;
+    userId: string;
+    dateAdded: Date;
+    amount: number;
+    categoryId: number;
+}
+
+export interface NewBudget {
+    name: string;
+    userId: string;
+    dateAdded: Date;
+    amount: number;
+    categoryId: number;
 }
 
 export interface ValidationResponse {
@@ -21,4 +40,18 @@ export interface ValidationResponse {
     msg: string;
     path: string;
     location: string;
+}
+
+export interface Category {
+    categoryId: number;
+    name: string;
+    userId: string | null;
+    color: string;
+}
+
+export interface IFetch {
+    get: (url: string) => Promise<any>;
+    post: (url: string, data: any) => Promise<any>;
+    put: (url: string, data: any) => Promise<any>;
+    delete: (url: string) => Promise<any>;
 }

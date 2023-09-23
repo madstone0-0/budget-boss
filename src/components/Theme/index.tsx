@@ -9,6 +9,7 @@ import {
 } from "@mui/joy/styles";
 import { CssBaseline } from "@mui/joy";
 import { SnackbarProvider } from "notistack";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -172,6 +173,40 @@ const theme = extendTheme({
                     color: theme.palette.text.primary,
                 }),
             },
+            defaultProps: {
+                sx: {
+                    "--Input-focusedInset": "var(--any, )",
+                    "--Input-focusedThickness": "0.25rem",
+                    "&::before": {
+                        transition: "box-shadow .15s ease-in-out",
+                    },
+                },
+            },
+        },
+        JoyButton: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    color: theme.palette.text.primary,
+                    borderRadius: 10,
+                    lineHeight: "1.75rem",
+                    height: "1.5rem",
+                }),
+            },
+        },
+        JoyModalDialog: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    background: theme.palette.background.body,
+                }),
+            },
+        },
+        JoySelect: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    borderRadius: 10,
+                    height: "2rem",
+                }),
+            },
         },
     },
 });
@@ -187,25 +222,28 @@ const Background = styled("div")(({ theme }) => {
 });
 
 const Theme = ({ children }: ThemeProps) => {
+    const queryClient = new QueryClient();
     return (
         <>
             {getInitColorSchemeScript()}
             <CssBaseline />
-            <CssVarsProvider
-                modeStorageKey="dark-mode-toggle"
-                colorSchemeSelector="#container"
-                defaultMode="dark"
-                theme={theme}
-                disableNestedContext
-            >
-                <SnackbarProvider maxSnack={4}>
-                    <Background id="container">
-                        <div className="flex flex-col mx-5 sm:mx-10">
-                            {children}
-                        </div>
-                    </Background>
-                </SnackbarProvider>
-            </CssVarsProvider>
+            <QueryClientProvider client={queryClient}>
+                <CssVarsProvider
+                    modeStorageKey="dark-mode-toggle"
+                    colorSchemeSelector="#container"
+                    defaultMode="dark"
+                    theme={theme}
+                    disableNestedContext
+                >
+                    <SnackbarProvider maxSnack={4}>
+                        <Background id="container">
+                            <div className="flex flex-col mx-5 sm:mx-10">
+                                {children}
+                            </div>
+                        </Background>
+                    </SnackbarProvider>
+                </CssVarsProvider>
+            </QueryClientProvider>
         </>
     );
 };

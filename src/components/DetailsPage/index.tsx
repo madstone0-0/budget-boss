@@ -11,76 +11,16 @@ import React, { useState, useEffect, useReducer } from "react";
 import FormWrapper from "../FormWrapper";
 import { InputChangeHandler, NewUser, ValidationResponse } from "../types";
 import useStore from "../stores";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import axios from "axios";
 import { API_BASE, API_LOG_IN, API_SIGN_UP } from "../constants";
 import { writeToLocalStore } from "../utils";
+import { cookies } from "next/headers";
 import { useSnackbar } from "notistack";
 import { EyeOffIcon, EyeIcon } from "lucide-react";
-
-const InputWrapper = ({
-    label,
-    placeholder,
-    type = "text",
-    value,
-    onChange,
-}: {
-    label: string;
-    placeholder: string;
-    type?: string;
-    value: string | number;
-    onChange: InputChangeHandler;
-}) => {
-    const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, true);
-    const [mounted, setMounted] = useState<boolean>(false);
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-    if (!mounted) {
-        return (
-            <>
-                <FormControl>
-                    <FormLabel className="text-xl font-medium">Label</FormLabel>
-                    <Input type="text" />
-                </FormControl>
-            </>
-        );
-    }
-    return (
-        <FormControl>
-            <FormLabel className="text-xl font-medium">{label}</FormLabel>
-            {type === "password" ? (
-                <Input
-                    value={value}
-                    onChange={onChange}
-                    className="min-w-[50%] p-3 min-h-[2.5rem]"
-                    type={pwdHidden ? "password" : "text"}
-                    endDecorator={
-                        <IconButton
-                            sx={(theme) => ({
-                                color: theme.palette.text.primary,
-                                backgroundColor: theme.palette.background.body,
-                            })}
-                            variant="plain"
-                            onClick={updatePwdState}
-                        >
-                            {pwdHidden ? <EyeIcon /> : <EyeOffIcon />}
-                        </IconButton>
-                    }
-                    placeholder={placeholder}
-                />
-            ) : (
-                <Input
-                    value={value}
-                    onChange={onChange}
-                    className="min-w-[50%] p-3 min-h-[2.5rem]"
-                    type={type}
-                    placeholder={placeholder}
-                />
-            )}
-        </FormControl>
-    );
-};
+import { createJWTCookie } from "../../../app/actions";
+import InputWrapper from "../InputWrapper";
+import Fetch from "../utils/Fetch";
 
 const Shared = ({
     onPasswordChange,
@@ -95,13 +35,17 @@ const Shared = ({
 }) => (
     <>
         <InputWrapper
-            value={email}
+            value$={email}
             onChange={onEmailChange}
+            muiOptions={{ required: true }}
             label="Email"
             placeholder="Enter your email address"
         />
         <InputWrapper
-            value={password}
+            muiOptions={{
+                required: true,
+            }}
+            value$={password}
             onChange={onPasswordChange}
             label="Password"
             placeholder="Enter your password"
@@ -144,6 +88,8 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const [rememberMe, updateRemeberState] = useState<boolean>(false);
     const [errors, updateErrors] = useState<ValidationResponse[]>([]);
 
+    const detailFetch = new Fetch();
+
     const onSubmitDetails = (e: React.FormEvent, type: "login" | "signup") => {
         e.preventDefault();
         const user: NewUser = {
@@ -152,8 +98,8 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
         };
 
         if (type === "login") {
-            axios
-                .post(`${API_BASE}${API_LOG_IN}`, user)
+            detailFetch
+                .post(API_LOG_IN, user)
                 .then((res) => {
                     if (res.status == 200) {
                         updatePassword("");
@@ -168,37 +114,54 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         } = res.data.userDetails;
                         updateErrors([]);
 
-                        writeToLocalStore("token", accessToken);
-                        writeToLocalStore("refreshToken", refreshToken);
+                        createJWTCookie("token", accessToken);
+                        createJWTCookie("refreshToken", refreshToken);
                         setAuth(true);
                         setHasCreatedBudget(hasCreatedBudget);
                         updateEmail(email);
                         updateId(id);
+                        enqueueSnackbar("Successfully logged in", {
+                            variant: "success",
+                        });
                         router.push(`/home/${id}`);
                     }
                 })
                 .catch((err) => {
-                    setAuth(true);
-                    console.log({ err });
+                    setAuth(false);
                     const msg = err.response.data.msg;
                     console.log({ msg });
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {
-                        enqueueSnackbar(`${msg}`, { variant: "error" });
+                        let shownMsg = msg;
+                        switch (err.response.status) {
+                            case 401:
+                                shownMsg = "Invalid email or password";
+                                break;
+                            case 500:
+                                shownMsg = "Something went wrong";
+                                break;
+                            default:
+                                shownMsg = msg;
+                                break;
+                        }
+                        enqueueSnackbar(`${shownMsg}`, { variant: "error" });
                     }
                 });
         } else {
-            axios
-                .post(`${API_BASE}${API_SIGN_UP}`, user)
+            detailFetch
+                .post(API_SIGN_UP, user)
                 .then((res) => {
+                    enqueueSnackbar("Successfully signed up", {
+                        variant: "success",
+                    });
+
                     if (res.status == 200) {
-                        router.push("/login");
+                        router.replace("/login");
                     }
                 })
                 .catch((err) => {
                     const msg = err.response.data.msg;
-                    console.log({ msg });
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {

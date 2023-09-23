@@ -11,6 +11,7 @@ import useStore from "../stores/index.ts";
 import { NextRouter, useRouter } from "next/router";
 import { ButtonChangeHandler } from "../types.ts";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { deleteJWTCookie } from "../../../app/actions.ts";
 
 const Header = ({ router }: { router?: AppRouterInstance }) => {
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
@@ -20,6 +21,8 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
     const clearEmail = useStore((state) => state.clearEmail);
     const clearId = useStore((state) => state.clearId);
     const setAuth = useStore((state) => state.setAuth);
+    const clearUserBudgets = useStore((state) => state.clearUserBudgets);
+    const clearUserCategories = useStore((state) => state.clearUserCategories);
 
     const handleOpenNavMenu = (e: React.MouseEvent) => {
         setAnchorElNav(e.currentTarget as HTMLElement);
@@ -31,10 +34,16 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
 
     const handleLogout: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        router!.push("/");
+        router!.replace("/");
         clearEmail();
         clearId();
+        clearUserCategories();
+        clearUserBudgets();
         setAuth(false);
+        (async () => {
+            await deleteJWTCookie("token");
+            await deleteJWTCookie("refreshToken");
+        })().catch((err) => console.log(err));
     };
 
     useEffect(() => {
@@ -61,7 +70,7 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
     }
 
     return (
-        <div className="sm:py-5 py-2 flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+        <div className="sm:py-5 py-2  flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
             <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
             <Box
                 sx={{
