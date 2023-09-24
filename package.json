@@ -2,7 +2,6 @@
     "name": "budget-boss",
     "private": true,
     "version": "0.0.0",
-    "type": "module",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -16,7 +15,7 @@
         "axios": "^1.5.0",
         "immer": "^10.0.2",
         "lucide-react": "^0.279.0",
-        "next": "latest",
+        "next": "^13.5.2",
         "notistack": "^3.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

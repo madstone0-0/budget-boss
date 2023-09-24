@@ -123,7 +123,6 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 .catch((err) => {
                     setAuth(false);
                     const msg = err.response.data.msg;
-                    console.log({ msg });
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {

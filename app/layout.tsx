@@ -1,6 +1,5 @@
 import React from "react";
-import "./layout.css";
-import "./output.css";
+import "./globals.css";
 import Theme from "../src/components/Theme";
 
 export default function RootLayout({

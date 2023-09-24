@@ -96,7 +96,6 @@ const BudgetList = () => {
             })
             .then((res) => {
                 const budgets = res.data.budgets;
-                console.log({ budgets });
                 updateUserBudgets(budgets);
             })
             .catch((err) => {
@@ -133,7 +132,6 @@ const BudgetList = () => {
             })
             .catch((err) => {
                 setAuth(false);
-                console.log({ err });
                 const err_msg =
                     err.response.data.msg !== null
                         ? err.response.data.msg
@@ -230,7 +228,6 @@ const BudgetList = () => {
                     });
             })
             .catch((err) => {
-                console.log({ err });
                 const msg =
                     err.response.data.msg !== null
                         ? err.response.data.msg

@@ -3,7 +3,6 @@ import React from "react";
 import { styled } from "@mui/joy/styles";
 
 const HeroHeader = styled("h1")(({ theme }) => {
-    console.log(theme.palette.text.primary);
     return {
         color: "#1B232A",
     };
