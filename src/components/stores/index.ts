@@ -12,6 +12,7 @@ type Actions = {
     updateId: (id: string) => void;
     clearEmail: () => void;
     clearId: () => void;
+    clearUser: () => void;
     setAuth: (value: boolean) => void;
     setHasCreatedBudget: (value: boolean) => void;
 
@@ -50,6 +51,17 @@ const useStore = create<State & Actions>()(
                     clearId: () =>
                         set((state) => {
                             state.user.id = null;
+                        }),
+                    clearUser: () =>
+                        set((state) => {
+                            state.user = {
+                                email: "",
+                                id: null,
+                                isAuthed: false,
+                                hasCreatedBudget: false,
+                                categories: [],
+                                budgets: [],
+                            };
                         }),
                     setAuth: (value) =>
                         set((state) => {

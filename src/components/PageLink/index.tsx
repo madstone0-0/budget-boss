@@ -1,26 +1,21 @@
 "use client";
 import React, { ReactNode } from "react";
 import NextLink from "next/link";
-import Link from "@mui/joy/Link";
+import Link, { LinkTypeMap } from "@mui/joy/Link";
 
 const PageLink = ({
     children,
     href,
     passHref = false,
-    className = "",
+    other,
 }: {
     children: ReactNode;
     href: string;
     passHref?: boolean;
-    className?: string;
+    other?: LinkTypeMap["props"];
 }) => (
     <div className="flex items-center">
-        <Link
-            className={className}
-            component={NextLink}
-            passHref={passHref}
-            href={href}
-        >
+        <Link {...other} component={NextLink} passHref={passHref} href={href}>
             {children}
         </Link>
     </div>

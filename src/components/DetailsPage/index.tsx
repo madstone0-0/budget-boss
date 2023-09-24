@@ -187,8 +187,11 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 <a href="#">Forgot Password</a>
                 <Button
                     variant="solid"
-                    sx={(theme) => ({ color: theme.palette.text.primary })}
-                    className="text-xl"
+                    sx={(theme) => ({
+                        color: theme.palette.text.primary,
+                        fontSize: "1.25rem",
+                        lineHeight: "1.75rem",
+                    })}
                     type="submit"
                 >
                     Login
@@ -209,9 +212,12 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                     onEmailChange={onEmailChange}
                 />
                 <Button
-                    sx={(theme) => ({ color: theme.palette.text.primary })}
+                    sx={(theme) => ({
+                        color: theme.palette.text.primary,
+                        fontSize: "1.25rem",
+                        lineHeight: "1.75rem",
+                    })}
                     variant="solid"
-                    className="text-xl"
                     type="submit"
                 >
                     Sign Up

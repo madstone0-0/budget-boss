@@ -39,7 +39,7 @@ const InputWrapper = ({
         value: value,
         size: "lg",
         onChange: onChange,
-        className: "min-w-[30%] sm:min-w-[50%] min-h-[2.5rem] rounded-md",
+        className: "min-w-[30%] sm:min-w-[50%]",
         type: type,
         placeholder: placeholder,
     };

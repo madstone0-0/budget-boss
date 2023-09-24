@@ -101,7 +101,7 @@ const BudgetList = () => {
             .catch((err) => {
                 setAuth(false);
                 const err_msg =
-                    err.response?.data.msg !== null
+                    err.response !== null && err.response !== undefined
                         ? err.response.data.msg
                         : err.message;
                 enqueueSnackbar(`Failed to get budgets: ${err_msg}`, {
@@ -133,7 +133,7 @@ const BudgetList = () => {
             .catch((err) => {
                 setAuth(false);
                 const err_msg =
-                    err.response.data.msg !== null
+                    err.response !== null && err.response !== undefined
                         ? err.response.data.msg
                         : err.message;
                 enqueueSnackbar(`Falied to get categories: ${err_msg}`, {
@@ -148,16 +148,16 @@ const BudgetList = () => {
         const refreshBudgetsController = refreshBudgets();
         const refreshCategoriesController = refreshCategories();
         return () => {
-            refreshBudgetsController
-                .then((res) => {
-                    res.abort();
-                })
-                .catch((err) => console.log({ err }));
-            refreshCategoriesController
-                .then((res) => {
-                    res.abort();
-                })
-                .catch((err) => console.log({ err }));
+            // refreshBudgetsController
+            //     .then((res) => {
+            //         res.abort();
+            //     })
+            //     .catch((err) => console.log({ err }));
+            // refreshCategoriesController
+            //     .then((res) => {
+            //         res.abort();
+            //     })
+            //     .catch((err) => console.log({ err }));
         };
     }, []);
 
@@ -427,7 +427,14 @@ const BudgetList = () => {
             <Button
                 onClick={openModal}
                 variant="outlined"
-                className="fixed right-10 bottom-10 w-20 h-20 rounded-xl"
+                sx={{
+                    position: "fixed",
+                    right: "2.5rem",
+                    bottom: "2.5rem",
+                    width: "5rem",
+                    height: "5rem",
+                    borderRadius: "0.75rem",
+                }}
             >
                 <Plus />
             </Button>

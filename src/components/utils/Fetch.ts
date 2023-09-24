@@ -25,7 +25,7 @@ class Fetch implements IFetch {
         //     default:
         //         break;
         // }
-        console.log(`AxiosError: ${error.stack}`);
+        console.log("AxiosError: ", { error });
         return Promise.reject(error);
     }
     /* eslint-enable @typescript-eslint/restrict-template-expressions*/

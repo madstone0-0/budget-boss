@@ -175,6 +175,8 @@ const theme = extendTheme({
             },
             defaultProps: {
                 sx: {
+                    minHeight: "2.5rem",
+                    borderRadius: "0.375rem",
                     "--Input-focusedInset": "var(--any, )",
                     "--Input-focusedThickness": "0.25rem",
                     "&::before": {

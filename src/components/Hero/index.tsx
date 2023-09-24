@@ -2,7 +2,7 @@
 import React from "react";
 import { styled } from "@mui/joy/styles";
 
-const HeroHeader = styled("h1")(({ theme }) => {
+const HeroHeader = styled("h1")(({}) => {
     return {
         color: "#1B232A",
     };
