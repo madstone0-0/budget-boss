@@ -10,24 +10,13 @@ import { IFetch } from "../types";
 
 class Fetch implements IFetch {
     private instance: AxiosInstance;
-    constructor() {
-        const instance = axios.create({
-            baseURL: API_BASE,
-            headers: {
-                Accept: "application/json",
-            },
-        });
-        instance.interceptors.response.use(
-            this.handleSuccess,
-            this.handleError,
-        );
-        this.instance = instance;
-    }
 
+    /* eslint-disable @typescript-eslint/unbound-method */
     handleSuccess(res: AxiosResponse) {
         return res;
     }
 
+    /* eslint-disable @typescript-eslint/restrict-template-expressions*/
     handleError(error: AxiosError) {
         // switch (error.response?.status) {
         //     case 401:
@@ -36,31 +25,66 @@ class Fetch implements IFetch {
         //     default:
         //         break;
         // }
-        console.log(`Error: ${error}`);
+        console.log(`AxiosError: ${error.stack}`);
         return Promise.reject(error);
+    }
+    /* eslint-enable @typescript-eslint/restrict-template-expressions*/
+    /* eslint-enable @typescript-eslint/unbound-method */
+
+    constructor() {
+        const instance = axios.create({
+            baseURL: API_BASE,
+            headers: {
+                Accept: "application/json",
+            },
+        });
+        /* eslint-disable @typescript-eslint/unbound-method */
+        instance.interceptors.response.use(
+            this.handleSuccess,
+            this.handleError,
+        );
+        /* eslint-enable @typescript-eslint/unbound-method */
+
+        this.instance = instance;
     }
 
     // redirectTo(path: string) {
     //
     // }
 
-    async get(url: string, options?: AxiosRequestConfig) {
-        const res = await this.instance.get(url, { ...options });
+    async get<T = never, R = AxiosResponse<T>>(
+        url: string,
+        options?: AxiosRequestConfig<T>,
+    ) {
+        const res = await this.instance.get<T, R>(url, { ...options });
         return res;
     }
 
-    async post(url: string, data: any, options?: AxiosRequestConfig) {
-        const res = await this.instance.post(url, data, { ...options });
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    async post<T = never, R = AxiosResponse<T>>(
+        url: string,
+        data: any,
+        options?: AxiosRequestConfig<T>,
+    ) {
+        const res = await this.instance.post<T, R>(url, data, { ...options });
         return res;
     }
 
-    async put(url: string, data: any, options?: AxiosRequestConfig) {
-        const res = await this.instance.put(url, data, { ...options });
+    async put<T = never, R = AxiosResponse<T>>(
+        url: string,
+        data: any,
+        options?: AxiosRequestConfig,
+    ) {
+        const res = await this.instance.put<T, R>(url, data, { ...options });
         return res;
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
-    async delete(url: string, options?: AxiosRequestConfig) {
-        const res = await this.instance.delete(url, { ...options });
+    async delete<T = never, R = AxiosResponse<T>>(
+        url: string,
+        options?: AxiosRequestConfig<T>,
+    ) {
+        const res = await this.instance.delete<T, R>(url, { ...options });
         return res;
     }
 }

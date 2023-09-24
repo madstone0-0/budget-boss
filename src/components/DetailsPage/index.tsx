@@ -1,23 +1,17 @@
 "use client";
-import {
-    Button,
-    FormControl,
-    FormLabel,
-    IconButton,
-    Input,
-    Typography,
-} from "@mui/joy";
-import React, { useState, useEffect, useReducer } from "react";
+import { Button } from "@mui/joy";
+import React, { useState } from "react";
 import FormWrapper from "../FormWrapper";
-import { InputChangeHandler, NewUser, ValidationResponse } from "../types";
+import {
+    InputChangeHandler,
+    NewUser,
+    UserDetails,
+    ValidationResponse,
+} from "../types";
 import useStore from "../stores";
-import { useRouter, redirect } from "next/navigation";
-import axios from "axios";
-import { API_BASE, API_LOG_IN, API_SIGN_UP } from "../constants";
-import { writeToLocalStore } from "../utils";
-import { cookies } from "next/headers";
+import { useRouter } from "next/navigation";
+import { API_LOG_IN, API_SIGN_UP } from "../constants";
 import { useSnackbar } from "notistack";
-import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { createJWTCookie } from "../../../app/actions";
 import InputWrapper from "../InputWrapper";
 import Fetch from "../utils/Fetch";
@@ -61,8 +55,8 @@ const ValidationFeedback = ({ errors }: { errors: ValidationResponse[] }) => {
     return (
         <div className="p-5 w-fit min-h-fit">
             <ul>
-                {errors.map((error) => (
-                    <li>{error.msg}</li>
+                {errors.map((error, key) => (
+                    <li key={key}>{error.msg}</li>
                 ))}
             </ul>
         </div>
@@ -99,8 +93,8 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
 
         if (type === "login") {
             detailFetch
-                .post(API_LOG_IN, user)
-                .then((res) => {
+                .post<{ userDetails: UserDetails }>(API_LOG_IN, user)
+                .then(async (res) => {
                     if (res.status == 200) {
                         updatePassword("");
                         clearEmail();
@@ -114,8 +108,8 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         } = res.data.userDetails;
                         updateErrors([]);
 
-                        createJWTCookie("token", accessToken);
-                        createJWTCookie("refreshToken", refreshToken);
+                        await createJWTCookie("token", accessToken);
+                        await createJWTCookie("refreshToken", refreshToken);
                         setAuth(true);
                         setHasCreatedBudget(hasCreatedBudget);
                         updateEmail(email);

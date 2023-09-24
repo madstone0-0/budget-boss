@@ -17,6 +17,14 @@ export interface User {
     budgets: Budget[];
 }
 
+export interface UserDetails {
+    id: string;
+    email: string;
+    hasCreatedBudget: boolean;
+    accessToken: string;
+    refreshToken: string;
+}
+
 export interface Budget {
     name: string;
     id: number;
@@ -49,9 +57,11 @@ export interface Category {
     color: string;
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IFetch {
     get: (url: string) => Promise<any>;
     post: (url: string, data: any) => Promise<any>;
     put: (url: string, data: any) => Promise<any>;
     delete: (url: string) => Promise<any>;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

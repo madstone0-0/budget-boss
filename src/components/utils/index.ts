@@ -2,6 +2,7 @@ export const writeToLocalStore = (key: string, value: string) => {
     localStorage.setItem(key, JSON.stringify(value));
 };
 
+/* eslint-disable @typescript-eslint/no-unsafe-return*/
 export const readFromLocalStore = (key: string) => {
     const value = localStorage.getItem(key);
     if (value != null) {
@@ -9,6 +10,7 @@ export const readFromLocalStore = (key: string) => {
     }
     return null;
 };
+/* eslint-disable @typescript-eslint/no-unsafe-return*/
 
 // https://stackoverflow.com/a/69058154
 export const isTokenExpired = (token: string) => {

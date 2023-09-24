@@ -86,9 +86,7 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
                             root: { variant: "outlined", color: "neutral" },
                         }}
                         onClick={
-                            Boolean(anchorElNav)
-                                ? handleCloseNavMenu
-                                : handleOpenNavMenu
+                            anchorElNav ? handleCloseNavMenu : handleOpenNavMenu
                         }
                         color="neutral"
                         size="md"

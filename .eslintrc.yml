@@ -42,5 +42,8 @@ rules:
     "@typescript-eslint/prefer-as-const": off
     "@typescript-eslint/no-unsafe-assignment": off
     "@typescript-eslint/no-invalid-this": 2
+    "@typescript-eslint/require-await": warn
+    "@typescript-eslint/no-unsafe-member-access": warn
+    "no-empty-pattern": off
 
     no-var: off

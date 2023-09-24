@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Budget, ButtonChangeHandler, NewBudget } from "../types";
+import { Budget, ButtonChangeHandler, Category, NewBudget } from "../types";
 import {
     Button,
     DialogTitle,
@@ -30,7 +30,7 @@ import { getJWTCookie } from "../../../app/actions";
 import Unauthorized from "../utils/Unauthorized";
 
 const NumericFormatAdapter = React.forwardRef(function NumericFormatAdapter(
-    props: { name: string; onChange: (arg0: any) => void },
+    props: { name: string; onChange: (arg0: object) => void },
     ref,
 ) {
     const { onChange, ...other } = props;
@@ -81,14 +81,14 @@ const BudgetList = () => {
     );
     const [error, setError] = useState<Error | null>(null);
 
-    const action = React.useRef(null);
+    const action = React.useRef<null | { focusVisible(): void }>(null);
 
     const refreshBudgets = async () => {
         const token = await getJWTCookie("token");
         const abortContoller = new AbortController();
         let signal = abortContoller.signal;
         fetch
-            .get(`${API_GET_ALL_BUDGETS}${user.id}`, {
+            .get<{ budgets: Budget[] }>(`${API_GET_ALL_BUDGETS}${user.id}`, {
                 signal: signal,
                 headers: {
                     Authorization: `Bearer ${token?.value}`,
@@ -108,7 +108,7 @@ const BudgetList = () => {
                 enqueueSnackbar(`Failed to get budgets: ${err_msg}`, {
                     variant: "error",
                 });
-                setError(err);
+                setError(err as Error);
             });
         return abortContoller;
     };
@@ -118,12 +118,15 @@ const BudgetList = () => {
         const abortContoller = new AbortController();
         let signal = abortContoller.signal;
         fetch
-            .get(`${API_GET_ALL_CATEGORY}${user.id}`, {
-                signal: signal,
-                headers: {
-                    Authorization: `Bearer ${token?.value}`,
+            .get<{ categories: Category[] }>(
+                `${API_GET_ALL_CATEGORY}${user.id}`,
+                {
+                    signal: signal,
+                    headers: {
+                        Authorization: `Bearer ${token?.value}`,
+                    },
                 },
-            })
+            )
             .then((res) => {
                 const categories = res.data.categories;
                 updateUserCategories(categories);
@@ -138,7 +141,7 @@ const BudgetList = () => {
                 enqueueSnackbar(`Falied to get categories: ${err_msg}`, {
                     variant: "error",
                 });
-                setError(err);
+                setError(err as Error);
             });
         return abortContoller;
     };
@@ -147,12 +150,16 @@ const BudgetList = () => {
         const refreshBudgetsController = refreshBudgets();
         const refreshCategoriesController = refreshCategories();
         return () => {
-            refreshBudgetsController.then((res) => {
-                res.abort();
-            });
-            refreshCategoriesController.then((res) => {
-                res.abort();
-            });
+            refreshBudgetsController
+                .then((res) => {
+                    res.abort();
+                })
+                .catch((err) => console.log({ err }));
+            refreshCategoriesController
+                .then((res) => {
+                    res.abort();
+                })
+                .catch((err) => console.log({ err }));
         };
     }, []);
 
@@ -187,27 +194,43 @@ const BudgetList = () => {
         return budget;
     };
 
-    const onAddBudget: ButtonChangeHandler = async (e) => {
+    const onAddBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        const token = await getJWTCookie("token");
-        const budget = generateBudget();
-        fetch
-            .post(`${API_ADD_BUDGET}${user.id}`, budget, {
-                headers: {
-                    Authorization: `Bearer ${token?.value}`,
-                },
-            })
-            .then((res) => {
-                const msg =
-                    res.data.msg !== null
-                        ? res.data.msg
-                        : "Budget added successfully";
-                enqueueSnackbar(msg, { variant: "success" });
-                resetBudget();
-                refreshBudgets();
-                setOpen(false);
+        getJWTCookie("token")
+            .then((token) => {
+                const budget = generateBudget();
+                fetch
+                    .post<{ msg: string }>(
+                        `${API_ADD_BUDGET}${user.id}`,
+                        budget,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token?.value}`,
+                            },
+                        },
+                    )
+                    .then(async (res) => {
+                        const msg =
+                            res.data.msg !== null
+                                ? res.data.msg
+                                : "Budget added successfully";
+                        enqueueSnackbar(msg, { variant: "success" });
+                        resetBudget();
+                        await refreshBudgets();
+                        setOpen(false);
+                    })
+                    .catch((err) => {
+                        const msg =
+                            err.response.data.msg !== null
+                                ? err.response.data.msg
+                                : err.message;
+                        enqueueSnackbar(`Failed to add budget: ${msg}`, {
+                            variant: "error",
+                        });
+                    });
             })
             .catch((err) => {
+                console.log({ err });
                 const msg =
                     err.response.data.msg !== null
                         ? err.response.data.msg
@@ -299,7 +322,7 @@ const BudgetList = () => {
                         placeholder="Budget category"
                         value={budgetCategory}
                         required
-                        onChange={(e, newVal) => setBudgetCategory(newVal)}
+                        onChange={(_e, newVal) => setBudgetCategory(newVal)}
                         {...(budgetCategory != null && {
                             endDecorator: (
                                 <IconButton
@@ -324,7 +347,10 @@ const BudgetList = () => {
                     >
                         {user.categories.length != 0 ? (
                             user.categories.map((category) => (
-                                <Option value={category.categoryId}>
+                                <Option
+                                    key={category.categoryId}
+                                    value={category.categoryId}
+                                >
                                     {category.name}
                                 </Option>
                             ))

@@ -202,7 +202,7 @@ const theme = extendTheme({
         },
         JoySelect: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: ({}) => ({
                     borderRadius: 10,
                     height: "2rem",
                 }),
@@ -215,7 +215,7 @@ interface ThemeProps {
     children: React.ReactNode;
 }
 
-const Background = styled("div")(({ theme }) => {
+const Background = styled("div")(({}) => {
     return {
         height: "100%",
     };
