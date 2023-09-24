@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/joy/Button";
+import IconButton from "@mui/joy/IconButton";
 import { useColorScheme } from "@mui/joy/styles";
+import { MoonIcon, SunIcon } from "lucide-react";
 
 const DarkModeToggle = () => {
     const { mode, setMode } = useColorScheme();
@@ -10,16 +11,21 @@ const DarkModeToggle = () => {
         setMounted(true);
     }, []);
     if (!mounted) {
-        return <Button variant="outlined" sx={{ width: 90 }}></Button>;
+        return <IconButton variant="outlined" sx={{ width: 90 }}></IconButton>;
     }
+    const iconSize = 20;
 
     return (
-        <Button
+        <IconButton
             variant="outlined"
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
         >
-            {mode === "dark" ? "Turn light" : "Turn dark"}
-        </Button>
+            {mode === "dark" ? (
+                <SunIcon size={iconSize} />
+            ) : (
+                <MoonIcon size={iconSize} />
+            )}
+        </IconButton>
     );
 };
 
