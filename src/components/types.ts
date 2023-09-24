@@ -57,6 +57,11 @@ export interface Category {
     color: string;
 }
 
+export interface HeaderItem {
+    name: string;
+    href: string;
+}
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IFetch {
     get: (url: string) => Promise<any>;

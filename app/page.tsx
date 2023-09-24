@@ -1,11 +1,18 @@
 import React from "react";
 import Hero from "../src/components/Hero";
-import MainHeader from "../src/components/MainHeader";
+import Header from "@/components/Header";
 
 const Page = () => {
+    const headerItems = [
+        { name: "Sign Up", href: "/signup" },
+        { name: "Login", href: "/login" },
+    ];
     return (
         <>
-            <MainHeader />
+            <Header
+                mountedHeaderItems={headerItems}
+                unMountedHeaderItems={headerItems}
+            />
             <Hero />
         </>
     );

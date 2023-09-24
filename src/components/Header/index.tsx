@@ -8,21 +8,23 @@ import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import PageLink from "../PageLink";
 import useStore from "../stores/index.ts";
-import { NextRouter, useRouter } from "next/router";
-import { ButtonChangeHandler } from "../types.ts";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { useRouter } from "next/navigation";
+import { ButtonChangeHandler, HeaderItem } from "../types.ts";
 import { deleteJWTCookie } from "../../../app/actions.ts";
 
-const Header = ({ router }: { router?: AppRouterInstance }) => {
+const Header = ({
+    mountedHeaderItems,
+    unMountedHeaderItems,
+}: {
+    mountedHeaderItems: HeaderItem[];
+    unMountedHeaderItems: HeaderItem[];
+}) => {
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
     const [mounted, setMounted] = useState<boolean>(false);
+    const router = useRouter();
 
     const userId = useStore((state) => state.user.id);
-    const clearEmail = useStore((state) => state.clearEmail);
-    const clearId = useStore((state) => state.clearId);
-    const setAuth = useStore((state) => state.setAuth);
-    const clearUserBudgets = useStore((state) => state.clearUserBudgets);
-    const clearUserCategories = useStore((state) => state.clearUserCategories);
+    const clearUser = useStore((state) => state.clearUser);
 
     const handleOpenNavMenu = (e: React.MouseEvent) => {
         setAnchorElNav(e.currentTarget as HTMLElement);
@@ -33,13 +35,9 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
     };
 
     const handleLogout: ButtonChangeHandler = (e) => {
+        router.replace("/");
         e.preventDefault();
-        router!.replace("/");
-        clearEmail();
-        clearId();
-        clearUserCategories();
-        clearUserBudgets();
-        setAuth(false);
+        clearUser();
         (async () => {
             await deleteJWTCookie("token");
             await deleteJWTCookie("refreshToken");
@@ -49,24 +47,12 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
     useEffect(() => {
         setMounted(true);
     });
-    let headerItems;
+    let headerItems: HeaderItem[];
 
     if (!mounted) {
-        headerItems = [
-            { name: "Portfolio", href: "/home/#/portfolio" },
-            { name: "Budget", href: "/home/#/budget" },
-            { name: "Home", href: "/home/#" },
-            { name: "Investment", href: "/home/#/invest" },
-            { name: "Game", href: "/home/#/game" },
-        ];
+        headerItems = unMountedHeaderItems;
     } else {
-        headerItems = [
-            { name: "Portfolio", href: `/home/${userId}/portfolio` },
-            { name: "Budget", href: `/home/${userId}/budget` },
-            { name: "Home", href: `/home/${userId}` },
-            { name: "Investment", href: `/home/${userId}/invest` },
-            { name: "Game", href: `/home/${userId}/game` },
-        ];
+        headerItems = mountedHeaderItems;
     }
 
     return (
@@ -120,13 +106,24 @@ const Header = ({ router }: { router?: AppRouterInstance }) => {
 
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {headerItems.map((item, key) => (
-                    <PageLink key={key} className="mr-5" href={item.href}>
+                    <PageLink
+                        key={key}
+                        other={{
+                            sx: {
+                                marginRight: "1.5rem",
+                            },
+                        }}
+                        href={item.href}
+                    >
                         {item.name}
                     </PageLink>
                 ))}
                 <Button
-                    sx={(theme) => ({ color: theme.palette.text.primary })}
-                    className="mr-5"
+                    sx={(theme) => ({
+                        color: theme.palette.text.primary,
+                        display: userId ? "block" : "none",
+                        marginRight: "1.25rem",
+                    })}
                     onClick={handleLogout}
                 >
                     Logout

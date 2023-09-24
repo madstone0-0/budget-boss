@@ -1,14 +1,32 @@
 "use client";
 import React, { ReactNode, Suspense } from "react";
 import Header from "../../../src/components/Header";
-import { useRouter } from "next/navigation";
 import LoadingBar from "../../../src/components/LoadingBar";
+import useStore from "@/components/stores";
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
-    const router = useRouter();
+    const userId = useStore((state) => state.user.id);
+    const headerItemsMounted = [
+        { name: "Portfolio", href: `/home/${userId}/portfolio` },
+        { name: "Budget", href: `/home/${userId}/budget` },
+        { name: "Home", href: `/home/${userId}` },
+        { name: "Investment", href: `/home/${userId}/invest` },
+        { name: "Game", href: `/home/${userId}/game` },
+    ];
+    const headerItemsUnMounted = [
+        { name: "Portfolio", href: "/home/#/portfolio" },
+        { name: "Budget", href: "/home/#/budget" },
+        { name: "Home", href: "/home/#" },
+        { name: "Investment", href: "/home/#/invest" },
+        { name: "Game", href: "/home/#/game" },
+    ];
+
     return (
         <>
-            <Header router={router} />
+            <Header
+                mountedHeaderItems={headerItemsMounted}
+                unMountedHeaderItems={headerItemsUnMounted}
+            />
             <Suspense fallback={<LoadingBar />}>{children}</Suspense>
         </>
     );
