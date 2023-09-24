@@ -28,6 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@emotion/cache", "npm:11.11.0"],\
             ["@emotion/react", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:11.11.1"],\
             ["@emotion/styled", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:11.11.0"],\
             ["@mui/joy", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.0.0-beta.7"],\
@@ -1908,6 +1909,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["budget-boss", "workspace:."],\
+            ["@emotion/cache", "npm:11.11.0"],\
             ["@emotion/react", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:11.11.1"],\
             ["@emotion/styled", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:11.11.0"],\
             ["@mui/joy", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.0.0-beta.7"],\

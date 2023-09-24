@@ -1,5 +1,8 @@
 "use client";
-import React, { Suspense } from "react";
+import createCache from "@emotion/cache";
+import { useServerInsertedHTML } from "next/navigation";
+import { CacheProvider } from "@emotion/react";
+import React, { Suspense, useState } from "react";
 import LoadingBar from "../LoadingBar";
 import {
     CssVarsProvider,
@@ -214,6 +217,7 @@ const theme = extendTheme({
 });
 
 interface ThemeProps {
+    options: { key: string };
     children: React.ReactNode;
 }
 
@@ -223,28 +227,75 @@ const Background = styled("div")(({}) => {
     };
 });
 
-const Theme = ({ children }: ThemeProps) => {
+const Theme = ({ children, options }: ThemeProps) => {
     const queryClient = new QueryClient();
+
+    /* https://mui.com/joy-ui/integrations/next-js-app-router/ */
+    /*eslint-disable @typescript-eslint/unbound-method*/
+    const [{ cache, flush }] = useState(() => {
+        const cache = createCache(options);
+        cache.compat = true;
+        const prevInsert = cache.insert;
+        let inserted: string[] = [];
+        cache.insert = (...args) => {
+            const serialized = args[1];
+            if (cache.inserted[serialized.name] === undefined) {
+                inserted.push(serialized.name);
+            }
+            return prevInsert(...args);
+        };
+        const flush = () => {
+            const prevInserted = inserted;
+            inserted = [];
+            return prevInserted;
+        };
+        return { cache, flush };
+    });
+
+    useServerInsertedHTML(() => {
+        const names = flush();
+        if (names.length === 0) {
+            return null;
+        }
+        let styles = "";
+        for (const name of names) {
+            styles += cache.inserted[name];
+        }
+        return (
+            <style
+                key={cache.key}
+                data-emotion={`${cache.key} ${names.join(" ")}`}
+                dangerouslySetInnerHTML={{
+                    __html: styles,
+                }}
+            />
+        );
+    });
+    /*eslint-disable @typescript-eslint/unbound-method*/
+    /* https://mui.com/joy-ui/integrations/next-js-app-router/ */
+
     return (
         <>
             {getInitColorSchemeScript()}
             <CssBaseline />
             <QueryClientProvider client={queryClient}>
-                <CssVarsProvider
-                    modeStorageKey="dark-mode-toggle"
-                    colorSchemeSelector="#container"
-                    defaultMode="dark"
-                    theme={theme}
-                    disableNestedContext
-                >
-                    <SnackbarProvider maxSnack={4}>
-                        <Background id="container">
-                            <div className="flex flex-col mx-5 sm:mx-10">
-                                {children}
-                            </div>
-                        </Background>
-                    </SnackbarProvider>
-                </CssVarsProvider>
+                <CacheProvider value={cache}>
+                    <CssVarsProvider
+                        modeStorageKey="dark-mode-toggle"
+                        colorSchemeSelector="#container"
+                        defaultMode="dark"
+                        theme={theme}
+                        disableNestedContext
+                    >
+                        <SnackbarProvider maxSnack={4}>
+                            <Background id="container">
+                                <div className="flex flex-col mx-5 sm:mx-10">
+                                    {children}
+                                </div>
+                            </Background>
+                        </SnackbarProvider>
+                    </CssVarsProvider>
+                </CacheProvider>
             </QueryClientProvider>
         </>
     );

@@ -31,7 +31,7 @@ export default function RootLayout({
                 <title>INVEBB</title>
             </head>
             <body suppressHydrationWarning={true}>
-                <Theme>{children}</Theme>
+                <Theme options={{ key: "joy" }}>{children}</Theme>
             </body>
         </html>
     );
