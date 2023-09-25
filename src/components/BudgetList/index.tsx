@@ -5,7 +5,6 @@ import {
     Button,
     DialogTitle,
     RadioGroup,
-    Stack,
     Box,
     Select,
     Option,
@@ -28,6 +27,16 @@ import { useSnackbar } from "notistack";
 import { NumericFormat } from "react-number-format";
 import { getJWTCookie } from "../../../app/actions";
 import Unauthorized from "../utils/Unauthorized";
+import { useQueryClient, useQuery, useMutation } from "react-query";
+import Loading from "@/loading";
+import { AxiosError } from "axios";
+import LoadingBar from "../LoadingBar";
+
+declare module "react-query" {
+    interface Register {
+        defaultError: AxiosError;
+    }
+}
 
 const NumericFormatAdapter = React.forwardRef(function NumericFormatAdapter(
     props: { name: string; onChange: (arg0: object) => void },
@@ -72,94 +81,118 @@ const BudgetList = () => {
     const [budgetDateAdded, setBudgetDateAdded] = useState<string>(
         getDateString(new Date()),
     );
-    const [budgetDateUpdated, setBudgetDateUpdated] = useState<Date>(
-        new Date(Date.now()),
-    );
+    // const [budgetDateUpdated, setBudgetDateUpdated] = useState<Date>(
+    //     new Date(Date.now()),
+    // );
     const [budgetCategory, setBudgetCategory] = useState<number | null>(null);
     const [budgetType, setBudgetType] = useState<"income" | "expense">(
         "income",
     );
-    const [error, setError] = useState<Error | null>(null);
 
     const action = React.useRef<null | { focusVisible(): void }>(null);
 
-    const refreshBudgets = async () => {
-        const token = await getJWTCookie("token");
-        const abortContoller = new AbortController();
-        let signal = abortContoller.signal;
-        fetch
-            .get<{ budgets: Budget[] }>(`${API_GET_ALL_BUDGETS}${user.id}`, {
-                signal: signal,
-                headers: {
-                    Authorization: `Bearer ${token?.value}`,
-                },
-            })
-            .then((res) => {
-                const budgets = res.data.budgets;
-                updateUserBudgets(budgets);
-            })
-            .catch((err) => {
-                setAuth(false);
-                const err_msg =
-                    err.response !== null && err.response !== undefined
-                        ? err.response.data.msg
-                        : err.message;
-                enqueueSnackbar(`Failed to get budgets: ${err_msg}`, {
-                    variant: "error",
-                });
-                setError(err as Error);
-            });
-        return abortContoller;
-    };
+    const queryClient = useQueryClient();
 
-    const refreshCategories = async () => {
-        const token = await getJWTCookie("token");
-        const abortContoller = new AbortController();
-        let signal = abortContoller.signal;
-        fetch
-            .get<{ categories: Category[] }>(
-                `${API_GET_ALL_CATEGORY}${user.id}`,
+    const budgetQuery = useQuery({
+        queryKey: ["budgets"],
+        queryFn: async () => {
+            const token = await getJWTCookie("token");
+            const res = await fetch.get<{ budgets: Budget[] }>(
+                `${API_GET_ALL_BUDGETS}${user.id}`,
                 {
-                    signal: signal,
                     headers: {
                         Authorization: `Bearer ${token?.value}`,
                     },
                 },
-            )
-            .then((res) => {
-                const categories = res.data.categories;
-                updateUserCategories(categories);
-            })
-            .catch((err) => {
-                setAuth(false);
-                const err_msg =
-                    err.response !== null && err.response !== undefined
-                        ? err.response.data.msg
-                        : err.message;
-                enqueueSnackbar(`Falied to get categories: ${err_msg}`, {
+            );
+            return res.data;
+        },
+        onError: (err) => {
+            setAuth(false);
+
+            let err_msg = "";
+            if (err instanceof AxiosError) {
+                err_msg = err.response?.data.msg;
+            } else {
+                err_msg = (err as Error).message;
+            }
+
+            enqueueSnackbar(`Failed to get budgets: ${err_msg}`, {
+                variant: "error",
+            });
+        },
+    });
+
+    const categoryQuery = useQuery({
+        queryKey: "categories",
+        queryFn: async () => {
+            const token = await getJWTCookie("token");
+            const res = await fetch.get<{ categories: Category[] }>(
+                `${API_GET_ALL_CATEGORY}${user.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token?.value}`,
+                    },
+                },
+            );
+            return res.data;
+        },
+
+        onError: (err) => {
+            setAuth(false);
+
+            let err_msg = "";
+            if (err instanceof AxiosError) {
+                err_msg = err.response?.data.msg;
+            } else {
+                err_msg = (err as Error).message;
+            }
+
+            enqueueSnackbar(`Failed to get budgets: ${err_msg}`, {
+                variant: "error",
+            });
+        },
+    });
+
+    const budgetMutation = useMutation(
+        async (budget: NewBudget) => {
+            const token = await getJWTCookie("token");
+
+            const res = await fetch.post<{ msg: string }>(
+                `${API_ADD_BUDGET}${user.id}`,
+                budget,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token?.value}`,
+                    },
+                },
+            );
+            return res;
+        },
+        {
+            onSuccess: async (res) => {
+                const msg =
+                    res.data.msg !== null
+                        ? res.data.msg
+                        : "Budget added successfully";
+                enqueueSnackbar(msg, { variant: "success" });
+                resetBudget();
+                setOpen(false);
+                await queryClient.invalidateQueries("budgets");
+            },
+            onError: async (err) => {
+                let msg = "";
+                if (err instanceof AxiosError) {
+                    msg = err.response?.data.msg;
+                } else {
+                    msg = (err as Error).message;
+                }
+                enqueueSnackbar(`Failed to add budget: ${msg}`, {
                     variant: "error",
                 });
-                setError(err as Error);
-            });
-        return abortContoller;
-    };
-
-    useEffect(() => {
-        const refreshBudgetsController = refreshBudgets();
-        const refreshCategoriesController = refreshCategories();
-        return () => {
-            // refreshBudgetsController
-            //     .then((res) => {
-            //         res.abort();
-            //     })
-            //     .catch((err) => console.log({ err }));
-            // refreshCategoriesController
-            //     .then((res) => {
-            //         res.abort();
-            //     })
-            //     .catch((err) => console.log({ err }));
-        };
-    }, []);
+            },
+        },
+    );
 
     const openModal: ButtonChangeHandler = (e) => {
         e.preventDefault();
@@ -194,67 +227,52 @@ const BudgetList = () => {
 
     const onAddBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        getJWTCookie("token")
-            .then((token) => {
-                const budget = generateBudget();
-                fetch
-                    .post<{ msg: string }>(
-                        `${API_ADD_BUDGET}${user.id}`,
-                        budget,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token?.value}`,
-                            },
-                        },
-                    )
-                    .then(async (res) => {
-                        const msg =
-                            res.data.msg !== null
-                                ? res.data.msg
-                                : "Budget added successfully";
-                        enqueueSnackbar(msg, { variant: "success" });
-                        resetBudget();
-                        await refreshBudgets();
-                        setOpen(false);
-                    })
-                    .catch((err) => {
-                        const msg =
-                            err.response.data.msg !== null
-                                ? err.response.data.msg
-                                : err.message;
-                        enqueueSnackbar(`Failed to add budget: ${msg}`, {
-                            variant: "error",
-                        });
-                    });
-            })
-            .catch((err) => {
-                const msg =
-                    err.response.data.msg !== null
-                        ? err.response.data.msg
-                        : err.message;
-                enqueueSnackbar(`Failed to add budget: ${msg}`, {
-                    variant: "error",
-                });
-            });
+        budgetMutation.mutate(generateBudget());
     };
 
-    if (error != null) {
-        if (error.message == "Unauthorized") return <Unauthorized />;
+    // if (error != null) {
+    //     if (error.message == "Unauthorized") return <Unauthorized />;
+    //
+    //     return (
+    //         <div className="flex flex-col justify-center items-center my-52 h-full text-center">
+    //             <h1 className="min-w-max text-2xl font-bold sm:text-3xl">
+    //                 Something went wrong
+    //             </h1>
+    //             <p> {error.message}</p>
+    //         </div>
+    //     );
+    // }
+
+    if (budgetQuery.isLoading) return <LoadingBar />;
+
+    if (budgetQuery.isError && budgetQuery.error != null) {
+        if (
+            budgetQuery.error instanceof AxiosError &&
+            budgetQuery.error.message == "Unauthorized"
+        )
+            return <Unauthorized />;
 
         return (
             <div className="flex flex-col justify-center items-center my-52 h-full text-center">
                 <h1 className="min-w-max text-2xl font-bold sm:text-3xl">
                     Something went wrong
                 </h1>
-                <p> {error.message}</p>
+                <p>
+                    {budgetQuery.error instanceof AxiosError
+                        ? budgetQuery.error.message
+                        : budgetQuery.error instanceof Error
+                        ? budgetQuery.error.message
+                        : "Unknown Error"}
+                </p>
             </div>
         );
     }
 
     return (
         <div>
-            {user.budgets != null && user.budgets.length != 0 ? (
-                user.budgets.map((budget) => {
+            {budgetQuery.data?.budgets != null &&
+            budgetQuery.data?.budgets.length != 0 ? (
+                budgetQuery.data?.budgets.map((budget) => {
                     const { id, name, dateAdded } = budget;
                     let { amount } = budget;
                     amount = Number(Number(budget.amount).toFixed(2));
@@ -342,8 +360,8 @@ const BudgetList = () => {
                         })}
                         sx={{ minWidth: 160 }}
                     >
-                        {user.categories.length != 0 ? (
-                            user.categories.map((category) => (
+                        {categoryQuery.data?.categories.length != 0 ? (
+                            categoryQuery.data?.categories.map((category) => (
                                 <Option
                                     key={category.categoryId}
                                     value={category.categoryId}

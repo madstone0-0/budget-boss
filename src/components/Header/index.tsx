@@ -118,16 +118,19 @@ const Header = ({
                         {item.name}
                     </PageLink>
                 ))}
-                <Button
-                    sx={(theme) => ({
-                        color: theme.palette.text.primary,
-                        display: userId ? "block" : "none",
-                        marginRight: "1.25rem",
-                    })}
-                    onClick={handleLogout}
-                >
-                    Logout
-                </Button>
+                {userId ? (
+                    <Button
+                        sx={(theme) => ({
+                            color: theme.palette.text.primary,
+                            marginRight: "1.25rem",
+                        })}
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                ) : (
+                    <></>
+                )}
                 <DarkModeToggle />
             </Box>
         </div>

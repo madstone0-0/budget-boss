@@ -13,6 +13,7 @@ import {
 import { CssBaseline } from "@mui/joy";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -296,6 +297,7 @@ const Theme = ({ children, options }: ThemeProps) => {
                         </SnackbarProvider>
                     </CssVarsProvider>
                 </CacheProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </>
     );

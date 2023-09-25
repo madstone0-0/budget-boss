@@ -79,6 +79,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const isUserAuthed = useStore((state) => state.user.isAuthed);
 
     const [password, updatePassword] = useState<string>("");
+    const [formEmail, updateFormEmail] = useState<string>("");
     const [rememberMe, updateRemeberState] = useState<boolean>(false);
     const [errors, updateErrors] = useState<ValidationResponse[]>([]);
 
@@ -87,7 +88,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const onSubmitDetails = (e: React.FormEvent, type: "login" | "signup") => {
         e.preventDefault();
         const user: NewUser = {
-            email: userEmail,
+            email: formEmail,
             password: password,
         };
 
@@ -97,8 +98,9 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 .then(async (res) => {
                     if (res.status == 200) {
                         updatePassword("");
-                        clearEmail();
-                        clearId();
+                        updateFormEmail("");
+                        // clearEmail();
+                        // clearId();
                         const {
                             email,
                             id,
@@ -106,6 +108,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                             accessToken,
                             hasCreatedBudget,
                         } = res.data.userDetails;
+                        router.push(`/home/${id}`);
                         updateErrors([]);
 
                         await createJWTCookie("token", accessToken);
@@ -117,7 +120,6 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         enqueueSnackbar("Successfully logged in", {
                             variant: "success",
                         });
-                        router.push(`/home/${id}`);
                     }
                 })
                 .catch((err) => {
@@ -165,7 +167,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     };
 
     const onEmailChange: InputChangeHandler = (e) => {
-        updateEmail(e.currentTarget.value);
+        updateFormEmail(e.currentTarget.value);
     };
 
     const onPasswordChange: InputChangeHandler = (e) => {
@@ -180,7 +182,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
             >
                 <Shared
                     password={password}
-                    email={userEmail}
+                    email={formEmail}
                     onPasswordChange={onPasswordChange}
                     onEmailChange={onEmailChange}
                 />
@@ -207,7 +209,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
             >
                 <Shared
                     password={password}
-                    email={userEmail}
+                    email={formEmail}
                     onPasswordChange={onPasswordChange}
                     onEmailChange={onEmailChange}
                 />
