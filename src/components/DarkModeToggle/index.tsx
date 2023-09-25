@@ -11,12 +11,19 @@ const DarkModeToggle = () => {
         setMounted(true);
     }, []);
     if (!mounted) {
-        return <IconButton variant="outlined" sx={{ width: 90 }}></IconButton>;
+        return (
+            <IconButton variant="outlined" sx={{ width: "2rem" }}></IconButton>
+        );
     }
-    const iconSize = 20;
+    const iconSize = 24;
 
     return (
         <IconButton
+            sx={(theme) => ({
+                color: theme.palette.primary[500],
+                padding: "0.5rem",
+                width: "2rem",
+            })}
             variant="outlined"
             onClick={() => setMode(mode === "dark" ? "light" : "dark")}
         >

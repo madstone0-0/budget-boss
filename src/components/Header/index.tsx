@@ -64,7 +64,6 @@ const Header = ({
                     display: { xs: "flex", md: "none" },
                 }}
             >
-                <DarkModeToggle />
                 <Dropdown>
                     <MenuButton
                         slots={{ root: IconButton }}
@@ -74,9 +73,12 @@ const Header = ({
                         onClick={
                             anchorElNav ? handleCloseNavMenu : handleOpenNavMenu
                         }
+                        sx={{
+                            marginRight: "1.25rem",
+                            width: 40,
+                        }}
                         color="neutral"
                         size="md"
-                        className="ml-2"
                     >
                         <MenuIcon />
                     </MenuButton>
@@ -97,14 +99,26 @@ const Header = ({
                                 </PageLink>
                             </MenuItem>
                         ))}
-                        <MenuItem onClick={handleLogout as MouseEventHandler}>
-                            Logout
-                        </MenuItem>
+                        {mounted && userId ? (
+                            <MenuItem
+                                onClick={handleLogout as MouseEventHandler}
+                            >
+                                Logout
+                            </MenuItem>
+                        ) : (
+                            <></>
+                        )}
                     </Menu>
                 </Dropdown>
+                <DarkModeToggle />
             </Box>
 
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Box
+                sx={{
+                    display: { xs: "none", md: "flex" },
+                    alignItems: "center",
+                }}
+            >
                 {headerItems.map((item, key) => (
                     <PageLink
                         key={key}
@@ -118,7 +132,7 @@ const Header = ({
                         {item.name}
                     </PageLink>
                 ))}
-                {userId ? (
+                {mounted && userId ? (
                     <Button
                         sx={(theme) => ({
                             color: theme.palette.text.primary,

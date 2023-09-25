@@ -190,6 +190,9 @@ const theme = extendTheme({
             },
         },
         JoyButton: {
+            defaultProps: {
+                color: "primary",
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,

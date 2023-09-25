@@ -30,6 +30,7 @@ const Shared = ({
     <>
         <InputWrapper
             value$={email}
+            type="email"
             onChange={onEmailChange}
             muiOptions={{ required: true }}
             label="Email"
@@ -124,23 +125,30 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 })
                 .catch((err) => {
                     setAuth(false);
-                    const msg = err.response.data.msg;
+                    const msg =
+                        err.response != undefined
+                            ? err.response.data.msg
+                            : err.message;
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {
                         let shownMsg = msg;
-                        switch (err.response.status) {
-                            case 401:
-                                shownMsg = "Invalid email or password";
-                                break;
-                            case 500:
-                                shownMsg = "Something went wrong";
-                                break;
-                            default:
-                                shownMsg = msg;
-                                break;
+                        if (err.response != undefined) {
+                            switch (err.response.status) {
+                                case 401:
+                                    shownMsg = "Invalid email or password";
+                                    break;
+                                case 500:
+                                    shownMsg = "Something went wrong";
+                                    break;
+                                default:
+                                    shownMsg = msg;
+                                    break;
+                            }
                         }
-                        enqueueSnackbar(`${shownMsg}`, { variant: "error" });
+                        enqueueSnackbar(`Error: ${shownMsg}`, {
+                            variant: "error",
+                        });
                     }
                 });
         } else {
@@ -156,11 +164,14 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                     }
                 })
                 .catch((err) => {
-                    const msg = err.response.data.msg;
+                    const msg =
+                        err.response != undefined
+                            ? err.response.data.msg
+                            : err.message;
                     if (Array.isArray(msg)) {
                         updateErrors(msg);
                     } else {
-                        enqueueSnackbar(`${msg}`, { variant: "error" });
+                        enqueueSnackbar(`Error: ${msg}`, { variant: "error" });
                     }
                 });
         }
@@ -174,60 +185,32 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
         updatePassword(e.currentTarget.value);
     };
 
-    if (login) {
-        return (
-            <FormWrapper
-                className="my-20"
-                onSubmit={(e) => onSubmitDetails(e, "login")}
+    return (
+        <FormWrapper
+            className="my-28 sm:my-20"
+            onSubmit={(e) => onSubmitDetails(e, login ? "login" : "signup")}
+        >
+            <Shared
+                password={password}
+                email={formEmail}
+                onPasswordChange={onPasswordChange}
+                onEmailChange={onEmailChange}
+            />
+            {login ? <a href="#">Forgot Password</a> : <></>}
+            <Button
+                variant="solid"
+                sx={(theme) => ({
+                    color: theme.palette.text.primary,
+                    fontSize: "1.25rem",
+                    lineHeight: "1.75rem",
+                })}
+                type="submit"
             >
-                <Shared
-                    password={password}
-                    email={formEmail}
-                    onPasswordChange={onPasswordChange}
-                    onEmailChange={onEmailChange}
-                />
-                <a href="#">Forgot Password</a>
-                <Button
-                    variant="solid"
-                    sx={(theme) => ({
-                        color: theme.palette.text.primary,
-                        fontSize: "1.25rem",
-                        lineHeight: "1.75rem",
-                    })}
-                    type="submit"
-                >
-                    Login
-                </Button>
-                <ValidationFeedback errors={errors} />
-            </FormWrapper>
-        );
-    } else {
-        return (
-            <FormWrapper
-                className="my-20"
-                onSubmit={(e) => onSubmitDetails(e, "signup")}
-            >
-                <Shared
-                    password={password}
-                    email={formEmail}
-                    onPasswordChange={onPasswordChange}
-                    onEmailChange={onEmailChange}
-                />
-                <Button
-                    sx={(theme) => ({
-                        color: theme.palette.text.primary,
-                        fontSize: "1.25rem",
-                        lineHeight: "1.75rem",
-                    })}
-                    variant="solid"
-                    type="submit"
-                >
-                    Sign Up
-                </Button>
-                <ValidationFeedback errors={errors} />
-            </FormWrapper>
-        );
-    }
+                {login ? "Login" : "Sign Up"}
+            </Button>
+            <ValidationFeedback errors={errors} />
+        </FormWrapper>
+    );
 };
 
 export default DetailsPage;

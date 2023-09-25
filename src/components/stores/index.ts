@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { Budget, Category, User } from "../types";
+import { User } from "../types";
 
 type State = {
     user: User;
@@ -16,11 +16,11 @@ type Actions = {
     setAuth: (value: boolean) => void;
     setHasCreatedBudget: (value: boolean) => void;
 
-    updateUserCategories: (categories: Category[]) => void;
-    clearUserCategories: () => void;
-
-    updateUserBudgets: (budgets: Budget[]) => void;
-    clearUserBudgets: () => void;
+    // updateUserCategories: (categories: Category[]) => void;
+    // clearUserCategories: () => void;
+    //
+    // updateUserBudgets: (budgets: Budget[]) => void;
+    // clearUserBudgets: () => void;
 };
 
 const useStore = create<State & Actions>()(
@@ -33,8 +33,8 @@ const useStore = create<State & Actions>()(
                         id: null,
                         isAuthed: false,
                         hasCreatedBudget: false,
-                        categories: [],
-                        budgets: [],
+                        // categories: [],
+                        // budgets: [],
                     },
                     updateEmail: (email) =>
                         set((state) => {
@@ -59,8 +59,8 @@ const useStore = create<State & Actions>()(
                                 id: null,
                                 isAuthed: false,
                                 hasCreatedBudget: false,
-                                categories: [],
-                                budgets: [],
+                                // categories: [],
+                                // budgets: [],
                             };
                         }),
                     setAuth: (value) =>
@@ -71,24 +71,24 @@ const useStore = create<State & Actions>()(
                         set((state) => {
                             state.user.hasCreatedBudget = value;
                         }),
-
-                    updateUserCategories: (categories: Category[]) =>
-                        set((state) => {
-                            state.user.categories = categories;
-                        }),
-                    clearUserCategories: () =>
-                        set((state) => {
-                            state.user.categories = [];
-                        }),
-
-                    updateUserBudgets: (budgets: Budget[]) =>
-                        set((state) => {
-                            state.user.budgets = budgets;
-                        }),
-                    clearUserBudgets: () =>
-                        set((state) => {
-                            state.user.budgets = [];
-                        }),
+                    //
+                    // updateUserCategories: (categories: Category[]) =>
+                    //     set((state) => {
+                    //         state.user.categories = categories;
+                    //     }),
+                    // clearUserCategories: () =>
+                    //     set((state) => {
+                    //         state.user.categories = [];
+                    //     }),
+                    //
+                    // updateUserBudgets: (budgets: Budget[]) =>
+                    //     set((state) => {
+                    //         state.user.budgets = budgets;
+                    //     }),
+                    // clearUserBudgets: () =>
+                    //     set((state) => {
+                    //         state.user.budgets = [];
+                    //     }),
                 }),
                 {
                     name: "global-storage",

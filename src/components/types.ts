@@ -13,8 +13,8 @@ export interface User {
     id: string | null;
     isAuthed: boolean;
     hasCreatedBudget: boolean;
-    categories: Category[];
-    budgets: Budget[];
+    // categories: Category[];
+    // budgets: Budget[];
 }
 
 export interface UserDetails {
@@ -27,7 +27,7 @@ export interface UserDetails {
 
 export interface Budget {
     name: string;
-    id: number;
+    id: string;
     userId: string;
     dateAdded: Date;
     amount: number;
