@@ -1,4 +1,15 @@
-export const API_BASE = "http://localhost:10500";
+let HOST = "localhost";
+
+switch (process.env.NODE_ENV) {
+    case "development":
+        HOST = "localhost";
+        break;
+    case "production":
+        HOST = "localhost";
+        break;
+}
+
+export const API_BASE = `http://${HOST}:10500`;
 
 export const API_LOG_IN = "/auth/login";
 export const API_SIGN_UP = "/auth/signup";
