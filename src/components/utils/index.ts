@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+
 export const writeToLocalStore = (key: string, value: string) => {
     localStorage.setItem(key, JSON.stringify(value));
 };
@@ -37,4 +39,52 @@ export const isTokenExpired = (token: string) => {
 
 export const getDateString = (date: Date) => {
     return date.toISOString().split("T")[0];
+};
+
+export const addScrollProperty = () => {
+    window.addEventListener(
+        "scroll",
+        () => {
+            const windowPercent = scrollY / screen["availHeight"];
+            const windowPercentBound = 0.5;
+
+            const moveCondition = windowPercent >= windowPercentBound;
+            console.log({ scrollY, windowPercent });
+
+            const scrollVal = moveCondition
+                ? (scrollY - windowPercentBound * screen["availHeight"]) /
+                  innerHeight
+                : 0;
+
+            document.body.style.setProperty("--scroll", scrollVal.toString());
+        },
+        false,
+    );
+};
+
+export const useScrollEffect = (
+    setMounted: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+    const fn = () => {
+        const windowPercent = scrollY / screen["availHeight"];
+        const windowPercentBound = 0.5;
+
+        const moveCondition = windowPercent >= windowPercentBound;
+        console.log({ scrollY, windowPercent });
+
+        const scrollVal = moveCondition
+            ? (scrollY - windowPercentBound * screen["availHeight"]) /
+              innerHeight
+            : 0;
+
+        document.body.style.setProperty("--scroll", scrollVal.toString());
+    };
+
+    useEffect(() => {
+        setMounted(true);
+        window.addEventListener("scroll", fn);
+        return () => {
+            window.removeEventListener("scroll", fn);
+        };
+    }, []);
 };

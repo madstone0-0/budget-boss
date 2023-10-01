@@ -6,8 +6,6 @@
     display: flex;
     justify-content: center;
     height: 100%;
-    /* background-color: #1b232a; */
-    /* color: #fff; */
     font-family:
         Actor,
         Inter,
@@ -26,7 +24,7 @@
 
 a {
     /* Links */
-    color: #5ED5A8
+    color: #5ed5a8;
 }
 
 html {
@@ -44,3 +42,28 @@ input:focus-visible {
     /*  */
     outline: none;
 }
+
+.hide {
+    opacity: 0;
+    filter: blur(0.5rem);
+    transform: scale(0.9);
+    transition: all 0.5s;
+}
+
+.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+    transition: all 0.5s;
+}
+
+@media (preferres-reduced-motion) {
+    .hide {
+        transition: none;
+    }
+
+    .show {
+        transition: none;
+    }
+}
+

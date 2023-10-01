@@ -2,7 +2,7 @@
 import createCache from "@emotion/cache";
 import { useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import LoadingBar from "../LoadingBar";
 import {
     CssVarsProvider,
@@ -14,13 +14,14 @@ import { CssBaseline } from "@mui/joy";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { addScrollProperty } from "../utils";
 
 const theme = extendTheme({
     colorSchemes: {
         light: {
             palette: {
                 background: {
-                    body: "#fff",
+                    body: "#f2f3f4",
                 },
                 primary: {
                     "50": "#ecfdf5",
@@ -225,7 +226,18 @@ interface ThemeProps {
     children: React.ReactNode;
 }
 
-const Background = styled("div")(({}) => {
+const Background = styled("div")(({ theme }) => {
+    const [monuted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (monuted)
+        document.documentElement.style.setProperty(
+            "--joy-palette-background-body",
+            theme.palette.background.body,
+        );
+
     return {
         height: "100%",
     };
@@ -233,6 +245,7 @@ const Background = styled("div")(({}) => {
 
 const Theme = ({ children, options }: ThemeProps) => {
     const queryClient = new QueryClient();
+    const [mounted, setMounted] = useState(false);
 
     /* https://mui.com/joy-ui/integrations/next-js-app-router/ */
     /*eslint-disable @typescript-eslint/unbound-method*/
@@ -280,8 +293,8 @@ const Theme = ({ children, options }: ThemeProps) => {
 
     return (
         <>
+            <CssBaseline enableColorScheme />
             {getInitColorSchemeScript()}
-            <CssBaseline />
             <QueryClientProvider client={queryClient}>
                 <CacheProvider value={cache}>
                     <CssVarsProvider
@@ -293,9 +306,7 @@ const Theme = ({ children, options }: ThemeProps) => {
                     >
                         <SnackbarProvider maxSnack={4}>
                             <Background id="container">
-                                <div className="flex flex-col mx-5 sm:mx-10">
-                                    {children}
-                                </div>
+                                <div className="flex flex-col">{children}</div>
                             </Background>
                         </SnackbarProvider>
                     </CssVarsProvider>

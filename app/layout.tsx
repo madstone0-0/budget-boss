@@ -1,6 +1,8 @@
 import React from "react";
 import "./globals.css";
 import Theme from "../src/components/Theme";
+import { actor, inter } from "./fonts";
+import { addScrollProperty } from "@/components/utils";
 
 export default function RootLayout({
     children,
@@ -8,12 +10,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html suppressHydrationWarning={true} lang="en">
+        <html
+            className={`${inter.variable} ${actor.variable}`}
+            suppressHydrationWarning={true}
+            lang="en"
+        >
             <head>
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1.0"
-                />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
                     rel="preconnect"
@@ -27,6 +29,11 @@ export default function RootLayout({
                 <link
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css2?family=Actor:wght@300;400;500;600;700&display=swap"
+                />
+
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
                 />
                 <title>INVEBB</title>
             </head>
