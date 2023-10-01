@@ -20,6 +20,11 @@ const config: Config = {
     ],
     theme: {
         extend: {},
+        fontFamily: {
+            // sans: ["var(--font-inter)", "sans-serif"],
+            // actor: ["var(--font-actor)", "sans-serif"],
+            actor: ["Actor", "Inter", "sans-serif"],
+        },
     },
     plugins: [],
 };

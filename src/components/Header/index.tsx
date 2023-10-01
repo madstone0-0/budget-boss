@@ -1,5 +1,6 @@
 "use client";
 import { Box, Button, Dropdown, IconButton, MenuButton } from "@mui/joy";
+import { styled } from "@mui/joy/styles";
 
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import DarkModeToggle from "../DarkModeToggle";
@@ -13,11 +14,11 @@ import { ButtonChangeHandler, HeaderItem } from "../types.ts";
 import { deleteJWTCookie } from "../../../app/actions.ts";
 
 const Header = ({
-    mountedHeaderItems,
-    unMountedHeaderItems,
+    mountedHeaderItems = [],
+    unMountedHeaderItems = [],
 }: {
-    mountedHeaderItems: HeaderItem[];
-    unMountedHeaderItems: HeaderItem[];
+    mountedHeaderItems?: HeaderItem[];
+    unMountedHeaderItems?: HeaderItem[];
 }) => {
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
     const [mounted, setMounted] = useState<boolean>(false);
@@ -55,8 +56,41 @@ const Header = ({
         headerItems = mountedHeaderItems;
     }
 
+    const Background = styled("div")(({ theme }) => {
+        const [monuted, setMounted] = useState(false);
+        useEffect(() => {
+            setMounted(true);
+        }, []);
+
+        const result = {
+            backgroundColor: theme.palette.background.body,
+            padding: "1.0rem 1.5rem 1.0rem 1.5rem",
+            position: "sticky",
+            top: 0,
+            display: "flex",
+            width: "100%",
+            zIndex: 100,
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            flexShrink: 0,
+            boxShadow:
+                "0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12)",
+        };
+
+        if (mounted) {
+            const mql = window.matchMedia("(max-width: 640px)");
+
+            if (mql.matches.valueOf()) {
+                result.padding = "1.25rem 1.5rem 1.25rem 1.5rem";
+            }
+        }
+
+        return result;
+    });
+
     return (
-        <div className="sm:py-5 py-2  flex w-full leading=[1.8em] justify-between flex-row items-center shrink-0">
+        <Background>
             <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
             <Box
                 sx={{
@@ -64,52 +98,61 @@ const Header = ({
                     display: { xs: "flex", md: "none" },
                 }}
             >
-                <Dropdown>
-                    <MenuButton
-                        slots={{ root: IconButton }}
-                        slotProps={{
-                            root: { variant: "outlined", color: "neutral" },
-                        }}
-                        onClick={
-                            anchorElNav ? handleCloseNavMenu : handleOpenNavMenu
-                        }
-                        sx={{
-                            marginRight: "1.25rem",
-                            width: 40,
-                        }}
-                        color="neutral"
-                        size="md"
-                    >
-                        <MenuIcon />
-                    </MenuButton>
-                    <Menu
-                        open={Boolean(anchorElNav)}
-                        onClose={handleCloseNavMenu}
-                        sx={{
-                            display: { xs: "block", md: "none" },
-                        }}
-                        id="menu-header"
-                        keepMounted
-                        anchorEl={anchorElNav}
-                    >
-                        {headerItems.map((item, key) => (
-                            <MenuItem key={key} onClick={handleCloseNavMenu}>
-                                <PageLink href={item.href} passHref>
-                                    {item.name}
-                                </PageLink>
-                            </MenuItem>
-                        ))}
-                        {mounted && userId ? (
-                            <MenuItem
-                                onClick={handleLogout as MouseEventHandler}
-                            >
-                                Logout
-                            </MenuItem>
-                        ) : (
-                            <></>
-                        )}
-                    </Menu>
-                </Dropdown>
+                {headerItems.length > 0 ? (
+                    <Dropdown>
+                        <MenuButton
+                            slots={{ root: IconButton }}
+                            slotProps={{
+                                root: { variant: "outlined", color: "neutral" },
+                            }}
+                            onClick={
+                                anchorElNav
+                                    ? handleCloseNavMenu
+                                    : handleOpenNavMenu
+                            }
+                            sx={{
+                                marginRight: "1.25rem",
+                                width: 40,
+                            }}
+                            color="neutral"
+                            size="md"
+                        >
+                            <MenuIcon />
+                        </MenuButton>
+                        <Menu
+                            open={Boolean(anchorElNav)}
+                            onClose={handleCloseNavMenu}
+                            sx={{
+                                display: { xs: "block", md: "none" },
+                            }}
+                            id="menu-header"
+                            keepMounted
+                            anchorEl={anchorElNav}
+                        >
+                            {headerItems.map((item, key) => (
+                                <MenuItem
+                                    key={key}
+                                    onClick={handleCloseNavMenu}
+                                >
+                                    <PageLink href={item.href} passHref>
+                                        {item.name}
+                                    </PageLink>
+                                </MenuItem>
+                            ))}
+                            {mounted && userId ? (
+                                <MenuItem
+                                    onClick={handleLogout as MouseEventHandler}
+                                >
+                                    Logout
+                                </MenuItem>
+                            ) : (
+                                <></>
+                            )}
+                        </Menu>
+                    </Dropdown>
+                ) : (
+                    <></>
+                )}
                 <DarkModeToggle />
             </Box>
 
@@ -147,7 +190,7 @@ const Header = ({
                 )}
                 <DarkModeToggle />
             </Box>
-        </div>
+        </Background>
     );
 };
 

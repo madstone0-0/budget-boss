@@ -9,10 +9,7 @@ const Page = () => {
     ];
     return (
         <>
-            <Header
-                mountedHeaderItems={headerItems}
-                unMountedHeaderItems={headerItems}
-            />
+            <Header />
             <Hero />
         </>
     );
