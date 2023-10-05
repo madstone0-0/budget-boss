@@ -3,7 +3,6 @@ import "./globals.css";
 import Theme from "../src/components/Theme";
 import { actor, inter } from "./fonts";
 import type { Metadata } from "next";
-import * as gtag from "../lib/gtag";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
