@@ -2,7 +2,13 @@ import React from "react";
 import "./globals.css";
 import Theme from "../src/components/Theme";
 import { actor, inter } from "./fonts";
-import { addScrollProperty } from "@/components/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "INVEBB",
+    description:
+        "INVEBB provides access to financial education and investment opportunities to college students.",
+};
 
 export default function RootLayout({
     children,
@@ -30,7 +36,12 @@ export default function RootLayout({
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css2?family=Actor:wght@300;400;500;600;700&display=swap"
                 />
-
+                <link
+                    rel="icon"
+                    href="/icon?<generated>"
+                    type="image/<generated>"
+                    sizes="<generated>"
+                />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"

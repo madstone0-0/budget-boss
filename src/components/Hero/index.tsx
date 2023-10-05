@@ -95,7 +95,7 @@ const HeroPage = () => {
                 <HeroHeader className="m-5 text-2xl font-bold text-center rounded-md sm:text-2xl md:text-5xl">
                     Change the Way You Invest
                 </HeroHeader>
-                <div className="self-center mt-10 h-full bg-black rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"></div>
+                <div className="self-center mt-2 h-full bg-black rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"></div>
             </div>
             <div className="flex flex-col my-10">
                 {sectionItems.map((item, key) => (
