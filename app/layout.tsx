@@ -22,9 +22,6 @@ export default function RootLayout({
             suppressHydrationWarning={true}
             lang="en"
         >
-            <GoogleAnalytics
-                GA_TRACKING_ID={process.env.NEXT_PUBLIC_GA_ID || ""}
-            />
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
@@ -52,6 +49,9 @@ export default function RootLayout({
                 />
                 <title>INVEBB</title>
             </head>
+            <GoogleAnalytics
+                GA_TRACKING_ID={process.env.NEXT_PUBLIC_GA_ID || ""}
+            />
             <body suppressHydrationWarning={true}>
                 <Theme options={{ key: "joy" }}>{children}</Theme>
             </body>
