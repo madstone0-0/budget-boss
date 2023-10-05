@@ -373,7 +373,7 @@ const BudgetList = () => {
             />
             <Button
                 onClick={openModal}
-                variant="outlined"
+                variant="soft"
                 sx={{
                     position: "fixed",
                     right: "2.5rem",
@@ -381,6 +381,7 @@ const BudgetList = () => {
                     width: "5rem",
                     height: "5rem",
                     borderRadius: "0.75rem",
+                    zIndex: 2,
                 }}
             >
                 <Plus />

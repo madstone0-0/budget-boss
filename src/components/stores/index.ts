@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { User } from "../types";
+import { HeaderItem, User } from "../types";
 
 type State = {
     user: User;
+    landingHeaderItems: HeaderItem[];
 };
 
 type Actions = {
@@ -15,12 +16,6 @@ type Actions = {
     clearUser: () => void;
     setAuth: (value: boolean) => void;
     setHasCreatedBudget: (value: boolean) => void;
-
-    // updateUserCategories: (categories: Category[]) => void;
-    // clearUserCategories: () => void;
-    //
-    // updateUserBudgets: (budgets: Budget[]) => void;
-    // clearUserBudgets: () => void;
 };
 
 const useStore = create<State & Actions>()(
@@ -36,6 +31,12 @@ const useStore = create<State & Actions>()(
                         // categories: [],
                         // budgets: [],
                     },
+                    landingHeaderItems: [
+                        { name: "Home", href: "/" },
+                        { name: "Sign Up", href: "/signup" },
+                        { name: "Login", href: "/login" },
+                        { name: "About", href: "/about" },
+                    ],
                     updateEmail: (email) =>
                         set((state) => {
                             state.user.email = email;

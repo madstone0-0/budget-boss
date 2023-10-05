@@ -1,9 +1,12 @@
 import React from "react";
 import Hero from "../src/components/Hero";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Page = () => {
     const headerItems = [
+        { name: "Home", href: "/" },
+        { name: "About", href: "/about" },
         { name: "Sign Up", href: "/signup" },
         { name: "Login", href: "/login" },
     ];
@@ -14,6 +17,7 @@ const Page = () => {
                 unMountedHeaderItems={headerItems}
             />
             <Hero />
+            <Footer />
         </>
     );
 };

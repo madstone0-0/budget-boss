@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Budget, ButtonChangeHandler, Category, NewBudget } from "../types";
-import { Button } from "@mui/joy";
+import { Button, Chip } from "@mui/joy";
 import { getDateString } from "../utils";
 import BudgetModal from "../BudgetModal";
 import { UseMutationResult } from "react-query";
 import { AxiosResponse } from "axios";
+import { NumericFormat } from "react-number-format";
 
 interface BudgetSingleProps {
     // budget: {
@@ -48,18 +49,35 @@ const BudgetSingle = ({
     const [budgetDateAdded, setBudgetDateAdded] = useState<string>(
         getDateString(dateAdded),
     );
-    const [budgetCategory, setBudgetCategory] = useState<number | null>(
+    const [budgetCategoryId, setBudgetCategoryId] = useState<number | null>(
         categoryId,
     );
     const [budgetType, setBudgetType] = useState<"income" | "expense">(
         amount < 0 ? "expense" : "income",
     );
 
+    const getBudgetCategory = (id: number | null) => {
+        if (id == null) return null;
+        if (categories.length !== 0)
+            return categories.filter(
+                (category) => category.categoryId === id,
+            )[0];
+        return null;
+    };
+
+    const [budgetCategory, setBudgetCategory] = useState<Category | null>(
+        getBudgetCategory(budgetCategoryId),
+    );
+
+    useEffect(() => {
+        setBudgetCategory(getBudgetCategory(budgetCategoryId));
+    }, [categoryId, categories]);
+
     const resetBudget = () => {
         setBudgetName(name);
         setBudgetAmount(amount.toString());
         setBudgetDateAdded(getDateString(dateAdded));
-        setBudgetCategory(categoryId);
+        setBudgetCategoryId(categoryId);
         setBudgetType(budgetType);
     };
 
@@ -73,7 +91,7 @@ const BudgetSingle = ({
                     : -Math.abs(Number(budgetAmount)),
 
             dateAdded: new Date(budgetDateAdded),
-            categoryId: budgetCategory!,
+            categoryId: budgetCategoryId!,
         };
 
         return budget;
@@ -81,7 +99,9 @@ const BudgetSingle = ({
 
     const onEditBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        editMutation.mutate({ budget: generateBudget(), id: id });
+        const budget = generateBudget();
+        editMutation.mutate({ budget: budget, id: id });
+        setBudgetCategory(getBudgetCategory(budget.categoryId));
         setOpen(false);
     };
 
@@ -104,18 +124,35 @@ const BudgetSingle = ({
     return (
         <>
             <div className="flex flex-row justify-between">
-                <div className="flex flex-col items-center [&>*]:py-2">
+                <div className="flex w-max px-5 flex-col items-center [&>*]:py-2">
                     <h1 className="text-xl sm:text-3xl">{name}</h1>
-                    <p>
-                        {dateAdded.toLocaleDateString(undefined, {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                        })}
-                    </p>
+                    <div className="flex flex-row space-x-10">
+                        <p>
+                            {dateAdded.toLocaleDateString(undefined, {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                            })}
+                        </p>
+                        <Chip
+                            variant="soft"
+                            sx={{
+                                backgroundColor:
+                                    budgetCategory?.color || "#000",
+                            }}
+                        >
+                            {budgetCategory?.name || "Uncategorized"}
+                        </Chip>
+                    </div>
                 </div>
                 <div className="flex flex-col items-end [&>*]:py-2">
-                    <p className="text-xl">₵ {amount.toFixed(2)}</p>
+                    <NumericFormat
+                        className="text-xl sm:text-2xl"
+                        value={amount.toFixed(2)}
+                        displayType="text"
+                        thousandSeparator={true}
+                        prefix="₵ "
+                    />
                     <div className="flex flex-row justify-between w-40">
                         <Button variant="outlined" onClick={openModal}>
                             Edit
@@ -153,10 +190,12 @@ const BudgetSingle = ({
                         onChange: (e) => setBudgetDateAdded(e.target.value),
                     },
                     category: {
-                        value$: budgetCategory,
+                        value$: budgetCategoryId,
                         placeholder: "Select category",
                         label: "Category",
-                        onChange: (newVal) => setBudgetCategory(newVal),
+                        onChange: (newVal) => {
+                            setBudgetCategoryId(newVal);
+                        },
                         categories: categories,
                     },
                     type: {

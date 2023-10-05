@@ -1,5 +1,6 @@
-import React, { ReactNode, ReactElement } from "react";
-import { Modal, ModalClose, Box, Sheet, ModalDialog } from "@mui/joy";
+import React, { ReactNode } from "react";
+import { Transition } from "react-transition-group";
+import { Modal, ModalClose, ModalDialog } from "@mui/joy";
 import { ButtonChangeHandler } from "../types";
 
 const BaseModal = ({

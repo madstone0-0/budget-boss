@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@mui/joy";
+import { Button, CircularProgress } from "@mui/joy";
 import React, { useState } from "react";
 import FormWrapper from "../FormWrapper";
 import {
@@ -15,30 +15,35 @@ import { useSnackbar } from "notistack";
 import { createJWTCookie } from "../../../app/actions";
 import InputWrapper from "../InputWrapper";
 import Fetch from "../utils/Fetch";
+import Loading from "@/loading";
+import LoadingBar from "../LoadingBar";
 
 const Shared = ({
     onPasswordChange,
     onEmailChange,
     password,
     email,
+    isLoading = false,
 }: {
     onPasswordChange: InputChangeHandler;
     onEmailChange: InputChangeHandler;
     password: string;
     email: string;
+    isLoading?: boolean;
 }) => (
     <>
         <InputWrapper
             value$={email}
             type="email"
             onChange={onEmailChange}
-            muiOptions={{ required: true }}
+            muiOptions={{ required: true, disabled: isLoading }}
             label="Email"
             placeholder="Enter your email address"
         />
         <InputWrapper
             muiOptions={{
                 required: true,
+                disabled: isLoading,
             }}
             value$={password}
             onChange={onPasswordChange}
@@ -83,11 +88,13 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
     const [formEmail, updateFormEmail] = useState<string>("");
     const [rememberMe, updateRemeberState] = useState<boolean>(false);
     const [errors, updateErrors] = useState<ValidationResponse[]>([]);
+    const [loading, isLoading] = useState<boolean>(false);
 
     const detailFetch = new Fetch();
 
     const onSubmitDetails = (e: React.FormEvent, type: "login" | "signup") => {
         e.preventDefault();
+        isLoading(true);
         const user: NewUser = {
             email: formEmail,
             password: password,
@@ -110,6 +117,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                             hasCreatedBudget,
                         } = res.data.userDetails;
                         router.push(`/home/${id}`);
+
                         updateErrors([]);
 
                         await createJWTCookie("token", accessToken);
@@ -121,6 +129,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         enqueueSnackbar("Successfully logged in", {
                             variant: "success",
                         });
+                        isLoading(false);
                     }
                 })
                 .catch((err) => {
@@ -149,21 +158,24 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         enqueueSnackbar(`Error: ${shownMsg}`, {
                             variant: "error",
                         });
+                        isLoading(false);
                     }
                 });
         } else {
             detailFetch
                 .post(API_SIGN_UP, user)
                 .then((res) => {
+                    isLoading(false);
                     enqueueSnackbar("Successfully signed up", {
                         variant: "success",
                     });
 
                     if (res.status == 200) {
-                        router.replace("/login");
+                        router.push("/login");
                     }
                 })
                 .catch((err) => {
+                    isLoading(false);
                     const msg =
                         err.response != undefined
                             ? err.response.data.msg
@@ -195,19 +207,35 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 email={formEmail}
                 onPasswordChange={onPasswordChange}
                 onEmailChange={onEmailChange}
+                isLoading={loading}
             />
             {login ? <a href="#">Forgot Password</a> : <></>}
-            <Button
-                variant="solid"
-                sx={(theme) => ({
-                    color: theme.palette.text.primary,
-                    fontSize: "1.25rem",
-                    lineHeight: "1.75rem",
-                })}
-                type="submit"
-            >
-                {login ? "Login" : "Sign Up"}
-            </Button>
+            {!loading ? (
+                <Button
+                    variant="solid"
+                    sx={(theme) => ({
+                        color: theme.palette.text.primary,
+                        fontSize: "1.25rem",
+                        lineHeight: "1.75rem",
+                    })}
+                    type="submit"
+                >
+                    {login ? "Login" : "Sign Up"}
+                </Button>
+            ) : (
+                <Button
+                    startDecorator={<CircularProgress variant="solid" />}
+                    sx={(theme) => ({
+                        color: theme.palette.text.primary,
+                        fontSize: "1.25rem",
+                        lineHeight: "1.75rem",
+                    })}
+                    variant="solid"
+                    disabled
+                >
+                    Loading
+                </Button>
+            )}
             <ValidationFeedback errors={errors} />
         </FormWrapper>
     );

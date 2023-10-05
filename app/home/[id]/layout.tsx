@@ -27,7 +27,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
                 mountedHeaderItems={headerItemsMounted}
                 unMountedHeaderItems={headerItemsUnMounted}
             />
-            <div className="mx-5 sm:mx-10">
+            <div className="my-2 mx-5 sm:my-5 sm:mx-10">
                 <Suspense fallback={<LoadingBar />}>{children}</Suspense>
             </div>
         </>

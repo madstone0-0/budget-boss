@@ -1,6 +1,6 @@
 "use client";
 import { Box, Button, Dropdown, IconButton, MenuButton } from "@mui/joy";
-import { styled } from "@mui/joy/styles";
+import { styled } from "@mui/system";
 
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import DarkModeToggle from "../DarkModeToggle";
@@ -36,13 +36,14 @@ const Header = ({
     };
 
     const handleLogout: ButtonChangeHandler = (e) => {
-        router.replace("/");
         e.preventDefault();
         clearUser();
         (async () => {
             await deleteJWTCookie("token");
             await deleteJWTCookie("refreshToken");
         })().catch((err) => console.log(err));
+        router.prefetch("/");
+        router.replace("/");
     };
 
     useEffect(() => {
@@ -56,38 +57,20 @@ const Header = ({
         headerItems = mountedHeaderItems;
     }
 
-    const Background = styled("div")(({ theme }) => {
-        const [monuted, setMounted] = useState(false);
-        useEffect(() => {
-            setMounted(true);
-        }, []);
-
-        const result = {
-            backgroundColor: theme.palette.background.body,
-            padding: "1.0rem 1.5rem 1.0rem 1.5rem",
-            position: "sticky",
-            top: 0,
-            display: "flex",
-            width: "100%",
-            zIndex: 100,
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexDirection: "row",
-            flexShrink: 0,
-            boxShadow:
-                "0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12)",
-        };
-
-        if (mounted) {
-            const mql = window.matchMedia("(max-width: 640px)");
-
-            if (mql.matches.valueOf()) {
-                result.padding = "1.25rem 1.5rem 1.25rem 1.5rem";
-            }
-        }
-
-        return result;
-    });
+    const Background = styled("div")(({ theme }) => ({
+        backgroundColor: theme.palette.background.body,
+        padding: "1.0rem 1.5rem 1.0rem 1.5rem",
+        position: "sticky",
+        top: 0,
+        display: "flex",
+        width: "100%",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row",
+        flexShrink: 0,
+        boxShadow:
+            "0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12)",
+    }));
 
     return (
         <Background>
@@ -103,7 +86,7 @@ const Header = ({
                         <MenuButton
                             slots={{ root: IconButton }}
                             slotProps={{
-                                root: { variant: "outlined", color: "neutral" },
+                                root: { variant: "outlined", color: "primary" },
                             }}
                             onClick={
                                 anchorElNav

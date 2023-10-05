@@ -61,7 +61,7 @@ const HeroSection = ({
     return (
         <div
             ref={ref}
-            className={`flex md:flex-row min-w-[100vw] md:align-middle items-center justify-center min-h-[80vh] md:min-h-[100vh] space-y-10 md:space-x-20 flex-col p-5 md:px-20 ${
+            className={`flex -z-10 md:flex-row min-w-[100vw] md:align-middle items-center justify-center min-h-[80vh] md:min-h-[100vh] space-y-10 md:space-x-20 flex-col p-5 md:px-20 ${
                 isVisible ? "show" : "hide"
                 // ""
             }`}

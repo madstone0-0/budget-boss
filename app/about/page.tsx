@@ -1,6 +1,5 @@
-import React from "react";
-import DetailsPage from "@/components/DetailsPage";
 import Header from "@/components/Header";
+import React from "react";
 
 const Page = () => {
     const headerItems = [
@@ -9,13 +8,16 @@ const Page = () => {
         { name: "Sign Up", href: "/signup" },
         { name: "Login", href: "/login" },
     ];
+
     return (
         <>
             <Header
                 mountedHeaderItems={headerItems}
                 unMountedHeaderItems={headerItems}
             />
-            <DetailsPage />
+            <div className="flex flex-col my-2 mx-5 sm:my-5 sm:mx-10">
+                <h1 className="text-5xl font-bold text-center">Our vision</h1>
+            </div>
         </>
     );
 };
