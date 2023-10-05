@@ -3,6 +3,8 @@ import "./globals.css";
 import Theme from "../src/components/Theme";
 import { actor, inter } from "./fonts";
 import type { Metadata } from "next";
+import * as gtag from "../lib/gtag";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
     title: "INVEBB",
@@ -21,6 +23,9 @@ export default function RootLayout({
             suppressHydrationWarning={true}
             lang="en"
         >
+            <GoogleAnalytics
+                GA_TRACKING_ID={process.env.NEXT_PUBLIC_GA_ID || ""}
+            />
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
