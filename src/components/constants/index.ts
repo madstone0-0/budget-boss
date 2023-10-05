@@ -1,15 +1,18 @@
-let HOST = "localhost";
+let HOST = "";
 
 switch (process.env.NODE_ENV) {
     case "development":
-        HOST = "localhost";
+        HOST = "http://localhost:10500";
         break;
     case "production":
-        HOST = "localhost";
+        HOST = "https://budget-boss-backend.onrender.com";
+        break;
+    default:
+        HOST = "http://localhost:10500";
         break;
 }
 
-export const API_BASE = `http://${HOST}:10500`;
+export const API_BASE = `${HOST}`;
 
 export const API_LOG_IN = "/auth/login";
 export const API_SIGN_UP = "/auth/signup";
