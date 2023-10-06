@@ -1,6 +1,6 @@
 "use client";
 import createCache from "@emotion/cache";
-import { useServerInsertedHTML } from "next/navigation";
+import { useRouter, useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
 import React, { Suspense, useEffect, useState } from "react";
 import LoadingBar from "../LoadingBar";
@@ -15,6 +15,7 @@ import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { addScrollProperty } from "../utils";
+import useStore from "../stores";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -228,9 +229,19 @@ interface ThemeProps {
 
 const Background = styled("div")(({ theme }) => {
     const [monuted, setMounted] = useState(false);
+    const { isAuthed, id } = useStore((state) => state.user);
+    const router = useRouter();
+
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (id != "" && !isAuthed) {
+            router.prefetch("/login");
+            router.replace("/login");
+        }
+    }, [isAuthed]);
 
     if (monuted)
         document.documentElement.style.setProperty(
