@@ -57,6 +57,23 @@ input:focus-visible {
     transition: all 0.5s;
 }
 
+.category-modal .react-colorful {
+    width: 100%;
+}
+
+.category-modal .hex-input {
+    /*  */
+    border-radius: 1rem;
+}
+
+.category-modal .hex-input:focus-visible {
+    border-color: var(--joy-palette-primary-500);
+}
+
+.category-modal .hex-input &::before {
+    transition: box-shadow 0.15s ease-in-out;
+}
+
 @media (preferres-reduced-motion) {
     .hide {
         transition: none;
@@ -66,4 +83,3 @@ input:focus-visible {
         transition: none;
     }
 }
-

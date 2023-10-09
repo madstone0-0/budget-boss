@@ -57,7 +57,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier-plugin-tailwindcss", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:0.5.4"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"],\
-            ["react-color", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:2.19.3"],\
+            ["react-colorful", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.6.1"],\
             ["react-dom", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:18.2.0"],\
             ["react-number-format", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.3.1"],\
             ["react-query", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:3.39.3"],\
@@ -518,28 +518,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@humanwhocodes-object-schema-npm-1.2.1-eb622b5d0e-a824a1ec31.zip/node_modules/@humanwhocodes/object-schema/",\
           "packageDependencies": [\
             ["@humanwhocodes/object-schema", "npm:1.2.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@icons/material", [\
-        ["npm:0.2.4", {\
-          "packageLocation": "./.yarn/cache/@icons-material-npm-0.2.4-7c2363ec33-24baa360cb.zip/node_modules/@icons/material/",\
-          "packageDependencies": [\
-            ["@icons/material", "npm:0.2.4"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:0.2.4", {\
-          "packageLocation": "./.yarn/__virtual__/@icons-material-virtual-2dd786b8ea/0/cache/@icons-material-npm-0.2.4-7c2363ec33-24baa360cb.zip/node_modules/@icons/material/",\
-          "packageDependencies": [\
-            ["@icons/material", "virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:0.2.4"],\
-            ["@types/react", "npm:18.2.21"],\
-            ["react", "npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2183,7 +2161,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier-plugin-tailwindcss", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:0.5.4"],\
             ["prop-types", "npm:15.8.1"],\
             ["react", "npm:18.2.0"],\
-            ["react-color", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:2.19.3"],\
+            ["react-colorful", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.6.1"],\
             ["react-dom", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:18.2.0"],\
             ["react-number-format", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.3.1"],\
             ["react-query", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:3.39.3"],\
@@ -4371,15 +4349,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["lodash-es", [\
-        ["npm:4.17.21", {\
-          "packageLocation": "./.yarn/cache/lodash-es-npm-4.17.21-b45832dfce-05cbffad6e.zip/node_modules/lodash-es/",\
-          "packageDependencies": [\
-            ["lodash-es", "npm:4.17.21"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["lodash.merge", [\
         ["npm:4.6.2", {\
           "packageLocation": "./.yarn/cache/lodash.merge-npm-4.6.2-77cb4416bf-ad580b4bdb.zip/node_modules/lodash.merge/",\
@@ -4485,15 +4454,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["match-sorter", "npm:6.3.1"],\
             ["@babel/runtime", "npm:7.22.15"],\
             ["remove-accents", "npm:0.4.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["material-colors", [\
-        ["npm:1.2.6", {\
-          "packageLocation": "./.yarn/cache/material-colors-npm-1.2.6-38f7e3d1c1-72d005cccc.zip/node_modules/material-colors/",\
-          "packageDependencies": [\
-            ["material-colors", "npm:1.2.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5458,30 +5418,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["react-color", [\
-        ["npm:2.19.3", {\
-          "packageLocation": "./.yarn/cache/react-color-npm-2.19.3-d63f96d772-40b49e1aa2.zip/node_modules/react-color/",\
+      ["react-colorful", [\
+        ["npm:5.6.1", {\
+          "packageLocation": "./.yarn/cache/react-colorful-npm-5.6.1-ba0c706357-e432b7cb0d.zip/node_modules/react-colorful/",\
           "packageDependencies": [\
-            ["react-color", "npm:2.19.3"]\
+            ["react-colorful", "npm:5.6.1"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:2.19.3", {\
-          "packageLocation": "./.yarn/__virtual__/react-color-virtual-4fc14c78bd/0/cache/react-color-npm-2.19.3-d63f96d772-40b49e1aa2.zip/node_modules/react-color/",\
+        ["virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.6.1", {\
+          "packageLocation": "./.yarn/__virtual__/react-colorful-virtual-78fe708a6b/0/cache/react-colorful-npm-5.6.1-ba0c706357-e432b7cb0d.zip/node_modules/react-colorful/",\
           "packageDependencies": [\
-            ["react-color", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:2.19.3"],\
-            ["@icons/material", "virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:0.2.4"],\
+            ["react-colorful", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:5.6.1"],\
             ["@types/react", "npm:18.2.21"],\
-            ["lodash", "npm:4.17.21"],\
-            ["lodash-es", "npm:4.17.21"],\
-            ["material-colors", "npm:1.2.6"],\
-            ["prop-types", "npm:15.8.1"],\
+            ["@types/react-dom", "npm:18.2.7"],\
             ["react", "npm:18.2.0"],\
-            ["reactcss", "virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:1.2.3"],\
-            ["tinycolor2", "npm:1.6.0"]\
+            ["react-dom", "virtual:a1eac5fd9d3bdf48708575b153398098dee916fa7ad2b1592db162b24aa58c1ac61bcf4e5fd15e81df8bf503891698065283525ffd3bdcdf09902dc4c9cc4e02#npm:18.2.0"]\
           ],\
           "packagePeers": [\
+            "@types/react-dom",\
             "@types/react",\
+            "react-dom",\
             "react"\
           ],\
           "linkType": "HARD"\
@@ -5708,29 +5665,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/react-dom",\
             "@types/react",\
             "react-dom",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["reactcss", [\
-        ["npm:1.2.3", {\
-          "packageLocation": "./.yarn/cache/reactcss-npm-1.2.3-16f7947bcd-c53e386a08.zip/node_modules/reactcss/",\
-          "packageDependencies": [\
-            ["reactcss", "npm:1.2.3"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:1.2.3", {\
-          "packageLocation": "./.yarn/__virtual__/reactcss-virtual-e0fc9f738e/0/cache/reactcss-npm-1.2.3-16f7947bcd-c53e386a08.zip/node_modules/reactcss/",\
-          "packageDependencies": [\
-            ["reactcss", "virtual:4fc14c78bd6b30277c373791ac2742a7f1cfedca7b4131513ff822488a533a44f4802da2e5bf9d80c415311554dca7376ca54a0455ac0f127947142c729e9578#npm:1.2.3"],\
-            ["@types/react", "npm:18.2.21"],\
-            ["lodash", "npm:4.17.21"],\
-            ["react", "npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
             "react"\
           ],\
           "linkType": "HARD"\
@@ -6425,15 +6359,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["thenify-all", "npm:1.6.0"],\
             ["thenify", "npm:3.3.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["tinycolor2", [\
-        ["npm:1.6.0", {\
-          "packageLocation": "./.yarn/cache/tinycolor2-npm-1.6.0-8df41252c6-6df4d07fce.zip/node_modules/tinycolor2/",\
-          "packageDependencies": [\
-            ["tinycolor2", "npm:1.6.0"]\
           ],\
           "linkType": "HARD"\
         }]\

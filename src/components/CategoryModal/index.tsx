@@ -4,6 +4,7 @@ import BaseModal from "../BaseModal";
 import FormWrapper from "../FormWrapper";
 import { Button, DialogTitle } from "@mui/joy";
 import InputWrapper from "../InputWrapper";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 
 interface CategoryModalProps {
     open: boolean;
@@ -14,7 +15,10 @@ interface CategoryModalProps {
     options: {
         modalTitle: string;
         name: Value<string>;
-        color: Value<string>;
+        color: {
+            value: string;
+            onChange: (value: string) => void;
+        };
     };
 }
 
@@ -29,7 +33,7 @@ const CategoryModal = ({
     const { modalTitle, name, color } = options;
 
     return (
-        <BaseModal open={open} onClose={onClose}>
+        <BaseModal className="category-modal" open={open} onClose={onClose}>
             <DialogTitle>{modalTitle}</DialogTitle>
             <FormWrapper onSubmit={onSubmit}>
                 <InputWrapper
@@ -37,10 +41,14 @@ const CategoryModal = ({
                     muiOptions={{ required: true }}
                     labelClassName="text-sm"
                 />
-                <InputWrapper
-                    {...color}
-                    muiOptions={{ required: true }}
-                    labelClassName="text-sm"
+                <HexColorPicker
+                    color={color.value}
+                    onChange={(c) => color.onChange(c)}
+                />
+                <HexColorInput
+                    className="self-center text-center text-base min-h-[2.5rem] hex-input sm:text-xl p-2 bg-[var(--color-background)] rounded-md"
+                    color={color.value}
+                    onChange={(c) => color.onChange(c)}
                 />
                 <Button
                     loading={buttonLoading}

@@ -403,7 +403,13 @@ const BudgetList = () => {
         }
     };
 
-    if (budgetQuery.isLoading || categoryQuery.isLoading) return <LoadingBar />;
+    if (
+        budgetQuery.isLoading ||
+        budgetQuery.isFetching ||
+        categoryQuery.isLoading ||
+        categoryQuery.isFetching
+    )
+        return <LoadingBar />;
 
     if (budgetQuery.isError && budgetQuery.error != null) {
         if (
@@ -432,7 +438,7 @@ const BudgetList = () => {
         <div>
             {budgetQuery.data?.budgets != null &&
             budgetQuery.data?.budgets.length != 0 ? (
-                <div className="flex flex-col justify-center">
+                <div className="flex flex-col justify-center items-center">
                     <BudgetPie
                         budgets={budgetQuery.data?.budgets}
                         categories={

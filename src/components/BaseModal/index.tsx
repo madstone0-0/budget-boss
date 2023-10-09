@@ -7,13 +7,16 @@ const BaseModal = ({
     open,
     onClose,
     children,
+    className = "",
 }: {
     open: boolean;
     onClose: ButtonChangeHandler;
     children: ReactNode;
+    className?: string;
 }) => {
     return (
         <Modal
+            className={className}
             aria-labelledby="modal-title"
             aria-describedby="modal-desc"
             open={open}

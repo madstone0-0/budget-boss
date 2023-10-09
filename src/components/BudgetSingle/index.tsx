@@ -124,7 +124,7 @@ const BudgetSingle = ({
 
     return (
         <>
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between w-full sm:w-[75vw]">
                 <div className="flex w-max px-2 sm:px-5 flex-col items-center [&>*]:py-2">
                     <h1 className="text-lg sm:text-3xl">{name}</h1>
                     <div className="flex flex-row space-x-4 sm:space-x-10">

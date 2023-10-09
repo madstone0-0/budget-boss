@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import {
     Budget,
     ButtonChangeHandler,
@@ -10,9 +10,10 @@ import { AxiosResponse } from "axios";
 import { UseBaseMutationResult } from "react-query";
 import { Chip, Button, IconButton } from "@mui/joy";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { Plus } from "lucide-react";
+import { Plus, Pencil, Trash } from "lucide-react";
 import useStore from "../stores";
 import CategoryModal from "../CategoryModal";
+import CategorySingle from "../CategorySingle";
 
 interface BudgetPieProps {
     categories: Category[];
@@ -47,18 +48,19 @@ const BudgetPie = ({
     const { editMutation, deleteMutation, addMutation } = categoryMutations;
     const [series, setSeries] = useState<Series>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [mode, toggleMode] = useReducer((mode) => !mode, true);
 
     const userId = useStore((state) => state.user.id);
 
     const [name, setName] = useState<string>("");
-    const [color, setColor] = useState<string>("");
+    const [color, setColor] = useState<string>("#000");
 
-    const openModal: ButtonChangeHandler = (e) => {
+    const openModal: React.MouseEventHandler = (e) => {
         e.preventDefault();
         setOpen(true);
     };
 
-    const closeModal: ButtonChangeHandler = (e) => {
+    const closeModal: React.MouseEventHandler = (e) => {
         e.preventDefault();
         setOpen(false);
     };
@@ -99,21 +101,12 @@ const BudgetPie = ({
         closeModal(e);
     };
 
-    const onDeleteCategory = (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-        id: string,
-    ) => {
-        e.preventDefault();
-        deleteMutation.mutate(id);
-        closeModal(e);
-    };
-
     return (
         <>
-            <div className="flex flex-col items-center self-center w-[80vw] h-[50vh]">
+            <div className="flex flex-col items-center self-center mb-5 sm:mb=10 w-[100vw] h-[40vh]">
                 <div className="w-full h-full -z-10">
                     <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={800} height={400}>
+                        <PieChart width={1000} height={500}>
                             <Pie
                                 data={series}
                                 innerRadius={50}
@@ -132,24 +125,18 @@ const BudgetPie = ({
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex overflow-x-scroll flex-row space-x-5">
+                <div className="flex flex-row flex-wrap space-x-2 sm:space-x-5">
+                    <IconButton variant="soft" onClick={toggleMode}>
+                        {mode ? <Pencil /> : <Trash />}
+                    </IconButton>
                     {categories.map((category, key) => (
-                        <Chip
-                            // onClick={(e) =>
-                            //     onDeleteCategory(
-                            //         e,
-                            //         category.categoryId.toString(),
-                            //     )
-                            // }
-                            variant="soft"
-                            sx={{
-                                backgroundColor: category.color,
-                                fontSize: "1.5rem",
-                            }}
+                        <CategorySingle
                             key={key}
-                        >
-                            {category.name}
-                        </Chip>
+                            mode={mode}
+                            category={category}
+                            editMutation={editMutation}
+                            deleteMutation={deleteMutation}
+                        />
                     ))}
                     <IconButton variant="soft" onClick={openModal}>
                         <Plus />
@@ -171,10 +158,8 @@ const BudgetPie = ({
                         onChange: (e) => setName(e.target.value),
                     },
                     color: {
-                        label: "Color",
-                        placeholder: "#FFFFFF",
-                        value$: color,
-                        onChange: (e) => setColor(e.target.value),
+                        value: color,
+                        onChange: (color) => setColor(color),
                     },
                 }}
             />
