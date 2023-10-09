@@ -1,6 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Budget, ButtonChangeHandler, Category, NewBudget } from "../types";
+import {
+    Budget,
+    ButtonChangeHandler,
+    Category,
+    NewBudget,
+    NewCategory,
+} from "../types";
 import { Button } from "@mui/joy";
 import { Plus } from "lucide-react";
 import { getDateString } from "../utils";
@@ -8,13 +14,15 @@ import { fetch } from "../utils/Fetch";
 import useStore from "../stores";
 import {
     API_ADD_BUDGET,
+    API_ADD_CATEGORY,
     API_DELETE_BUDGET,
+    API_DELETE_CATEGORY,
     API_GET_ALL_BUDGETS,
     API_GET_ALL_CATEGORY,
     API_UPDATE_BUDGET,
+    API_UPDATE_CATEGORY,
 } from "../constants";
 import { useSnackbar } from "notistack";
-import { NumericFormat } from "react-number-format";
 import { getJWTCookie } from "../../../app/actions";
 import Unauthorized from "../utils/Unauthorized";
 import { useQueryClient, useQuery, useMutation, QueryKey } from "react-query";
@@ -22,6 +30,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import LoadingBar from "../LoadingBar";
 import BudgetModal from "../BudgetModal";
 import BudgetSingle from "../BudgetSingle";
+import BudgetPie from "../BudgetPie";
 
 declare module "react-query" {
     interface Register {
@@ -107,6 +116,24 @@ const BudgetList = () => {
         throw Error("Cannot get jwt token");
     };
 
+    const postCategories = async (category: NewCategory) => {
+        const token = await getJWTCookie("token");
+
+        if (token !== undefined) {
+            const res = await fetch.post<{ msg: string }>(
+                `${API_ADD_CATEGORY}${user.id}`,
+                category,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.value}`,
+                    },
+                },
+            );
+            return res;
+        }
+        throw Error("Cannot get jwt token");
+    };
+
     const putBudgets = async ({
         budget,
         id,
@@ -115,12 +142,35 @@ const BudgetList = () => {
         id: string;
     }) => {
         const token = await getJWTCookie("token");
-        console.log({ budget });
 
         if (token !== undefined) {
             const res = await fetch.put<{ msg: string }>(
                 `${API_UPDATE_BUDGET}${id}`,
                 budget,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.value}`,
+                    },
+                },
+            );
+            return res;
+        }
+        throw Error("Cannot get jwt token");
+    };
+
+    const putCategories = async ({
+        category,
+        id,
+    }: {
+        category: NewCategory;
+        id: string;
+    }) => {
+        const token = await getJWTCookie("token");
+
+        if (token !== undefined) {
+            const res = await fetch.put<{ msg: string }>(
+                `${API_UPDATE_CATEGORY}${id}`,
+                category,
                 {
                     headers: {
                         Authorization: `Bearer ${token.value}`,
@@ -149,9 +199,25 @@ const BudgetList = () => {
         throw Error("Cannot get jwt token");
     };
 
+    const deleteCategories = async (id: string) => {
+        const token = await getJWTCookie("token");
+
+        if (token !== undefined) {
+            const res = await fetch.delete<{ msg: string }>(
+                `${API_DELETE_CATEGORY}${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.value}`,
+                    },
+                },
+            );
+            return res;
+        }
+        throw Error("Cannot get jwt token");
+    };
+
     const doOnError = (err: unknown, feebackFn: (msg: string) => void) => {
         console.log({ err });
-        setAuth(false);
         let err_msg = "";
         if (err instanceof AxiosError) {
             err_msg = JSON.stringify(err.response?.data.msg);
@@ -188,6 +254,53 @@ const BudgetList = () => {
             ),
     });
 
+    const budgetAddMutation = useMutation({
+        mutationFn: postBudgets,
+        onSuccess: async (res) => {
+            const msg = res.data.msg;
+            enqueueSnackbar(msg, { variant: "success" });
+            setOpen(false);
+            resetBudget();
+            await queryClient.invalidateQueries({ queryKey: "budgets" });
+        },
+        onError: (err) =>
+            doOnError(err, (msg) =>
+                enqueueSnackbar(`Failed to add budget: ${msg}`, {
+                    variant: "error",
+                }),
+            ),
+    });
+
+    const budgetEditMutation = useMutation({
+        mutationFn: putBudgets,
+        onSuccess: async (res) => {
+            const msg = res.data.msg;
+            enqueueSnackbar(msg, { variant: "success" });
+            await queryClient.invalidateQueries({ queryKey: "budgets" });
+        },
+        onError: (err) =>
+            doOnError(err, (msg) => {
+                enqueueSnackbar(`Failed to edit budget: ${msg}`, {
+                    variant: "error",
+                });
+            }),
+    });
+
+    const budgetDeleteMutation = useMutation({
+        mutationFn: deleteBudgets,
+        onSuccess: async (res) => {
+            const msg = res.data.msg;
+            enqueueSnackbar(msg, { variant: "success" });
+            await queryClient.invalidateQueries({ queryKey: "budgets" });
+        },
+        onError: (err) =>
+            doOnError(err, (msg) => {
+                enqueueSnackbar(`Failed to delete budget: ${msg}`, {
+                    variant: "error",
+                });
+            }),
+    });
+
     const categoryQuery = useQuery({
         queryKey: "categories",
         queryFn: getCategories,
@@ -199,45 +312,46 @@ const BudgetList = () => {
             ),
     });
 
-    const budgetAddMutation = useMutation(postBudgets, {
+    const categoryAddMutation = useMutation({
+        mutationFn: postCategories,
         onSuccess: async (res) => {
             const msg = res.data.msg;
             enqueueSnackbar(msg, { variant: "success" });
-            setOpen(false);
-            resetBudget();
-            await queryClient.invalidateQueries("budgets");
-        },
-        onError: (err) =>
-            doOnError(err, (msg) =>
-                enqueueSnackbar(`Failed to add budget: ${msg}`, {
-                    variant: "error",
-                }),
-            ),
-    });
-
-    const budgetEditMutation = useMutation(putBudgets, {
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries("budgets");
+            await queryClient.invalidateQueries({ queryKey: "categories" });
         },
         onError: (err) =>
             doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to edit budget: ${msg}`, {
+                enqueueSnackbar(`Failed to add category: ${msg}`, {
                     variant: "error",
                 });
             }),
     });
 
-    const budgetDeleteMutation = useMutation(deleteBudgets, {
+    const categoryEditMutation = useMutation({
+        mutationFn: putCategories,
         onSuccess: async (res) => {
             const msg = res.data.msg;
             enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries("budgets");
+            await queryClient.invalidateQueries({ queryKey: "categories" });
         },
         onError: (err) =>
             doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to delete budget: ${msg}`, {
+                enqueueSnackbar(`Failed to edit category: ${msg}`, {
+                    variant: "error",
+                });
+            }),
+    });
+
+    const categoryDeleteMutation = useMutation({
+        mutationFn: deleteCategories,
+        onSuccess: async (res) => {
+            const msg = res.data.msg;
+            enqueueSnackbar(msg, { variant: "success" });
+            await queryClient.invalidateQueries({ queryKey: "categories" });
+        },
+        onError: (err) =>
+            doOnError(err, (msg) => {
+                enqueueSnackbar(`Failed to delete category: ${msg}`, {
                     variant: "error",
                 });
             }),
@@ -271,15 +385,25 @@ const BudgetList = () => {
             categoryId: budgetCategory!,
         };
 
+        console.log({ budget });
         return budget;
     };
 
     const onAddBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        budgetAddMutation.mutate(generateBudget());
+        if (
+            ![budgetName, budgetDateAdded, budgetAmount].some(
+                (item) => item == "",
+            ) ||
+            budgetCategory != null
+        ) {
+            budgetAddMutation.mutate(generateBudget());
+        } else {
+            enqueueSnackbar("Missing fields", { variant: "error" });
+        }
     };
 
-    if (budgetQuery.isLoading) return <LoadingBar />;
+    if (budgetQuery.isLoading || categoryQuery.isLoading) return <LoadingBar />;
 
     if (budgetQuery.isError && budgetQuery.error != null) {
         if (
@@ -308,23 +432,38 @@ const BudgetList = () => {
         <div>
             {budgetQuery.data?.budgets != null &&
             budgetQuery.data?.budgets.length != 0 ? (
-                budgetQuery.data?.budgets.map((budget) => (
-                    <BudgetSingle
-                        key={budget.id}
-                        budget={budget}
+                <div className="flex flex-col justify-center">
+                    <BudgetPie
+                        budgets={budgetQuery.data?.budgets}
                         categories={
                             categoryQuery.data?.categories
                                 ? categoryQuery.data.categories
                                 : []
                         }
-                        editMutation={budgetEditMutation}
-                        deleteMutation={budgetDeleteMutation}
+                        categoryMutations={{
+                            editMutation: categoryEditMutation,
+                            deleteMutation: categoryDeleteMutation,
+                            addMutation: categoryAddMutation,
+                        }}
                     />
-                ))
+                    {budgetQuery.data?.budgets.map((budget) => (
+                        <BudgetSingle
+                            key={budget.id}
+                            budget={budget}
+                            categories={
+                                categoryQuery.data?.categories
+                                    ? categoryQuery.data.categories
+                                    : []
+                            }
+                            editMutation={budgetEditMutation}
+                            deleteMutation={budgetDeleteMutation}
+                        />
+                    ))}
+                </div>
             ) : (
                 <div className="flex flex-col justify-center items-center my-52 h-full text-center">
                     <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                        No budgets yet
+                        No records yet
                     </h1>
                 </div>
             )}
@@ -333,6 +472,7 @@ const BudgetList = () => {
                 onClose={closeModal}
                 onSubmit={onAddBudget}
                 buttonText="Add"
+                buttonLoading={budgetAddMutation.isLoading}
                 options={{
                     modalTitle: "Add Record",
                     name: {
@@ -378,10 +518,15 @@ const BudgetList = () => {
                     position: "fixed",
                     right: "2.5rem",
                     bottom: "2.5rem",
-                    width: "5rem",
-                    height: "5rem",
+                    width: {
+                        xs: "4rem",
+                        md: "5rem",
+                    },
+                    height: {
+                        xs: "4rem",
+                        md: "5rem",
+                    },
                     borderRadius: "0.75rem",
-                    zIndex: 2,
                 }}
             >
                 <Plus />

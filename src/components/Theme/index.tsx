@@ -11,7 +11,7 @@ import {
     getInitColorSchemeScript,
 } from "@mui/joy/styles";
 import { CssBaseline } from "@mui/joy";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, useSnackbar } from "notistack";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { addScrollProperty } from "../utils";
@@ -156,15 +156,23 @@ const theme = extendTheme({
     },
     components: {
         JoyMenuItem: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    color: theme.palette.text.primary,
+                    ":hover": {
+                        backgroundColor: theme.palette.background.body,
+                    },
+                }),
+            },
             defaultProps: {
-                variant: "solid",
+                variant: "outlined",
             },
         },
-        JoyLink: {
-            defaultProps: {
-                underline: "none",
-            },
-        },
+        // JoyLink: {
+        //     defaultProps: {
+        //         underline: "none",
+        //     },
+        // },
         JoyFormLabel: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -218,6 +226,27 @@ const theme = extendTheme({
                     height: "2rem",
                 }),
             },
+            defaultProps: {
+                slotProps: {
+                    listbox: {
+                        sx: (theme) => ({
+                            backgroundColor: theme.palette.background.body,
+                            borderRadius: 10,
+                        }),
+                    },
+                },
+            },
+        },
+        JoyMenu: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    backgroundColor: theme.palette.background.body,
+                    borderRadius: 10,
+                }),
+            },
+            defaultProps: {
+                sx: (theme) => ({}),
+            },
         },
     },
 });
@@ -231,15 +260,17 @@ const Background = styled("div")(({ theme }) => {
     const [monuted, setMounted] = useState(false);
     const { isAuthed, id } = useStore((state) => state.user);
     const router = useRouter();
+    const clearUser = useStore((state) => state.clearUser);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
     useEffect(() => {
-        if (id != "" && !isAuthed) {
+        if (id != null && !isAuthed) {
             router.prefetch("/login");
             router.replace("/login");
+            clearUser();
         }
     }, [isAuthed]);
 

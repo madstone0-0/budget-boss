@@ -1,5 +1,5 @@
 "use client";
-import { Button, CircularProgress } from "@mui/joy";
+import { Button } from "@mui/joy";
 import React, { useState } from "react";
 import FormWrapper from "../FormWrapper";
 import {
@@ -15,8 +15,6 @@ import { useSnackbar } from "notistack";
 import { createJWTCookie } from "../../../app/actions";
 import InputWrapper from "../InputWrapper";
 import Fetch from "../utils/Fetch";
-import Loading from "@/loading";
-import LoadingBar from "../LoadingBar";
 
 const Shared = ({
     onPasswordChange,
@@ -105,10 +103,6 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 .post<{ userDetails: UserDetails }>(API_LOG_IN, user)
                 .then(async (res) => {
                     if (res.status == 200) {
-                        updatePassword("");
-                        updateFormEmail("");
-                        // clearEmail();
-                        // clearId();
                         const {
                             email,
                             id,
@@ -130,6 +124,8 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                             variant: "success",
                         });
                         isLoading(false);
+                        updatePassword("");
+                        updateFormEmail("");
                     }
                 })
                 .catch((err) => {
@@ -210,32 +206,17 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                 isLoading={loading}
             />
             {login ? <a href="#">Forgot Password</a> : <></>}
-            {!loading ? (
-                <Button
-                    variant="solid"
-                    sx={(theme) => ({
-                        color: theme.palette.text.primary,
-                        fontSize: "1.25rem",
-                        lineHeight: "1.75rem",
-                    })}
-                    type="submit"
-                >
-                    {login ? "Login" : "Sign Up"}
-                </Button>
-            ) : (
-                <Button
-                    startDecorator={<CircularProgress variant="solid" />}
-                    sx={(theme) => ({
-                        color: theme.palette.text.primary,
-                        fontSize: "1.25rem",
-                        lineHeight: "1.75rem",
-                    })}
-                    variant="solid"
-                    disabled
-                >
-                    Loading
-                </Button>
-            )}
+            <Button
+                loading={loading}
+                sx={(theme) => ({
+                    color: theme.palette.text.primary,
+                    fontSize: "1.25rem",
+                    lineHeight: "1.75rem",
+                })}
+                type="submit"
+            >
+                {login ? "Login" : "Sign Up"}
+            </Button>
             <ValidationFeedback errors={errors} />
         </FormWrapper>
     );

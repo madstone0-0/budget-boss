@@ -1,11 +1,17 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { HeaderItem, User } from "../types";
 
+const initialUser: User = {
+    email: "",
+    id: null,
+    isAuthed: false,
+    hasCreatedBudget: false,
+};
+
 type State = {
     user: User;
-    landingHeaderItems: HeaderItem[];
 };
 
 type Actions = {
@@ -23,20 +29,7 @@ const useStore = create<State & Actions>()(
         devtools(
             persist(
                 (set) => ({
-                    user: {
-                        email: "",
-                        id: null,
-                        isAuthed: false,
-                        hasCreatedBudget: false,
-                        // categories: [],
-                        // budgets: [],
-                    },
-                    landingHeaderItems: [
-                        { name: "Home", href: "/" },
-                        { name: "Sign Up", href: "/signup" },
-                        { name: "Login", href: "/login" },
-                        { name: "About", href: "/about" },
-                    ],
+                    user: initialUser,
                     updateEmail: (email) =>
                         set((state) => {
                             state.user.email = email;
@@ -55,14 +48,7 @@ const useStore = create<State & Actions>()(
                         }),
                     clearUser: () =>
                         set((state) => {
-                            state.user = {
-                                email: "",
-                                id: null,
-                                isAuthed: false,
-                                hasCreatedBudget: false,
-                                // categories: [],
-                                // budgets: [],
-                            };
+                            state.user = initialUser;
                         }),
                     setAuth: (value) =>
                         set((state) => {
@@ -72,27 +58,19 @@ const useStore = create<State & Actions>()(
                         set((state) => {
                             state.user.hasCreatedBudget = value;
                         }),
-                    //
-                    // updateUserCategories: (categories: Category[]) =>
-                    //     set((state) => {
-                    //         state.user.categories = categories;
-                    //     }),
-                    // clearUserCategories: () =>
-                    //     set((state) => {
-                    //         state.user.categories = [];
-                    //     }),
-                    //
-                    // updateUserBudgets: (budgets: Budget[]) =>
-                    //     set((state) => {
-                    //         state.user.budgets = budgets;
-                    //     }),
-                    // clearUserBudgets: () =>
-                    //     set((state) => {
-                    //         state.user.budgets = [];
-                    //     }),
                 }),
                 {
                     name: "global-storage",
+                    storage: createJSONStorage(() => sessionStorage),
+                    onRehydrateStorage: (state) => {
+                        state.user = initialUser;
+
+                        return (_state, error) => {
+                            if (error) {
+                                console.error("Error rehydrating state", error);
+                            }
+                        };
+                    },
                 },
             ),
         ),

@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Budget, ButtonChangeHandler, Category, NewBudget } from "../types";
-import { Button, Chip } from "@mui/joy";
+import {
+    Button,
+    Chip,
+    Dropdown,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+} from "@mui/joy";
 import { getDateString } from "../utils";
 import BudgetModal from "../BudgetModal";
 import { UseMutationResult } from "react-query";
 import { AxiosResponse } from "axios";
 import { NumericFormat } from "react-number-format";
+import { MenuSquare } from "lucide-react";
 
 interface BudgetSingleProps {
-    // budget: {
-    //     name: string;
-    //     id: string;
-    //     userId: string;
-    //     dateAdded: string;
-    //     amount: number;
-    //     categoryId: number;
-    // };
     budget: Budget;
     categories: Category[];
     editMutation: UseMutationResult<
@@ -102,7 +103,7 @@ const BudgetSingle = ({
         const budget = generateBudget();
         editMutation.mutate({ budget: budget, id: id });
         setBudgetCategory(getBudgetCategory(budget.categoryId));
-        setOpen(false);
+        if (editMutation.isSuccess) setOpen(false);
     };
 
     const onDeleteBudget: ButtonChangeHandler = (e) => {
@@ -124,9 +125,9 @@ const BudgetSingle = ({
     return (
         <>
             <div className="flex flex-row justify-between">
-                <div className="flex w-max px-5 flex-col items-center [&>*]:py-2">
-                    <h1 className="text-xl sm:text-3xl">{name}</h1>
-                    <div className="flex flex-row space-x-10">
+                <div className="flex w-max px-2 sm:px-5 flex-col items-center [&>*]:py-2">
+                    <h1 className="text-lg sm:text-3xl">{name}</h1>
+                    <div className="flex flex-row space-x-4 sm:space-x-10">
                         <p>
                             {dateAdded.toLocaleDateString(undefined, {
                                 day: "2-digit",
@@ -147,19 +148,49 @@ const BudgetSingle = ({
                 </div>
                 <div className="flex flex-col items-end [&>*]:py-2">
                     <NumericFormat
-                        className="text-xl sm:text-2xl"
+                        className="text-lg sm:text-2xl"
                         value={amount.toFixed(2)}
                         displayType="text"
                         thousandSeparator={true}
                         prefix="₵ "
                     />
-                    <div className="flex flex-row justify-between w-40">
+                    <div className="hidden flex-row justify-between w-40 sm:flex">
                         <Button variant="outlined" onClick={openModal}>
                             Edit
                         </Button>
                         <Button variant="outlined" onClick={onDeleteBudget}>
                             Delete
                         </Button>
+                    </div>
+                    <div className="block self-center sm:hidden">
+                        <Dropdown>
+                            <MenuButton
+                                slots={{ root: IconButton }}
+                                slotProps={{
+                                    root: {
+                                        variant: "",
+                                        color: "plain",
+                                    },
+                                }}
+                                size="sm"
+                            >
+                                <MenuSquare />
+                            </MenuButton>
+                            <Menu id="options" keepMounted>
+                                <MenuItem
+                                    onClick={openModal as MouseEventHandler}
+                                >
+                                    Edit
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={
+                                        onDeleteBudget as MouseEventHandler
+                                    }
+                                >
+                                    Delete
+                                </MenuItem>
+                            </Menu>
+                        </Dropdown>
                     </div>
                 </div>
             </div>
@@ -169,6 +200,7 @@ const BudgetSingle = ({
                 onClose={closeModal}
                 onSubmit={onEditBudget}
                 buttonText="Edit"
+                buttonLoading={editMutation.isLoading}
                 options={{
                     modalTitle: "Edit Record",
                     name: {

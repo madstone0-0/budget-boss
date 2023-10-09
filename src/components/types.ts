@@ -57,10 +57,36 @@ export interface Category {
     color: string;
 }
 
+export interface NewCategory {
+    name: string;
+    color: string;
+    userId?: string | null | undefined;
+    categoryId?: number | undefined;
+}
+
 export interface HeaderItem {
     name: string;
     href: string;
 }
+
+export interface MenuItems {
+    name: string;
+    onClick: ButtonChangeHandler;
+}
+
+export type Series = {
+    id: string;
+    value: number;
+    label: string;
+    color: string;
+}[];
+
+export type Value<T, Handler = InputChangeHandler> = {
+    label: string;
+    placeholder: string;
+    value$: T;
+    onChange: Handler;
+};
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IFetch {

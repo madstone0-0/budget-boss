@@ -1,5 +1,10 @@
 import React, { ChangeEventHandler } from "react";
-import { ButtonChangeHandler, Category, InputChangeHandler } from "../types";
+import {
+    ButtonChangeHandler,
+    Category,
+    InputChangeHandler,
+    Value,
+} from "../types";
 import BaseModal from "../BaseModal";
 import {
     DialogTitle,
@@ -16,18 +21,12 @@ import InputWrapper from "../InputWrapper";
 import { NumericFormat } from "react-number-format";
 import { XCircle } from "lucide-react";
 
-type Value<T, Handler = InputChangeHandler> = {
-    label: string;
-    placeholder: string;
-    value$: T;
-    onChange: Handler;
-};
-
 interface BudgetModalProps {
     open: boolean;
     onClose: ButtonChangeHandler;
     onSubmit: ButtonChangeHandler;
     buttonText: string;
+    buttonLoading: boolean;
     options: {
         modalTitle: string;
 
@@ -80,6 +79,7 @@ const BudgetModal = ({
     onSubmit,
     options,
     buttonText,
+    buttonLoading,
 }: BudgetModalProps) => {
     const { modalTitle, name, amount, dateAdded, category, type } = options;
     const action = React.useRef<null | { focusVisible(): void }>(null);
@@ -166,6 +166,7 @@ const BudgetModal = ({
                     {["income", "expense"].map((currType, key) => (
                         <Box
                             sx={(theme) => ({
+                                backgroundColor: theme.palette.primary,
                                 position: "relative",
                                 display: "flex",
                                 justifyContent: "center",
@@ -206,10 +207,12 @@ const BudgetModal = ({
                                 slotProps={{
                                     input: { "aria-label": currType },
                                     action: {
-                                        sx: {
+                                        sx: (theme) => ({
+                                            backgroundColor:
+                                                theme.palette.primary,
                                             borderRadius: 0,
                                             transition: "none",
-                                        },
+                                        }),
                                     },
                                     label: { sx: { lineHeight: 0 } },
                                 }}
@@ -218,8 +221,12 @@ const BudgetModal = ({
                     ))}
                 </RadioGroup>
                 <Button
+                    loading={buttonLoading}
                     color="primary"
-                    sx={{ fontSize: "1.2rem", lineHeight: "1.75rem" }}
+                    sx={(theme) => ({
+                        fontSize: "1.2rem",
+                        lineHeight: "1.75rem",
+                    })}
                     type="submit"
                 >
                     {buttonText}

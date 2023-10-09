@@ -12,6 +12,7 @@ import useStore from "../stores/index.ts";
 import { useRouter } from "next/navigation";
 import { ButtonChangeHandler, HeaderItem } from "../types.ts";
 import { deleteJWTCookie } from "../../../app/actions.ts";
+import User from "../User/index.tsx";
 
 const Header = ({
     mountedHeaderItems = [],
@@ -25,6 +26,7 @@ const Header = ({
     const router = useRouter();
 
     const userId = useStore((state) => state.user.id);
+    const userEmail = useStore((state) => state.user.email);
     const clearUser = useStore((state) => state.clearUser);
 
     const handleOpenNavMenu = (e: React.MouseEvent) => {
@@ -82,57 +84,60 @@ const Header = ({
                 }}
             >
                 {headerItems.length > 0 ? (
-                    <Dropdown>
-                        <MenuButton
-                            slots={{ root: IconButton }}
-                            slotProps={{
-                                root: { variant: "outlined", color: "primary" },
-                            }}
-                            onClick={
-                                anchorElNav
-                                    ? handleCloseNavMenu
-                                    : handleOpenNavMenu
-                            }
-                            sx={{
-                                marginRight: "1.25rem",
-                                width: 40,
-                            }}
-                            color="neutral"
-                            size="md"
-                        >
-                            <MenuIcon />
-                        </MenuButton>
-                        <Menu
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{
-                                display: { xs: "block", md: "none" },
-                            }}
-                            id="menu-header"
-                            keepMounted
-                            anchorEl={anchorElNav}
-                        >
-                            {headerItems.map((item, key) => (
-                                <MenuItem
-                                    key={key}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <PageLink href={item.href} passHref>
-                                        {item.name}
-                                    </PageLink>
-                                </MenuItem>
-                            ))}
-                            {mounted && userId ? (
-                                <MenuItem
-                                    onClick={handleLogout as MouseEventHandler}
-                                >
-                                    Logout
-                                </MenuItem>
-                            ) : (
-                                <></>
-                            )}
-                        </Menu>
-                    </Dropdown>
+                    <>
+                        <Dropdown>
+                            <MenuButton
+                                slots={{ root: IconButton }}
+                                slotProps={{
+                                    root: {
+                                        variant: "outlined",
+                                        color: "primary",
+                                    },
+                                }}
+                                // onClick={
+                                //     anchorElNav != null
+                                //         ? handleCloseNavMenu
+                                //         : handleOpenNavMenu
+                                // }
+                                sx={{
+                                    marginRight: "1.25rem",
+                                    width: 40,
+                                }}
+                                color="neutral"
+                                size="md"
+                            >
+                                <MenuIcon />
+                            </MenuButton>
+                            <Menu
+                                // open={Boolean(anchorElNav)}
+                                // onClose={handleCloseNavMenu}
+                                sx={{
+                                    display: { xs: "block", md: "none" },
+                                }}
+                                id="menu-header"
+                                keepMounted
+                                // anchorEl={anchorElNav}
+                            >
+                                {headerItems.map((item, key) => (
+                                    <MenuItem key={key}>
+                                        <PageLink href={item.href} passHref>
+                                            {item.name}
+                                        </PageLink>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Dropdown>
+                        {mounted && userId != null ? (
+                            <User
+                                email={userEmail}
+                                menuItems={[
+                                    { name: "Logout", onClick: handleLogout },
+                                ]}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </>
                 ) : (
                     <></>
                 )}
@@ -159,15 +164,14 @@ const Header = ({
                     </PageLink>
                 ))}
                 {mounted && userId ? (
-                    <Button
-                        sx={(theme) => ({
-                            color: theme.palette.text.primary,
-                            marginRight: "1.25rem",
-                        })}
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </Button>
+                    <>
+                        <User
+                            email={userEmail}
+                            menuItems={[
+                                { name: "Logout", onClick: handleLogout },
+                            ]}
+                        />
+                    </>
                 ) : (
                     <></>
                 )}

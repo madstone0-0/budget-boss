@@ -14,11 +14,15 @@ const PageLink = ({
     passHref?: boolean;
     other?: LinkTypeMap["props"];
 }) => (
-    <div className="flex items-center">
-        <Link {...other} component={NextLink} passHref={passHref} href={href}>
-            {children}
-        </Link>
-    </div>
+    <Link
+        {...other}
+        className="flex justify-center items-center h-full w-fit"
+        component={NextLink}
+        passHref={passHref}
+        href={href}
+    >
+        {children}
+    </Link>
 );
 
 export default PageLink;
