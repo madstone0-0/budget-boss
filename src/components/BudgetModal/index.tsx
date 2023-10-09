@@ -223,7 +223,7 @@ const BudgetModal = ({
                 <Button
                     loading={buttonLoading}
                     color="primary"
-                    sx={(theme) => ({
+                    sx={() => ({
                         fontSize: "1.2rem",
                         lineHeight: "1.75rem",
                     })}
