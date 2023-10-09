@@ -1,21 +1,21 @@
 "use client";
 import createCache from "@emotion/cache";
-import { useRouter, useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
-import React, { Suspense, useEffect, useState } from "react";
-import LoadingBar from "../LoadingBar";
+import { CssBaseline } from "@mui/joy";
 import {
     CssVarsProvider,
     extendTheme,
-    styled,
     getInitColorSchemeScript,
+    styled,
 } from "@mui/joy/styles";
-import { CssBaseline } from "@mui/joy";
+import { useRouter, useServerInsertedHTML } from "next/navigation";
 import { SnackbarProvider, useSnackbar } from "notistack";
+import React, { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { addScrollProperty } from "../utils";
+import LoadingBar from "../LoadingBar";
 import useStore from "../stores";
+import { addScrollProperty } from "../utils";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -243,9 +243,6 @@ const theme = extendTheme({
                     backgroundColor: theme.palette.background.body,
                     borderRadius: 10,
                 }),
-            },
-            defaultProps: {
-                sx: (theme) => ({}),
             },
         },
     },
