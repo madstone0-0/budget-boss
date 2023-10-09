@@ -405,9 +405,9 @@ const BudgetList = () => {
 
     if (
         budgetQuery.isLoading ||
-        budgetQuery.isFetching ||
-        categoryQuery.isLoading ||
-        categoryQuery.isFetching
+        // budgetQuery.isFetching ||
+        categoryQuery.isLoading
+        // categoryQuery.isFetching
     )
         return <LoadingBar />;
 
