@@ -104,6 +104,9 @@ const BudgetPie = ({
     return (
         <>
             <div className="flex flex-col items-center self-center mb-5 sm:mb=10 w-[100vw] h-[40vh]">
+                <h1 className="text-xl text-center sm:text-2xl">
+                    Record count breakdown
+                </h1>
                 <div className="w-full h-full -z-10">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={1000} height={500}>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import SvG1 from "../assets/1.svg";
 import SvG2 from "../assets/2.svg";
 import SvG3 from "../assets/3.svg";
+import HeroImg from "../assets/hero.jpg";
 import { actor } from "@/fonts";
 import { addScrollProperty, useScrollEffect } from "../utils";
 
@@ -84,18 +85,41 @@ const HeroSection = ({
 
 const HeroPage = () => {
     const sectionItems: { img: string; text: string }[] = [
-        { img: SvG1, text: "Save anytime anywhere" },
-        { img: SvG2, text: "Save and invest at the same time" },
-        { img: SvG3, text: "Transact fast and easy" },
+        { img: SvG1, text: "Budget anytime anywhere" },
+        { img: SvG2, text: "Budget and learn at the same time" },
+        { img: SvG3, text: "Improve your financial literacy" },
+    ];
+
+    const features: { header: string; text: string }[] = [
+        {
+            header: "Learn",
+            text: "Enhance financial decision-making and secure a stable financial future",
+        },
+        {
+            header: "Budget",
+            text: "Record, Budget and Track your expenditures to mitigate poor spending habits",
+        },
+        {
+            header: "Connect",
+            text: "Get investment advice from stockbrokers to make improved investment decisions",
+        },
+        {
+            header: "Assess",
+            text: " Measure your financial literacy growth basedd on what you learn from us",
+        },
     ];
 
     return (
         <div className="flex flex-col justify-center items-center w-full h-full">
-            <div className="w-full flex flex-col p-5 h-[100vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
+            <div className="w-full flex flex-col p-10 h-[130vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
                 <HeroHeader className="m-5 text-2xl font-bold text-center rounded-md sm:text-2xl md:text-5xl">
                     Change the Way You Invest
                 </HeroHeader>
-                <div className="self-center mt-2 h-full bg-black rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"></div>
+                <Image
+                    src={HeroImg}
+                    alt="Hero"
+                    className="self-center mt-2 h-full rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"
+                />
             </div>
             <div className="flex flex-col my-10">
                 {sectionItems.map((item, key) => (
@@ -106,6 +130,29 @@ const HeroPage = () => {
                         img={item.img}
                     />
                 ))}
+            </div>
+            <div className="flex flex-col bg-[#141617]/30 justify-center w-full h-auto sm:h-[100vh]">
+                <h1 className="my-5 text-lg text-center sm:my-10 sm:text-3xl">
+                    Create a better and stable financial future for yourself
+                </h1>
+                <div className="flex flex-col flex-wrap justify-center items-center space-y-10 sm:flex-row sm:space-y-0 sm:space-x-10">
+                    {features.map((feature, key) => (
+                        <div
+                            key={key}
+                            className="flex flex-col p-6 items-center bg-[#141617]/40 text-center w-3/4 rounded-[3rem] sm:w-[20%] min-h-[35vh] sm:min-h-[60vh]"
+                        >
+                            <h3 className="mb-10 text-xl sm:text-2xl">
+                                {feature.header}
+                            </h3>
+                            <p className="text-lg sm:text-xl">{feature.text}</p>
+                        </div>
+                    ))}
+                </div>
+                <div className="my-5 text-lg text-center sm:my-10">
+                    <p>{"Don't know what to do with the money your have?"}</p>
+                    <p>Need help to manage your spending habits?</p>
+                    <p>Need help investing?</p>
+                </div>
             </div>
         </div>
     );
