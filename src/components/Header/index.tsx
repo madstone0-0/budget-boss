@@ -72,7 +72,7 @@ const Header = ({
         flexShrink: 0,
         boxShadow:
             "0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12)",
-        zIndex: 0,
+        zIndex: 1,
     }));
 
     return (

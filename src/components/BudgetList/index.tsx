@@ -31,6 +31,7 @@ import LoadingBar from "../LoadingBar";
 import BudgetModal from "../BudgetModal";
 import BudgetSingle from "../BudgetSingle";
 import BudgetPie from "../BudgetPie";
+import { Input } from "@mui/joy";
 
 declare module "react-query" {
     interface Register {
@@ -60,6 +61,17 @@ const BudgetList = () => {
         "income",
     );
 
+    const getDateAndYear = (date: Date) => {
+        return !isNaN(date.valueOf())
+            ? `${date.getFullYear()}-${date.getMonth() + 1}`
+            : undefined;
+    };
+
+    const [displpayedBudgets, setDisplayedBudgets] = useState<Budget[]>([]);
+    const [filterDate, setFilterDate] = useState<string | undefined>(
+        getDateAndYear(new Date()),
+    );
+
     const queryClient = useQueryClient();
 
     const getBudgets = async () => {
@@ -77,6 +89,7 @@ const BudgetList = () => {
                 ...budget,
                 dateAdded: new Date(budget.dateAdded),
             }));
+            setDisplayedBudgets(res.data.budgets);
             return res.data;
         }
         throw Error("Cannot get jwt token");
@@ -403,6 +416,16 @@ const BudgetList = () => {
         }
     };
 
+    const filterBudgets = (budgets: Budget[]) => {
+        if (budgets.length == 0) return budgets;
+        if (filterDate === "" || filterDate === undefined) return budgets;
+        return budgets.filter(
+            (budget) =>
+                getDateAndYear(budget.dateAdded) == filterDate &&
+                budget.userId == user.id,
+        );
+    };
+
     if (
         budgetQuery.isLoading ||
         // budgetQuery.isFetching ||
@@ -433,14 +456,33 @@ const BudgetList = () => {
             </div>
         );
     }
+    const filteredBudgets =
+        budgetQuery.data?.budgets !== undefined
+            ? filterBudgets(budgetQuery.data.budgets)
+            : [];
 
     return (
-        <div>
+        <div className="flex flex-col space-y-5">
+            <Input
+                className="self-center min-w-min"
+                size="lg"
+                type="month"
+                slotProps={{
+                    input: {
+                        min: "2000-01",
+                        max: "3000-12",
+                    },
+                }}
+                onChange={(e) =>
+                    setFilterDate(getDateAndYear(new Date(e.target.value)))
+                }
+                value={filterDate}
+            />
             {budgetQuery.data?.budgets != null &&
             budgetQuery.data?.budgets.length != 0 ? (
                 <div className="flex flex-col justify-center items-center">
                     <BudgetPie
-                        budgets={budgetQuery.data?.budgets}
+                        budgets={filteredBudgets}
                         categories={
                             categoryQuery.data?.categories
                                 ? categoryQuery.data.categories
@@ -452,19 +494,27 @@ const BudgetList = () => {
                             addMutation: categoryAddMutation,
                         }}
                     />
-                    {budgetQuery.data?.budgets.map((budget) => (
-                        <BudgetSingle
-                            key={budget.id}
-                            budget={budget}
-                            categories={
-                                categoryQuery.data?.categories
-                                    ? categoryQuery.data.categories
-                                    : []
-                            }
-                            editMutation={budgetEditMutation}
-                            deleteMutation={budgetDeleteMutation}
-                        />
-                    ))}
+                    {filteredBudgets.length !== 0 ? (
+                        filteredBudgets.map((budget) => (
+                            <BudgetSingle
+                                key={budget.id}
+                                budget={budget}
+                                categories={
+                                    categoryQuery.data?.categories
+                                        ? categoryQuery.data.categories
+                                        : []
+                                }
+                                editMutation={budgetEditMutation}
+                                deleteMutation={budgetDeleteMutation}
+                            />
+                        ))
+                    ) : (
+                        <div className="flex flex-col justify-center items-center my-20 h-full text-center">
+                            <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
+                                No records for this month
+                            </h1>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="flex flex-col justify-center items-center my-52 h-full text-center">

@@ -1,4 +1,9 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, {
+    useState,
+    useReducer,
+    useEffect,
+    HTMLInputTypeAttribute,
+} from "react";
 import { InputChangeHandler } from "../types";
 import {
     FormControl,
@@ -20,7 +25,7 @@ const InputWrapper = ({
 }: {
     label: string;
     placeholder: string;
-    type?: string;
+    type?: HTMLInputTypeAttribute;
     value$: React.DetailedHTMLProps<
         React.InputHTMLAttributes<HTMLInputElement>,
         HTMLInputElement

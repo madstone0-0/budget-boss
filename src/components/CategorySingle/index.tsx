@@ -70,8 +70,6 @@ const CategorySingle = ({
         if (editMutation.isSuccess) closeModal(e);
     };
 
-    if (deleteMutation.isLoading) return <Skeleton variant="rectangular" />;
-
     return (
         <>
             <Button
