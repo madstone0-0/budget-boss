@@ -111,7 +111,7 @@ const HeroPage = () => {
 
     return (
         <div className="flex flex-col justify-center items-center w-full h-full">
-            <div className="w-full flex flex-col p-10 h-[130vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
+            <div className="w-full flex flex-col p-10 h-auto sm:h-[130vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
                 <HeroHeader className="m-5 text-2xl font-bold text-center rounded-md sm:text-2xl md:text-5xl">
                     Change the Way You Invest
                 </HeroHeader>
@@ -121,7 +121,7 @@ const HeroPage = () => {
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                     }}
-                    className="self-center mt-2 h-full rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"
+                    className="self-center mt-2 h-auto text-[#f2f3f4] rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"
                 >
                     <h1 className="my-5 text-lg text-center sm:my-10 sm:text-3xl">
                         Create a better and stable financial future for yourself
@@ -141,7 +141,7 @@ const HeroPage = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="my-5 text-lg text-center sm:my-10">
+                    <div className="p-2 my-5 text-base text-center sm:my-10 sm:text-lg">
                         <p>
                             {"Don't know what to do with the money your have?"}
                         </p>
