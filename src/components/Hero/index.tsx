@@ -115,11 +115,40 @@ const HeroPage = () => {
                 <HeroHeader className="m-5 text-2xl font-bold text-center rounded-md sm:text-2xl md:text-5xl">
                     Change the Way You Invest
                 </HeroHeader>
-                <Image
-                    src={HeroImg}
-                    alt="Hero"
+                <div
+                    style={{
+                        backgroundImage: `url(${HeroImg.src})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                    }}
                     className="self-center mt-2 h-full rounded-md min-w-[80vw] max-w-[80vw] md:min-w-[90vw]"
-                />
+                >
+                    <h1 className="my-5 text-lg text-center sm:my-10 sm:text-3xl">
+                        Create a better and stable financial future for yourself
+                    </h1>
+                    <div className="flex flex-col flex-wrap justify-center items-center space-y-10 sm:flex-row sm:space-y-0 sm:space-x-10">
+                        {features.map((feature, key) => (
+                            <div
+                                key={key}
+                                className="flex flex-col p-6 items-center bg-[#141617]/70 text-center w-3/4 rounded-[3rem] sm:w-[20%] min-h-[35vh] sm:min-h-[60vh]"
+                            >
+                                <h3 className="mb-10 text-xl sm:text-2xl">
+                                    {feature.header}
+                                </h3>
+                                <p className="text-lg sm:text-xl">
+                                    {feature.text}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="my-5 text-lg text-center sm:my-10">
+                        <p>
+                            {"Don't know what to do with the money your have?"}
+                        </p>
+                        <p>Need help to manage your spending habits?</p>
+                        <p>Need help investing?</p>
+                    </div>
+                </div>
             </div>
             <div className="flex flex-col my-10">
                 {sectionItems.map((item, key) => (
@@ -130,29 +159,6 @@ const HeroPage = () => {
                         img={item.img}
                     />
                 ))}
-            </div>
-            <div className="flex flex-col bg-[#141617]/30 justify-center w-full h-auto sm:h-[100vh]">
-                <h1 className="my-5 text-lg text-center sm:my-10 sm:text-3xl">
-                    Create a better and stable financial future for yourself
-                </h1>
-                <div className="flex flex-col flex-wrap justify-center items-center space-y-10 sm:flex-row sm:space-y-0 sm:space-x-10">
-                    {features.map((feature, key) => (
-                        <div
-                            key={key}
-                            className="flex flex-col p-6 items-center bg-[#141617]/40 text-center w-3/4 rounded-[3rem] sm:w-[20%] min-h-[35vh] sm:min-h-[60vh]"
-                        >
-                            <h3 className="mb-10 text-xl sm:text-2xl">
-                                {feature.header}
-                            </h3>
-                            <p className="text-lg sm:text-xl">{feature.text}</p>
-                        </div>
-                    ))}
-                </div>
-                <div className="my-5 text-lg text-center sm:my-10">
-                    <p>{"Don't know what to do with the money your have?"}</p>
-                    <p>Need help to manage your spending habits?</p>
-                    <p>Need help investing?</p>
-                </div>
             </div>
         </div>
     );
