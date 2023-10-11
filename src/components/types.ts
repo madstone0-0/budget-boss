@@ -81,6 +81,11 @@ export type Series = {
     color: string;
 }[];
 
+export type NewUserBudgetOptions = {
+    userId: string;
+    budgetOptions: unknown;
+};
+
 export type Value<T, Handler = InputChangeHandler> = {
     label: string;
     placeholder: string;

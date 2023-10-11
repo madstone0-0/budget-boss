@@ -18,8 +18,8 @@ import {
 import Radio, { radioClasses } from "@mui/joy/Radio";
 import FormWrapper from "../FormWrapper";
 import InputWrapper from "../InputWrapper";
-import { NumericFormat } from "react-number-format";
 import { XCircle } from "lucide-react";
+import NumericFormatAdapter from "../NumericFormatAdapter";
 
 interface BudgetModalProps {
     open: boolean;
@@ -47,31 +47,6 @@ interface BudgetModalProps {
         };
     };
 }
-
-const NumericFormatAdapter = React.forwardRef(function NumericFormatAdapter(
-    props: { name: string; onChange: (arg0: object) => void },
-    ref,
-) {
-    const { onChange, ...other } = props;
-
-    return (
-        <NumericFormat
-            allowNegative={false}
-            {...other}
-            getInputRef={ref}
-            onValueChange={(values) => {
-                onChange({
-                    target: {
-                        name: props.name,
-                        value: values.value,
-                    },
-                });
-            }}
-            thousandSeparator
-            prefix="₵ "
-        />
-    );
-});
 
 const BudgetModal = ({
     open,

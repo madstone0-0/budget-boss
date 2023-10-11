@@ -25,6 +25,7 @@ export const API_CREATE_BUDGET_OPTIONS = "/budget/options/create/";
 export const API_GET_BUDGET_OPTIONS = "/budget/options/";
 export const API_UPDATE_BUDGET_OPTIONS = "/budget/options/update/";
 export const API_DELETE_BUDGET_OPTIONS = "/budget/options/delete/";
+export const API_USER_CREATED_TEMPLATE = "/budget/options/createdTemplate/";
 
 export const API_GET_ALL_CATEGORY = "/category/all/";
 export const API_ADD_CATEGORY = "/category/add/";

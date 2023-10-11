@@ -57,7 +57,11 @@ input:focus-visible {
     transition: all 0.5s;
 }
 
-.category-modal .react-colorful {
+.category-modal .react-colorful{
+    width: 100%;
+}
+
+.onboarding .react-colorful {
     width: 100%;
 }
 
