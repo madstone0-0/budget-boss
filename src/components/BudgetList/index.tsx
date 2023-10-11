@@ -233,7 +233,7 @@ const BudgetList = () => {
         console.log({ err });
         let err_msg = "";
         if (err instanceof AxiosError) {
-            err_msg = JSON.stringify(err.response?.data.msg);
+            err_msg = err.response?.data.msg;
             if (err_msg === undefined) err_msg = err.message;
         } else if (err instanceof Error) {
             err_msg = err.message;
