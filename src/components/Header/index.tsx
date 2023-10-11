@@ -77,7 +77,7 @@ const Header = ({
 
     return (
         <Background>
-            <h1 className="text-xl font-bold sm:text-3xl">INVEBB</h1>
+            <a href="/" className="text-xl font-bold sm:text-3xl">INVEBB</a>
             <Box
                 sx={{
                     flexGrow: 0,

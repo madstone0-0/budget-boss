@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 
 const Page = () => {
     const headerItems = [
-        { name: "Home", href: "/" },
         { name: "About", href: "/about" },
         { name: "Sign Up", href: "/signup" },
         { name: "Login", href: "/login" },
