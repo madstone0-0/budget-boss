@@ -158,7 +158,8 @@ const BudgetSingle = ({
                         value={amount.toFixed(2)}
                         displayType="text"
                         thousandSeparator={true}
-                        prefix="₵ "
+                        // prefix="₵ "
+                        prefix="$ "
                     />
                     <div className="hidden flex-row justify-between w-40 sm:flex">
                         <Button variant="outlined" onClick={openModal}>

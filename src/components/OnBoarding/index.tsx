@@ -196,6 +196,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                                     input: { component: NumericFormatAdapter },
                                 },
                             }}
+                            tooltip="How much money you make per month"
                             onChange={(e) =>
                                 setIncome(parseInt(e.target.value))
                             }
@@ -254,6 +255,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                         placeholder="Groceries"
                         onChange={(e) => setCategoryName(e.target.value)}
                         muiOptions={{ required: true }}
+                        tooltip="Name of category"
                         label="Category Name"
                         labelClassName="text-xl"
                     />

@@ -21,7 +21,7 @@ const NumericFormatAdapter = React.forwardRef(function NumericFormatAdapter(
                 });
             }}
             thousandSeparator
-            prefix="₵ "
+            prefix="$ "
         />
     );
 });
