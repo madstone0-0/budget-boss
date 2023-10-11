@@ -11,6 +11,7 @@ import {
     Input,
     IconButton,
     InputTypeMap,
+    FormHelperText,
 } from "@mui/joy";
 import { EyeIcon, EyeOffIcon, Calendar } from "lucide-react";
 
@@ -22,6 +23,7 @@ const InputWrapper = ({
     onChange,
     labelClassName = "text-xl",
     muiOptions = {},
+    tooltip = "",
 }: {
     label: string;
     placeholder: string;
@@ -33,6 +35,7 @@ const InputWrapper = ({
     onChange: InputChangeHandler;
     labelClassName?: string;
     muiOptions?: InputTypeMap["props"];
+    tooltip?: string;
 }) => {
     const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, true);
     const [mounted, setMounted] = useState<boolean>(false);
@@ -97,6 +100,7 @@ const InputWrapper = ({
                 {label}
             </FormLabel>
             {renderInputType(type)}
+            {tooltip !== "" && <FormHelperText>{tooltip}</FormHelperText>}
         </FormControl>
     );
 };

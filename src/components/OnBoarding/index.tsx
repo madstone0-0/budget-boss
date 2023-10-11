@@ -1,18 +1,15 @@
 "use client";
-import { Box, Button, Chip, Stack } from "@mui/joy";
+import { Box, Button, Chip, Stack, Tooltip } from "@mui/joy";
 import React, { useEffect, useState } from "react";
-import PageLink from "../PageLink";
 import FormWrapper from "../FormWrapper";
 import {
     ButtonChangeHandler,
-    Category,
     NewCategory,
     NewUserBudgetOptions,
-    User,
 } from "../types";
 import InputWrapper from "../InputWrapper";
 import { useSnackbar } from "notistack";
-import { HexColorInput, HexColorPicker } from "react-colorful";
+import { HexColorPicker } from "react-colorful";
 import { Plus } from "lucide-react";
 import { fetch } from "../utils/Fetch";
 import {
@@ -262,10 +259,11 @@ const OnBoarding = ({ id }: { id: string }) => {
                     />
                     <InputWrapper
                         value$={categoryWeight}
-                        placeholder=""
+                        placeholder="40"
                         onChange={(e) =>
                             setCategoryWeight(parseInt(e.target.value))
                         }
+                        tooltip="Percentage of your income this category should take"
                         muiOptions={{ required: true }}
                         type="number"
                         label="Category weight"

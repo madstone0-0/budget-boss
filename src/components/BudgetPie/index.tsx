@@ -114,7 +114,7 @@ const BudgetPie = ({
 
     return (
         <>
-            <div className="flex flex-col items-center self-center mb-5 sm:mb-20 w-[100vw] h-[40vh]">
+            <div className="flex flex-col items-center self-center mb-24 w-[100vw] h-[40vh]">
                 <div className="w-full h-full">
                     <h1
                         onClick={toggleSeriesType}
@@ -122,6 +122,10 @@ const BudgetPie = ({
                     >
                         {seriesType ? "Amount breakdown" : "Count breakdown"}
                     </h1>
+                    <p className="text-sm text-center text-gray-500">
+                        (click to change)
+                    </p>
+
                     {series.length !== 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={1000} height={500}>
@@ -147,7 +151,7 @@ const BudgetPie = ({
                         <div className=""></div>
                     )}
                 </div>
-                <div className="flex flex-row flex-wrap space-x-2 sm:space-x-5">
+                <div className="flex flex-row flex-wrap mt-5 space-x-2 sm:space-x-5">
                     <IconButton variant="soft" onClick={toggleMode}>
                         {mode ? <Pencil /> : <Trash />}
                     </IconButton>

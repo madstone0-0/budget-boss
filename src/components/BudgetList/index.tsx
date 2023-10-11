@@ -265,6 +265,8 @@ const BudgetList = () => {
                     variant: "error",
                 }),
             ),
+        staleTime: 5000,
+        refetchInterval: 300000,
     });
 
     const budgetAddMutation = useMutation({
@@ -323,6 +325,8 @@ const BudgetList = () => {
                     variant: "error",
                 }),
             ),
+        staleTime: 5000,
+        refetchInterval: 300000,
     });
 
     const categoryAddMutation = useMutation({
@@ -493,19 +497,27 @@ const BudgetList = () => {
                     }}
                 />
                 {filteredBudgets.length !== 0 ? (
-                    filteredBudgets.map((budget) => (
-                        <BudgetSingle
-                            key={budget.id}
-                            budget={budget}
-                            categories={
-                                categoryQuery.data?.categories
-                                    ? categoryQuery.data.categories
-                                    : []
-                            }
-                            editMutation={budgetEditMutation}
-                            deleteMutation={budgetDeleteMutation}
-                        />
-                    ))
+                    budgetQuery.isFetching ? (
+                        <div className="flex flex-col justify-center items-center my-20 h-full text-center">
+                            <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
+                                Refreshing...
+                            </h1>
+                        </div>
+                    ) : (
+                        filteredBudgets.map((budget) => (
+                            <BudgetSingle
+                                key={budget.id}
+                                budget={budget}
+                                categories={
+                                    categoryQuery.data?.categories
+                                        ? categoryQuery.data.categories
+                                        : []
+                                }
+                                editMutation={budgetEditMutation}
+                                deleteMutation={budgetDeleteMutation}
+                            />
+                        ))
+                    )
                 ) : (
                     <div className="flex flex-col justify-center items-center my-20 h-full text-center">
                         <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
