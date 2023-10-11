@@ -5,7 +5,7 @@ import Image from "next/image";
 import SvG1 from "../assets/1.svg";
 import SvG2 from "../assets/2.svg";
 import SvG3 from "../assets/3.svg";
-import HeroImg from "../assets/hero.png";
+import HeroImg from "../assets/hero.jpg";
 
 const HeroHeader = styled("h1")(({}) => {
     return {
@@ -109,7 +109,7 @@ const HeroPage = () => {
 
     return (
         <div className="flex flex-col justify-center items-center w-full h-full">
-            <div className="w-full flex flex-col p-10 h-auto sm:h-[130vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
+            <div className="w-full flex flex-col p-10 h-auto sm:min-h-[130vh] bg-[#8FE1D7] bg-gradient-to-tr from-current to-[#35DC9F]">
                 <HeroHeader className="m-5 text-2xl font-bold text-center rounded-md sm:text-2xl md:text-5xl">
                     Change the Way You Invest
                 </HeroHeader>
@@ -128,7 +128,7 @@ const HeroPage = () => {
                         {features.map((feature, key) => (
                             <div
                                 key={key}
-                                className="flex flex-col p-6 items-center bg-[#141617]/70 text-center w-3/4 rounded-[3rem] sm:w-[20%] min-h-[35vh] sm:min-h-[60vh]"
+                                className="flex flex-col p-6 items-center border border-gray-800 bg-[#e4e4e4]/10 text-center w-3/4 rounded-[3rem] sm:w-[20%] min-h-[35vh] sm:min-h-[60vh]"
                             >
                                 <h3 className="mb-10 text-xl sm:text-2xl">
                                     {feature.header}
@@ -146,6 +146,20 @@ const HeroPage = () => {
                         <p>Need help to manage your spending habits?</p>
                         <p>Need help investing?</p>
                     </div>
+                </div>
+                <div className="p-2 mt-2 mb-5 text-base text-[#1B232A] text-center sm:my-10 sm:text-lg">
+                    <p>
+                        {
+                            // eslint-disable-next-line quotes
+                            '"Intelligence solves problems and produces money, but money without financial intelligence is quickly lost"'
+                        }
+                    </p>
+                    <p>
+                        {
+                            // eslint-disable-next-line quotes
+                            '-"Rich Dad, Poor Dad"'
+                        }
+                    </p>
                 </div>
             </div>
             <div className="flex flex-col my-10">
