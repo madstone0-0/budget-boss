@@ -164,7 +164,11 @@ const BudgetSingle = ({
                         <Button variant="outlined" onClick={openModal}>
                             Edit
                         </Button>
-                        <Button variant="outlined" onClick={onDeleteBudget}>
+                        <Button
+                            variant="outlined"
+                            loading={deleteMutation.isLoading}
+                            onClick={onDeleteBudget}
+                        >
                             Delete
                         </Button>
                     </div>

@@ -77,6 +77,7 @@ const CategorySingle = ({
             <Button
                 onClick={(e) => (mode ? openModal(e) : onDeleteCategory(e))}
                 variant="soft"
+                loading={deleteMutation.isLoading}
                 sx={{
                     backgroundColor: category.color,
                     borderRadius: "2rem",
