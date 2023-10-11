@@ -478,51 +478,42 @@ const BudgetList = () => {
                 }
                 value={filterDate}
             />
-            {budgetQuery.data?.budgets != null &&
-            budgetQuery.data?.budgets.length != 0 ? (
-                <div className="flex flex-col justify-center items-center">
-                    <BudgetPie
-                        budgets={filteredBudgets}
-                        categories={
-                            categoryQuery.data?.categories
-                                ? categoryQuery.data.categories
-                                : []
-                        }
-                        categoryMutations={{
-                            editMutation: categoryEditMutation,
-                            deleteMutation: categoryDeleteMutation,
-                            addMutation: categoryAddMutation,
-                        }}
-                    />
-                    {filteredBudgets.length !== 0 ? (
-                        filteredBudgets.map((budget) => (
-                            <BudgetSingle
-                                key={budget.id}
-                                budget={budget}
-                                categories={
-                                    categoryQuery.data?.categories
-                                        ? categoryQuery.data.categories
-                                        : []
-                                }
-                                editMutation={budgetEditMutation}
-                                deleteMutation={budgetDeleteMutation}
-                            />
-                        ))
-                    ) : (
-                        <div className="flex flex-col justify-center items-center my-20 h-full text-center">
-                            <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                                No records for this month
-                            </h1>
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div className="flex flex-col justify-center items-center my-52 h-full text-center">
-                    <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                        No records yet
-                    </h1>
-                </div>
-            )}
+            <div className="flex flex-col justify-center items-center">
+                <BudgetPie
+                    budgets={filteredBudgets}
+                    categories={
+                        categoryQuery.data?.categories
+                            ? categoryQuery.data.categories
+                            : []
+                    }
+                    categoryMutations={{
+                        editMutation: categoryEditMutation,
+                        deleteMutation: categoryDeleteMutation,
+                        addMutation: categoryAddMutation,
+                    }}
+                />
+                {filteredBudgets.length !== 0 ? (
+                    filteredBudgets.map((budget) => (
+                        <BudgetSingle
+                            key={budget.id}
+                            budget={budget}
+                            categories={
+                                categoryQuery.data?.categories
+                                    ? categoryQuery.data.categories
+                                    : []
+                            }
+                            editMutation={budgetEditMutation}
+                            deleteMutation={budgetDeleteMutation}
+                        />
+                    ))
+                ) : (
+                    <div className="flex flex-col justify-center items-center my-20 h-full text-center">
+                        <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
+                            No records for this month
+                        </h1>
+                    </div>
+                )}
+            </div>
             <BudgetModal
                 open={open}
                 onClose={closeModal}

@@ -101,9 +101,15 @@ const BudgetSingle = ({
     const onEditBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
         const budget = generateBudget();
-        editMutation.mutate({ budget: budget, id: id });
-        setBudgetCategory(getBudgetCategory(budget.categoryId));
-        if (editMutation.isSuccess) setOpen(false);
+        editMutation
+            .mutateAsync({ budget: budget, id: id })
+            .then((_res) => {
+                setOpen(false);
+                setBudgetCategory(getBudgetCategory(budget.categoryId));
+            })
+            .catch((err) => {
+                console.log({ err });
+            });
     };
 
     const onDeleteBudget: ButtonChangeHandler = (e) => {

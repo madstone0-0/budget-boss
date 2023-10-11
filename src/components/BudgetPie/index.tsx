@@ -47,6 +47,10 @@ const BudgetPie = ({
 }: BudgetPieProps) => {
     const { editMutation, deleteMutation, addMutation } = categoryMutations;
     const [series, setSeries] = useState<Series>([]);
+    const [seriesType, toggleSeriesType] = useReducer(
+        (seriesType) => !seriesType,
+        true,
+    );
     const [open, setOpen] = useState<boolean>(false);
     const [mode, toggleMode] = useReducer((mode) => !mode, true);
 
@@ -71,9 +75,14 @@ const BudgetPie = ({
             const count = budgets.filter(
                 (budget) => budget.categoryId === category.categoryId,
             ).length;
+            let amount = 0;
+            budgets.forEach((budget) => {
+                if (budget.categoryId === category.categoryId)
+                    amount += Math.abs(budget.amount);
+            });
             data.push({
                 id: category.categoryId.toString(),
-                value: count,
+                value: seriesType ? amount : count,
                 label: category.name,
                 color: category.color,
             });
@@ -83,7 +92,7 @@ const BudgetPie = ({
 
     useEffect(() => {
         setSeries(generateSeries());
-    }, [categories, budgets]);
+    }, [categories, budgets, seriesType]);
 
     const generateCategory = () => {
         const category: NewCategory = {
@@ -103,30 +112,38 @@ const BudgetPie = ({
 
     return (
         <>
-            <div className="flex flex-col items-center self-center mb-5 sm:mb=10 w-[100vw] h-[40vh]">
-                <h1 className="text-xl text-center sm:text-2xl">
-                    Record count breakdown
-                </h1>
-                <div className="w-full h-full -z-10">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={1000} height={500}>
-                            <Pie
-                                data={series}
-                                innerRadius={50}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                            >
-                                <Tooltip />
-                                {series.map((item, key) => (
-                                    <Cell
-                                        key={`cell-${key}`}
-                                        fill={item.color}
-                                    />
-                                ))}
-                            </Pie>
-                        </PieChart>
-                    </ResponsiveContainer>
+            <div className="flex flex-col items-center self-center mb-5 sm:mb-20 w-[100vw] h-[40vh]">
+                <div className="w-full h-full">
+                    <h1
+                        onClick={toggleSeriesType}
+                        className="text-xl text-center sm:text-2xl hover:underline hover:cursor-pointer"
+                    >
+                        {seriesType ? "Amount breakdown" : "Count breakdown"}
+                    </h1>
+                    {series.length !== 0 ? (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={1000} height={500}>
+                                <Pie
+                                    data={series}
+                                    innerRadius={50}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    <Tooltip />
+                                    {series.map((item, key) => (
+                                        <Cell
+                                            key={`cell-${key}`}
+                                            fill={item.color}
+                                        />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        // Circle
+                        <div className=""></div>
+                    )}
                 </div>
                 <div className="flex flex-row flex-wrap space-x-2 sm:space-x-5">
                     <IconButton variant="soft" onClick={toggleMode}>
