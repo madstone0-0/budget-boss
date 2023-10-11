@@ -9,7 +9,7 @@ import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import PageLink from "../PageLink";
 import useStore from "../stores/index.ts";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ButtonChangeHandler, HeaderItem } from "../types.ts";
 import { deleteJWTCookie } from "../../../app/actions.ts";
 import User from "../User/index.tsx";
@@ -24,6 +24,7 @@ const Header = ({
     const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
     const [mounted, setMounted] = useState<boolean>(false);
     const router = useRouter();
+    const pathName = usePathname();
 
     const userId = useStore((state) => state.user.id);
     const userEmail = useStore((state) => state.user.email);
@@ -77,7 +78,17 @@ const Header = ({
 
     return (
         <Background>
-            <a href="/" className="text-xl font-bold sm:text-3xl">INVEBB</a>
+            {pathName.includes("home") ? (
+                <h1 className="text-3xl font-bold sm:text-3xl">INVEBB</h1>
+            ) : (
+                <PageLink
+                    href="/"
+                    passHref
+                    className="!text-3xl font-bold !sm:text-3xl"
+                >
+                    INVEBB
+                </PageLink>
+            )}
             <Box
                 sx={{
                     flexGrow: 0,

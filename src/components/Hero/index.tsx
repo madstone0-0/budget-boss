@@ -6,8 +6,6 @@ import SvG1 from "../assets/1.svg";
 import SvG2 from "../assets/2.svg";
 import SvG3 from "../assets/3.svg";
 import HeroImg from "../assets/hero.png";
-import { actor } from "@/fonts";
-import { addScrollProperty, useScrollEffect } from "../utils";
 
 const HeroHeader = styled("h1")(({}) => {
     return {

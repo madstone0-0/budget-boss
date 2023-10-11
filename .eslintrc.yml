@@ -34,7 +34,7 @@ rules:
         - error
         - double
     semi:
-        - error
+        - off
         - always
     no-unused-vars: off
     prefer-const: off
