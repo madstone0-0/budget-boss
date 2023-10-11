@@ -106,8 +106,10 @@ const BudgetPie = ({
 
     const onAddCategory: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        addMutation.mutate(generateCategory());
-        closeModal(e);
+        addMutation
+            .mutateAsync(generateCategory())
+            .then(() => closeModal(e))
+            .catch((err) => console.log(err));
     };
 
     return (
