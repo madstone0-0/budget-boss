@@ -285,6 +285,7 @@ const Background = styled("div")(({ theme }) => {
 const Theme = ({ children, options }: ThemeProps) => {
     const queryClient = new QueryClient();
     const [mounted, setMounted] = useState(false);
+    const [mobile, setMobile] = useState(false);
 
     /* https://mui.com/joy-ui/integrations/next-js-app-router/ */
     /*eslint-disable @typescript-eslint/unbound-method*/
@@ -329,6 +330,13 @@ const Theme = ({ children, options }: ThemeProps) => {
     });
     /*eslint-disable @typescript-eslint/unbound-method*/
     /* https://mui.com/joy-ui/integrations/next-js-app-router/ */
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        setMobile(window.innerWidth <= 768);
+    }, [mounted]);
 
     return (
         <>
@@ -343,7 +351,7 @@ const Theme = ({ children, options }: ThemeProps) => {
                         theme={theme}
                         disableNestedContext
                     >
-                        <SnackbarProvider maxSnack={4}>
+                        <SnackbarProvider dense={mobile} maxSnack={4}>
                             <Background id="container">
                                 <div className="flex flex-col">{children}</div>
                             </Background>
