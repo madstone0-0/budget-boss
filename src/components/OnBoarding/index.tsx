@@ -38,7 +38,8 @@ const OnBoarding = ({ id }: { id: string }) => {
     const [categoryColor, setCategoryColor] = useState("#000000");
     const [categoryWeight, setCategoryWeight] = useState(0);
 
-    const [totalWeight, setTotalWeight] = useState(0);
+    const [totalWeight, setTotalWeight] = useState(categoryWeight);
+    const [loading, setLoading] = useState(false);
 
     const addCategoryAndWeight = (category: NewCategory, weight: number) => {
         setCategoriesWithWeights([
@@ -69,7 +70,7 @@ const OnBoarding = ({ id }: { id: string }) => {
 
     useEffect(() => {
         calculateTotalWeight();
-    }, [categoriesWithWeights]);
+    }, [categoriesWithWeights, categoryWeight]);
 
     const onAddCategoryAndWeight: ButtonChangeHandler = (e) => {
         e.preventDefault();
@@ -121,6 +122,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                         },
                     )
                     .then((res) => {
+                        setLoading(false);
                         enqueueSnackbar(res.data.msg, {
                             variant: "success",
                         });
@@ -146,10 +148,12 @@ const OnBoarding = ({ id }: { id: string }) => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const onProceed: ButtonChangeHandler = async (e) => {
         e.preventDefault();
+        setLoading(true);
         if (totalWeight !== 100) {
             enqueueSnackbar("Total weight must be 100%", {
                 variant: "error",
             });
+            setLoading(false);
             return;
         }
 
@@ -175,6 +179,7 @@ const OnBoarding = ({ id }: { id: string }) => {
             },
         };
         onConfirmed(userBudgetOptions).catch((err) => {
+            setLoading(false);
             console.log(err);
         });
     };
@@ -282,6 +287,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                     lineHeight: "1.75rem",
                 }}
                 onClick={onProceed}
+                loading={loading}
             >
                 Proceed
             </Button>

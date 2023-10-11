@@ -63,11 +63,13 @@ const CategorySingle = ({
 
     const onEditCategory = (e: React.MouseEvent<Element, MouseEvent>) => {
         e.preventDefault();
-        editMutation.mutate({
-            id: category.categoryId.toString(),
-            category: generateCategory(),
-        });
-        if (editMutation.isSuccess) closeModal(e);
+        editMutation
+            .mutateAsync({
+                id: category.categoryId.toString(),
+                category: generateCategory(),
+            })
+            .then(() => closeModal(e))
+            .catch((err) => console.log(err));
     };
 
     return (

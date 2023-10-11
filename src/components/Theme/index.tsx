@@ -13,9 +13,7 @@ import { SnackbarProvider, useSnackbar } from "notistack";
 import React, { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import LoadingBar from "../LoadingBar";
 import useStore from "../stores";
-import { addScrollProperty } from "../utils";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -232,6 +230,7 @@ const theme = extendTheme({
                         sx: (theme) => ({
                             backgroundColor: theme.palette.background.body,
                             borderRadius: 10,
+                            zIndex: 1000,
                         }),
                     },
                 },
@@ -242,6 +241,7 @@ const theme = extendTheme({
                 root: ({ theme }) => ({
                     backgroundColor: theme.palette.background.body,
                     borderRadius: 10,
+                    zIndex: 1000,
                 }),
             },
         },

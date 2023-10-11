@@ -26,6 +26,7 @@ const BaseModal = ({
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 10,
+                zIndex: 500,
             }}
         >
             <ModalDialog
