@@ -114,7 +114,7 @@ const BudgetPie = ({
 
     return (
         <>
-            <div className="flex flex-col items-center self-center mb-5 sm:mb-20 w-[100vw] h-[40vh]">
+            <div className="flex flex-col items-center self-center mb-20 sm:mb-20 w-[100vw] h-[40vh]">
                 <div className="w-full h-full">
                     <h1
                         onClick={toggleSeriesType}
