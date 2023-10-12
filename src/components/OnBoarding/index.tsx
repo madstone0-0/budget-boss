@@ -138,6 +138,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                         enqueueSnackbar("Something went wrong", {
                             variant: "error",
                         });
+                        setLoading(false);
                         console.log(err);
                     });
             })
@@ -145,6 +146,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                 enqueueSnackbar("Something went wrong", {
                     variant: "error",
                 });
+                setLoading(false);
                 console.log(err);
             });
     };
@@ -157,6 +159,7 @@ const OnBoarding = ({ id }: { id: string }) => {
             enqueueSnackbar("Income cannot be 0 or less than 0", {
                 variant: "error",
             });
+            setLoading(false);
             return;
         }
 

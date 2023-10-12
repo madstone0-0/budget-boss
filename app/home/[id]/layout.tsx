@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode, Suspense } from "react";
-import Header from "../../../src/components/Header";
+import Header from "@/components/Header";
 import LoadingBar from "../../../src/components/LoadingBar";
 import useStore from "@/components/stores";
 

@@ -1,5 +1,12 @@
 "use client";
-import { Box, Button, Dropdown, IconButton, MenuButton } from "@mui/joy";
+import {
+    Avatar,
+    Box,
+    Button,
+    Dropdown,
+    IconButton,
+    MenuButton,
+} from "@mui/joy";
 import { styled } from "@mui/system";
 
 import React, { MouseEventHandler, useEffect, useState } from "react";
@@ -140,12 +147,11 @@ const Header = ({
                             </Menu>
                         </Dropdown>
                         {mounted && userId != null ? (
-                            <User
-                                email={userEmail}
-                                menuItems={[
-                                    { name: "Logout", onClick: handleLogout },
-                                ]}
-                            />
+                            <div>
+                                <Avatar>
+                                    {userEmail.slice(0, 2).toUpperCase()}
+                                </Avatar>
+                            </div>
                         ) : (
                             <></>
                         )}
@@ -176,14 +182,22 @@ const Header = ({
                     </PageLink>
                 ))}
                 {mounted && userId ? (
-                    <>
-                        <User
-                            email={userEmail}
-                            menuItems={[
-                                { name: "Logout", onClick: handleLogout },
-                            ]}
-                        />
-                    </>
+                    <div className="mr-5">
+                        <Avatar
+                            sx={{
+                                ":hover": {
+                                    cursor: "pointer",
+                                },
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                router.prefetch(`/home/${userId}/profile`);
+                                router.push(`/home/${userId}/profile`);
+                            }}
+                        >
+                            {userEmail.slice(0, 2).toUpperCase()}
+                        </Avatar>
+                    </div>
                 ) : (
                     <></>
                 )}
