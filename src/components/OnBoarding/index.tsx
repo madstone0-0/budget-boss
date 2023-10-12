@@ -145,19 +145,28 @@ const OnBoarding = ({ id }: { id: string }) => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const onProceed: ButtonChangeHandler = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        if (totalWeight !== 100) {
-            enqueueSnackbar("Total weight must be 100%", {
+
+        if (income <= 0) {
+            enqueueSnackbar("Income cannot be 0 or less than 0", {
+                variant: "error",
+            });
+            return;
+        }
+
+        if (categoriesWithWeights.length === 0) {
+            enqueueSnackbar("You must add at least one category", {
                 variant: "error",
             });
             setLoading(false);
             return;
         }
 
-        if (income === 0) {
-            enqueueSnackbar("Income cannot be 0", {
+        setLoading(true);
+        if (totalWeight !== 100) {
+            enqueueSnackbar("Total weight must be 100%", {
                 variant: "error",
             });
+            setLoading(false);
             return;
         }
 
