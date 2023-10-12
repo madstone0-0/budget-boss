@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Chip, Stack, Tooltip } from "@mui/joy";
+import { Box, Button, Chip, FormHelperText, Stack, Tooltip } from "@mui/joy";
 import React, { useEffect, useState } from "react";
 import FormWrapper from "../FormWrapper";
 import {
@@ -68,6 +68,13 @@ const OnBoarding = ({ id }: { id: string }) => {
     useEffect(() => {
         calculateTotalWeight();
     }, [categoriesWithWeights, categoryWeight]);
+
+    useEffect(() => {
+        if (user.hasCreatedBudget) {
+            router.prefetch(`/home/${user.id}/budget/home`);
+            router.replace(`/home/${user.id}/budget/home`);
+        }
+    }, []);
 
     const onAddCategoryAndWeight: ButtonChangeHandler = (e) => {
         e.preventDefault();
@@ -250,7 +257,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                         ) : (
                             <div className="flex flex-col justify-center items-center my-52 h-full text-center">
                                 <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                                    Add some categories
+                                    Add some categories with the form below
                                 </h1>
                             </div>
                         )}
@@ -287,6 +294,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                     <Button type="submit">
                         <Plus />
                     </Button>
+                    <FormHelperText>Add category</FormHelperText>
                 </FormWrapper>
             </div>
             <Button

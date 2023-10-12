@@ -258,9 +258,14 @@ const Background = styled("div")(({ theme }) => {
     const { isAuthed, id } = useStore((state) => state.user);
     const router = useRouter();
     const clearUser = useStore((state) => state.clearUser);
+    const user = useStore((state) => state.user);
 
     useEffect(() => {
         setMounted(true);
+        if (user.id != null) {
+            router.prefetch(`/home/${user.id}`);
+            router.replace(`/home/${user.id}`);
+        }
     }, []);
 
     useEffect(() => {
