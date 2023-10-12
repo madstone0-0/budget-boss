@@ -8,7 +8,7 @@ import {
     getInitColorSchemeScript,
     styled,
 } from "@mui/joy/styles";
-import { useRouter, useServerInsertedHTML } from "next/navigation";
+import { usePathname, useRouter, useServerInsertedHTML } from "next/navigation";
 import { SnackbarProvider, useSnackbar } from "notistack";
 import React, { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -200,6 +200,11 @@ const theme = extendTheme({
         JoyButton: {
             defaultProps: {
                 color: "primary",
+                sx: (theme) => ({
+                    color: theme.palette.text.primary,
+                    fontSize: "1.25rem",
+                    lineHeight: "1.75rem",
+                }),
             },
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -259,10 +264,11 @@ const Background = styled("div")(({ theme }) => {
     const router = useRouter();
     const clearUser = useStore((state) => state.clearUser);
     const user = useStore((state) => state.user);
+    const pathName = usePathname();
 
     useEffect(() => {
         setMounted(true);
-        if (user.id != null) {
+        if (user.id != null && pathName == "/") {
             router.prefetch(`/home/${user.id}`);
             router.replace(`/home/${user.id}`);
         }
