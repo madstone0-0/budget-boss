@@ -13,6 +13,7 @@ export interface User {
     id: string | null;
     isAuthed: boolean;
     hasCreatedBudget: boolean;
+    currency: string;
     // categories: Category[];
     // budgets: Budget[];
 }

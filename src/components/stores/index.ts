@@ -8,6 +8,7 @@ const initialUser: User = {
     id: null,
     isAuthed: false,
     hasCreatedBudget: false,
+    currency: "$",
 };
 
 type State = {

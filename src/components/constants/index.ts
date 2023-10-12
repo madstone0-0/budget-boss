@@ -16,6 +16,7 @@ export const API_BASE = `${HOST}`;
 
 export const API_LOG_IN = "/auth/login";
 export const API_SIGN_UP = "/auth/signup";
+export const API_DELETE_ACC = "/auth/delete/";
 
 export const API_GET_ALL_BUDGETS = "/budget/all/";
 export const API_ADD_BUDGET = "/budget/add/";
