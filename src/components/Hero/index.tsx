@@ -103,7 +103,7 @@ const HeroPage = () => {
         },
         {
             header: "Assess",
-            text: " Measure your financial literacy growth basedd on what you learn from us",
+            text: " Measure your financial literacy growth based on what you learn from us",
         },
     ];
 
