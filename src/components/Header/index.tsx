@@ -147,8 +147,21 @@ const Header = ({
                             </Menu>
                         </Dropdown>
                         {mounted && userId != null ? (
-                            <div>
-                                <Avatar>
+                            <div className="mr-5">
+                                <Avatar
+                                    sx={{
+                                        ":hover": {
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        router.prefetch(
+                                            `/home/${userId}/profile`,
+                                        );
+                                        router.push(`/home/${userId}/profile`);
+                                    }}
+                                >
                                     {userEmail.slice(0, 2).toUpperCase()}
                                 </Avatar>
                             </div>

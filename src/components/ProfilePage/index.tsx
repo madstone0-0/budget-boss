@@ -55,10 +55,22 @@ const ProfilePage = () => {
 
     if (!mounted)
         return (
-            <div>
-                <Avatar>US</Avatar>
-                <h1>user@email.com</h1>
+            <div className="flex flex-col justify-center items-center p-5 space-y-10 align-middle">
+                <Avatar
+                    variant="soft"
+                    sx={{
+                        height: "10rem",
+                        width: "10rem",
+                        fontSize: "5rem",
+                    }}
+                    alt="user avatar"
+                    size="lg"
+                >
+                    US
+                </Avatar>
+                <h1 className="text-xl sm:text-3xl">user@email.com</h1>
                 <Button>Logout</Button>
+                <Button color="danger">Delete Account</Button>
             </div>
         );
 
