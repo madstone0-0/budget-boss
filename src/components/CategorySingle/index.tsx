@@ -45,6 +45,11 @@ const CategorySingle = ({
     const [name, setName] = useState<string>(category.name);
     const [color, setColor] = useState<string>(category.color);
 
+    const resetState = () => {
+        setName("");
+        setColor("#000");
+    };
+
     const onDeleteCategory = (e: React.MouseEvent<Element, MouseEvent>) => {
         e.preventDefault();
         deleteMutation.mutate(category.categoryId.toString());
@@ -68,7 +73,9 @@ const CategorySingle = ({
                 id: category.categoryId.toString(),
                 category: generateCategory(),
             })
-            .then(() => closeModal(e))
+            .then(() => {
+                closeModal(e);
+            })
             .catch((err) => console.log(err));
     };
 

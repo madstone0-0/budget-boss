@@ -161,7 +161,7 @@ const BudgetSingle = ({
                         // prefix="₵ "
                         prefix="$ "
                     />
-                    <div className="hidden flex-row justify-between w-40 sm:flex">
+                    <div className="hidden flex-row justify-between space-x-2 w-40 sm:flex sm:space-x-5">
                         <Button variant="outlined" onClick={openModal}>
                             Edit
                         </Button>

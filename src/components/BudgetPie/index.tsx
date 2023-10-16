@@ -69,6 +69,11 @@ const BudgetPie = ({
         setOpen(false);
     };
 
+    const resetState = () => {
+        setName("");
+        setColor("#000");
+    };
+
     const generateSeries = () => {
         let data: Series = [];
         categories.forEach((category) => {
@@ -108,13 +113,16 @@ const BudgetPie = ({
         e.preventDefault();
         addMutation
             .mutateAsync(generateCategory())
-            .then(() => closeModal(e))
+            .then(() => {
+                resetState();
+                closeModal(e);
+            })
             .catch((err) => console.log(err));
     };
 
     return (
         <>
-            <div className="flex flex-col items-center self-center mb-24 w-[100vw] h-[40vh]">
+            <div className="flex flex-col items-center self-center mb-24 w-[100vw] h-[40vh] min-h-fit">
                 <div className="w-full h-full">
                     <h1
                         onClick={toggleSeriesType}
@@ -151,20 +159,39 @@ const BudgetPie = ({
                         <div className=""></div>
                     )}
                 </div>
-                <div className="flex flex-row flex-wrap mt-5 space-x-2 sm:space-x-5">
-                    <IconButton variant="soft" onClick={toggleMode}>
+                <div className="flex flex-row justify-center items-center mt-5 h-auto sm:space-x-5">
+                    <IconButton
+                        className="mr-5"
+                        sx={{
+                            margin: {
+                                xs: "1.25rem",
+                                sm: "0",
+                            },
+                        }}
+                        variant="soft"
+                        onClick={toggleMode}
+                    >
                         {mode ? <Pencil /> : <Trash />}
                     </IconButton>
-                    {categories.map((category, key) => (
-                        <CategorySingle
-                            key={key}
-                            mode={mode}
-                            category={category}
-                            editMutation={editMutation}
-                            deleteMutation={deleteMutation}
-                        />
-                    ))}
-                    <IconButton variant="soft" onClick={openModal}>
+
+                    <div className="flex flex-row flex-wrap gap-2 justify-center items-center self-center space-x-2 sm:space-x-5">
+                        {categories.map((category, key) => (
+                            <CategorySingle
+                                key={key}
+                                mode={mode}
+                                category={category}
+                                editMutation={editMutation}
+                                deleteMutation={deleteMutation}
+                            />
+                        ))}
+                    </div>
+                    <IconButton
+                        sx={{
+                            margin: "1.25rem",
+                        }}
+                        variant="soft"
+                        onClick={openModal}
+                    >
                         <Plus />
                     </IconButton>
                 </div>
