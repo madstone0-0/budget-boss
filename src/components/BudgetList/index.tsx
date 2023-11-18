@@ -1,15 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Budget,
     ButtonChangeHandler,
     Category,
     NewBudget,
     NewCategory,
+    CategoryTotal,
 } from "../types";
-import { Button } from "@mui/joy";
-import { Plus } from "lucide-react";
-import { getDateString } from "../utils";
+import { Alert, Button } from "@mui/joy";
+import { AlertCircle, MailWarning, Plus } from "lucide-react";
+import { getDateString, useCurrencyFormatter } from "../utils";
 import { fetch } from "../utils/Fetch";
 import useStore from "../stores";
 import {
@@ -25,13 +26,23 @@ import {
 import { useSnackbar } from "notistack";
 import { getJWTCookie } from "../../../app/actions";
 import Unauthorized from "../utils/Unauthorized";
-import { useQueryClient, useQuery, useMutation, QueryKey } from "react-query";
+import {
+    useQueryClient,
+    useQuery,
+    useMutation,
+    QueryKey,
+    UseQueryResult,
+} from "react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import LoadingBar from "../LoadingBar";
 import BudgetModal from "../BudgetModal";
 import BudgetSingle from "../BudgetSingle";
 import BudgetPie from "../BudgetPie";
 import { Input } from "@mui/joy";
+import useQueriesAndMutations, { doOnError } from "../utils/queries";
+import { getBudgetTotal } from "../utils/api";
+import { stat, truncate } from "fs";
+import usePersistantStore from "../stores/persistantStore";
 
 declare module "react-query" {
     interface Register {
@@ -44,7 +55,10 @@ const BudgetList = () => {
 
     const user = useStore((state) => state.user);
 
+    const { formatter } = useCurrencyFormatter();
+
     const setAuth = useStore((state) => state.setAuth);
+    // const updateCategories = useStore((state) => state.updateCategories);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -67,312 +81,40 @@ const BudgetList = () => {
             : undefined;
     };
 
-    const [displpayedBudgets, setDisplayedBudgets] = useState<Budget[]>([]);
     const [filterDate, setFilterDate] = useState<string | undefined>(
         getDateAndYear(new Date()),
     );
 
-    const queryClient = useQueryClient();
+    const { queries, mutations } = useQueriesAndMutations(user);
+    const { budgetQuery, categoryQuery, budgetOptionQuery } = queries;
+    const {
+        budgetAddMutation,
+        budgetEditMutation,
+        categoryAddMutation,
+        budgetDeleteMutation,
+        categoryEditMutation,
+        categoryDeleteMutation,
+    } = mutations;
 
-    const getBudgets = async () => {
-        const token = await getJWTCookie("token");
-        if (token !== undefined) {
-            const res = await fetch.get<{ budgets: Budget[] }>(
-                `${API_GET_ALL_BUDGETS}${user.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
+    const [totals, setTotals] = useState<CategoryTotal[]>([]);
+
+    const generateTotals = async () => {
+        const totals: CategoryTotal[] = [];
+        if (categoryQuery.data?.categories == undefined) return totals;
+
+        for (const category of categoryQuery.data.categories) {
+            const { total } = await getBudgetTotal(
+                user.id!,
+                category.categoryId,
             );
-            res.data.budgets = res.data.budgets.map((budget) => ({
-                ...budget,
-                dateAdded: new Date(budget.dateAdded),
-            }));
-            setDisplayedBudgets(res.data.budgets);
-            return res.data;
+            totals.push({
+                categoryId: category.categoryId,
+                total: total ? parseFloat(total) : null,
+            });
         }
-        throw Error("Cannot get jwt token");
+        console.log({ totals });
+        return totals;
     };
-
-    const getCategories = async () => {
-        const token = await getJWTCookie("token");
-        if (token !== undefined) {
-            const res = await fetch.get<{ categories: Category[] }>(
-                `${API_GET_ALL_CATEGORY}${user.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res.data;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const postBudgets = async (budget: NewBudget) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.post<{ msg: string }>(
-                `${API_ADD_BUDGET}${user.id}`,
-                budget,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const postCategories = async (category: NewCategory) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.post<{ msg: string }>(
-                `${API_ADD_CATEGORY}${user.id}`,
-                category,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const putBudgets = async ({
-        budget,
-        id,
-    }: {
-        budget: NewBudget;
-        id: string;
-    }) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.put<{ msg: string }>(
-                `${API_UPDATE_BUDGET}${id}`,
-                budget,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const putCategories = async ({
-        category,
-        id,
-    }: {
-        category: NewCategory;
-        id: string;
-    }) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.put<{ msg: string }>(
-                `${API_UPDATE_CATEGORY}${id}`,
-                category,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const deleteBudgets = async (id: string) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.delete<{ msg: string }>(
-                `${API_DELETE_BUDGET}${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const deleteCategories = async (id: string) => {
-        const token = await getJWTCookie("token");
-
-        if (token !== undefined) {
-            const res = await fetch.delete<{ msg: string }>(
-                `${API_DELETE_CATEGORY}${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.value}`,
-                    },
-                },
-            );
-            return res;
-        }
-        throw Error("Cannot get jwt token");
-    };
-
-    const doOnError = (err: unknown, feebackFn: (msg: string) => void) => {
-        console.log({ err });
-        let err_msg = "";
-        if (err instanceof AxiosError) {
-            err_msg = err.response?.data.msg;
-            if (err_msg === undefined) err_msg = err.message;
-        } else if (err instanceof Error) {
-            err_msg = err.message;
-        } else {
-            err_msg = "Unknown error";
-        }
-
-        feebackFn(err_msg);
-    };
-
-    const doOnSuccess = async (
-        res: AxiosResponse,
-        key: QueryKey,
-        feebackFn: (msg: string) => void,
-    ) => {
-        if (res.data.msg !== null) {
-            const msg = res.data.msg;
-            if (msg instanceof String) feebackFn(msg.toString());
-        }
-        await queryClient.invalidateQueries(key);
-    };
-
-    const budgetQuery = useQuery({
-        queryKey: "budgets",
-        queryFn: getBudgets,
-        onError: (err) =>
-            doOnError(err, (msg) =>
-                enqueueSnackbar(`Failed to get budgets: ${msg}`, {
-                    variant: "error",
-                }),
-            ),
-        staleTime: 5000,
-        refetchInterval: 300000,
-    });
-
-    const budgetAddMutation = useMutation({
-        mutationFn: postBudgets,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            setOpen(false);
-            resetBudget();
-            await queryClient.invalidateQueries({ queryKey: "budgets" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) =>
-                enqueueSnackbar(`Failed to add budget: ${msg}`, {
-                    variant: "error",
-                }),
-            ),
-    });
-
-    const budgetEditMutation = useMutation({
-        mutationFn: putBudgets,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries({ queryKey: "budgets" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to edit budget: ${msg}`, {
-                    variant: "error",
-                });
-            }),
-    });
-
-    const budgetDeleteMutation = useMutation({
-        mutationFn: deleteBudgets,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries({ queryKey: "budgets" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to delete budget: ${msg}`, {
-                    variant: "error",
-                });
-            }),
-    });
-
-    const categoryQuery = useQuery({
-        queryKey: "categories",
-        queryFn: getCategories,
-        onError: (err) =>
-            doOnError(err, (msg) =>
-                enqueueSnackbar(`Failed to get categories: ${msg}`, {
-                    variant: "error",
-                }),
-            ),
-        staleTime: 5000,
-        refetchInterval: 300000,
-    });
-
-    const categoryAddMutation = useMutation({
-        mutationFn: postCategories,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries({ queryKey: "categories" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to add category: ${msg}`, {
-                    variant: "error",
-                });
-            }),
-    });
-
-    const categoryEditMutation = useMutation({
-        mutationFn: putCategories,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries({ queryKey: "categories" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to edit category: ${msg}`, {
-                    variant: "error",
-                });
-            }),
-    });
-
-    const categoryDeleteMutation = useMutation({
-        mutationFn: deleteCategories,
-        onSuccess: async (res) => {
-            const msg = res.data.msg;
-            enqueueSnackbar(msg, { variant: "success" });
-            await queryClient.invalidateQueries({ queryKey: "categories" });
-        },
-        onError: (err) =>
-            doOnError(err, (msg) => {
-                enqueueSnackbar(`Failed to delete category: ${msg}`, {
-                    variant: "error",
-                });
-            }),
-    });
 
     const openModal: ButtonChangeHandler = (e) => {
         e.preventDefault();
@@ -390,6 +132,28 @@ const BudgetList = () => {
         setBudgetDateAdded(getDateString(new Date()));
         setBudgetType("income");
     };
+
+    useEffect(() => {
+        if (budgetQuery.data?.budgets) {
+            (async () => {
+                const totals = await generateTotals();
+                setTotals(totals);
+            })().catch((err) => {
+                console.log({ err });
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (budgetQuery.data?.budgets) {
+            (async () => {
+                const totals = await generateTotals();
+                setTotals(totals);
+            })().catch((err) => {
+                console.log({ err });
+            });
+        }
+    }, [budgetQuery.data, categoryQuery.data]);
 
     const generateBudget = () => {
         const budget: NewBudget = {
@@ -414,7 +178,21 @@ const BudgetList = () => {
             ) ||
             budgetCategory != null
         ) {
-            budgetAddMutation.mutate(generateBudget());
+            budgetAddMutation
+                .mutateAsync({ budget: generateBudget(), user: user })
+                .then(async () => {
+                    setOpen(false);
+                    resetBudget();
+                    const totals = await generateTotals();
+                    setTotals(totals);
+                })
+                .catch((err) => {
+                    doOnError(err, (msg) =>
+                        enqueueSnackbar(`Failed to add budget: ${msg}`, {
+                            variant: "error",
+                        }),
+                    );
+                });
         } else {
             enqueueSnackbar("Missing fields", { variant: "error" });
         }
@@ -482,6 +260,70 @@ const BudgetList = () => {
                 }
                 value={filterDate}
             />
+            <div className="self-center flex space-y-5 flex-col w-[40%]">
+                {categoryQuery.data?.categories.length !== 0 &&
+                budgetOptionQuery.data?.budgetOptions ? (
+                    categoryQuery.data?.categories.map((category, key) => {
+                        let status: "over" | "under" | undefined;
+                        let amountExceeded = 0;
+                        let percentExceeded = 0;
+                        const found = totals.find((total) => {
+                            if (total.categoryId == category.categoryId) {
+                                const expectedUsage =
+                                    (parseFloat(category.weight) / 100) *
+                                    budgetOptionQuery.data?.budgetOptions
+                                        .budgetOptions.income;
+
+                                if (total.total) {
+                                    const isNegative = total.total < 0;
+                                    const absTotal = Math.abs(total.total);
+                                    const catId = category.categoryId;
+
+                                    console.log({
+                                        catId,
+                                        expectedUsage,
+                                        isNegative,
+                                        absTotal,
+                                    });
+                                }
+
+                                if (
+                                    total.total &&
+                                    total.total < 0 &&
+                                    Math.abs(total.total) > expectedUsage
+                                ) {
+                                    status = "over";
+                                    amountExceeded =
+                                        Math.abs(total.total) - expectedUsage;
+                                    percentExceeded =
+                                        (amountExceeded / expectedUsage) * 100;
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                        // return <></>;
+                        if (!status) return <></>;
+                        if (!found) return <></>;
+                        return (
+                            <Alert
+                                className="animate-pulse"
+                                startDecorator={<AlertCircle />}
+                                key={key}
+                                color="danger"
+                            >
+                                {`You have exceeded your ${
+                                    category.name
+                                } budget by ${percentExceeded.toPrecision(
+                                    2,
+                                )}% (${formatter.format(amountExceeded)})`}
+                            </Alert>
+                        );
+                    })
+                ) : (
+                    <></>
+                )}
+            </div>
             <div className="flex flex-col justify-center items-center">
                 <BudgetPie
                     budgets={filteredBudgets}
@@ -508,6 +350,8 @@ const BudgetList = () => {
                             <BudgetSingle
                                 key={budget.id}
                                 budget={budget}
+                                setTotals={setTotals}
+                                generateTotals={generateTotals}
                                 categories={
                                     categoryQuery.data?.categories
                                         ? categoryQuery.data.categories

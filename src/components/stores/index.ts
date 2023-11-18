@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { HeaderItem, User } from "../types";
+import { Category, Currency, User } from "../types";
 
 const initialUser: User = {
     email: "",
     id: null,
     isAuthed: false,
     hasCreatedBudget: false,
-    currency: "$",
+    // categories: [],
 };
 
 type State = {
@@ -23,6 +23,7 @@ type Actions = {
     clearUser: () => void;
     setAuth: (value: boolean) => void;
     setHasCreatedBudget: (value: boolean) => void;
+    // updateCategories: (categories: Category[]) => void;
 };
 
 const useStore = create<State & Actions>()(
@@ -59,6 +60,11 @@ const useStore = create<State & Actions>()(
                         set((state) => {
                             state.user.hasCreatedBudget = value;
                         }),
+
+                    // updateCategories: (categories) =>
+                    //     set((state) => {
+                    //         state.user.categories = categories;
+                    //     }),
                 }),
                 {
                     name: "global-storage",

@@ -14,6 +14,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import useStore from "../stores";
+import { ModalProvider } from "react-modal-hook";
 
 const theme = extendTheme({
     colorSchemes: {
@@ -363,9 +364,13 @@ const Theme = ({ children, options }: ThemeProps) => {
                         disableNestedContext
                     >
                         <SnackbarProvider dense={mobile} maxSnack={4}>
-                            <Background id="container">
-                                <div className="flex flex-col">{children}</div>
-                            </Background>
+                            <ModalProvider>
+                                <Background id="container">
+                                    <div className="flex flex-col">
+                                        {children}
+                                    </div>
+                                </Background>
+                            </ModalProvider>
                         </SnackbarProvider>
                     </CssVarsProvider>
                 </CacheProvider>

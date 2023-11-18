@@ -19,6 +19,7 @@ interface CategoryModalProps {
             value: string;
             onChange: (value: string) => void;
         };
+        weight: Value<string>;
     };
 }
 
@@ -30,7 +31,7 @@ const CategoryModal = ({
     buttonLoading,
     options,
 }: CategoryModalProps) => {
-    const { modalTitle, name, color } = options;
+    const { modalTitle, name, color, weight } = options;
 
     return (
         <BaseModal className="category-modal" open={open} onClose={onClose}>
@@ -40,6 +41,11 @@ const CategoryModal = ({
                     {...name}
                     muiOptions={{ required: true }}
                     labelClassName="text-sm"
+                />
+                <InputWrapper
+                    {...weight}
+                    type="number"
+                    muiOptions={{ required: true }}
                 />
                 <HexColorPicker
                     color={color.value}

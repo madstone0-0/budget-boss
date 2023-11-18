@@ -1,5 +1,11 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { Budget, ButtonChangeHandler, Category, NewBudget } from "../types";
+import {
+    Budget,
+    ButtonChangeHandler,
+    Category,
+    CategoryTotal,
+    NewBudget,
+} from "../types";
 import {
     Button,
     Chip,
@@ -15,10 +21,13 @@ import { UseMutationResult } from "react-query";
 import { AxiosResponse } from "axios";
 import { NumericFormat } from "react-number-format";
 import { MenuSquare } from "lucide-react";
+import usePersistantStore from "../stores/persistantStore";
 
 interface BudgetSingleProps {
     budget: Budget;
     categories: Category[];
+    setTotals: React.Dispatch<React.SetStateAction<CategoryTotal[]>>;
+    generateTotals: () => Promise<CategoryTotal[]>;
     editMutation: UseMutationResult<
         AxiosResponse<{ msg: string }>,
         unknown,
@@ -38,10 +47,13 @@ const BudgetSingle = ({
     categories,
     editMutation,
     deleteMutation,
+    generateTotals,
+    setTotals,
 }: BudgetSingleProps) => {
     const { name, id, categoryId, dateAdded, userId } = budget;
     let { amount } = budget;
     amount = Number(Number(budget.amount).toFixed(2));
+    const currency = usePersistantStore((state) => state.options.currency);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -103,8 +115,10 @@ const BudgetSingle = ({
         const budget = generateBudget();
         editMutation
             .mutateAsync({ budget: budget, id: id })
-            .then((_res) => {
+            .then(async (_res) => {
                 setOpen(false);
+                const totals = await generateTotals();
+                setTotals(totals);
                 setBudgetCategory(getBudgetCategory(budget.categoryId));
             })
             .catch((err) => {
@@ -114,7 +128,16 @@ const BudgetSingle = ({
 
     const onDeleteBudget: ButtonChangeHandler = (e) => {
         e.preventDefault();
-        deleteMutation.mutate(id);
+        // deleteMutation.mutate(id);
+        deleteMutation
+            .mutateAsync(id)
+            .then(async (_res) => {
+                const totals = await generateTotals();
+                setTotals(totals);
+            })
+            .catch((err) => {
+                console.log({ err });
+            });
     };
 
     const openModal: ButtonChangeHandler = (e) => {
@@ -158,8 +181,7 @@ const BudgetSingle = ({
                         value={amount.toFixed(2)}
                         displayType="text"
                         thousandSeparator={true}
-                        // prefix="₵ "
-                        prefix="$ "
+                        prefix={`${currency} `}
                     />
                     <div className="hidden flex-row justify-between space-x-2 w-40 sm:flex sm:space-x-5">
                         <Button variant="outlined" onClick={openModal}>

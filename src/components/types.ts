@@ -1,4 +1,6 @@
 import React, { ChangeEventHandler, MouseEventHandler } from "react";
+import { CURRENCIES } from "./constants";
+import { UseQueryResult } from "react-query";
 
 export type InputChangeHandler = ChangeEventHandler<HTMLInputElement>;
 export type ButtonChangeHandler = MouseEventHandler<HTMLButtonElement>;
@@ -13,9 +15,15 @@ export interface User {
     id: string | null;
     isAuthed: boolean;
     hasCreatedBudget: boolean;
-    currency: string;
     // categories: Category[];
     // budgets: Budget[];
+}
+
+// export type Currency = "₵" | "$";
+export type Currency = (typeof CURRENCIES)[number]["sym"];
+
+export interface Options {
+    currency: Currency;
 }
 
 export interface UserDetails {
@@ -54,6 +62,7 @@ export interface ValidationResponse {
 export interface Category {
     categoryId: number;
     name: string;
+    weight: string;
     userId: string | null;
     color: string;
 }
@@ -61,6 +70,7 @@ export interface Category {
 export interface NewCategory {
     name: string;
     color: string;
+    weight: string;
     userId?: string | null | undefined;
     categoryId?: number | undefined;
 }
@@ -85,6 +95,20 @@ export type Series = {
 export type NewUserBudgetOptions = {
     userId: string;
     budgetOptions: unknown;
+};
+
+export type BudgetOptions = {
+    id: string;
+    userId: string;
+    budgetOptions: {
+        income: number;
+        options: { weight: number; category: Partial<Category> }[];
+    };
+};
+
+export type CategoryTotal = {
+    categoryId: number;
+    total: number | null;
 };
 
 export type Value<T, Handler = InputChangeHandler> = {

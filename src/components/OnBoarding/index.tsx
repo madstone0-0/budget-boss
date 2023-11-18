@@ -20,9 +20,11 @@ import { getJWTCookie } from "@/actions";
 import useStore from "../stores";
 import NumericFormatAdapter from "../NumericFormatAdapter";
 import { useRouter } from "next/navigation";
+import TemplateCategory from "../TemplateCategory";
 
 const OnBoarding = ({ id }: { id: string }) => {
     const user = useStore((state) => state.user);
+    const setHasCreatedBudget = useStore((state) => state.setHasCreatedBudget);
     const router = useRouter();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -92,6 +94,7 @@ const OnBoarding = ({ id }: { id: string }) => {
         const category: NewCategory = {
             name: categoryName,
             color: categoryColor,
+            weight: categoryWeight.toString(),
         };
         setCategoryName("");
         setCategoryColor("#000000");
@@ -110,37 +113,15 @@ const OnBoarding = ({ id }: { id: string }) => {
                     },
                 },
             )
-            .then(async (res) => {
+            .then((res) => {
+                setLoading(false);
                 enqueueSnackbar(res.data.msg, {
                     variant: "success",
                 });
-                const token = await getJWTCookie("token");
-                fetch
-                    .put<{ msg: string }>(
-                        `${API_USER_CREATED_TEMPLATE}${id}`,
-                        {},
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token?.value}`,
-                            },
-                        },
-                    )
-                    .then((res) => {
-                        setLoading(false);
-                        enqueueSnackbar(res.data.msg, {
-                            variant: "success",
-                        });
-                        resetState();
-                        router.prefetch(`/home/${id}/budget/home`);
-                        router.replace(`/home/${id}/budget/home`);
-                    })
-                    .catch((err) => {
-                        enqueueSnackbar("Something went wrong", {
-                            variant: "error",
-                        });
-                        setLoading(false);
-                        console.log(err);
-                    });
+                resetState();
+                setHasCreatedBudget(true);
+                router.prefetch(`/home/${id}/budget/home`);
+                router.replace(`/home/${id}/budget/home`);
             })
             .catch((err) => {
                 enqueueSnackbar("Something went wrong", {
@@ -217,7 +198,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                             }}
                             tooltip="How much money you make per month"
                             onChange={(e) =>
-                                setIncome(parseInt(e.target.value))
+                                setIncome(parseFloat(e.target.value))
                             }
                             labelClassName="text-xl"
                         />
@@ -238,22 +219,17 @@ const OnBoarding = ({ id }: { id: string }) => {
                                         key={key}
                                         className="flex flex-row justify-between hover:cursor-pointer"
                                     >
-                                        <Chip
-                                            variant="soft"
-                                            sx={{
-                                                backgroundColor:
-                                                    categoryWithWeight.category
-                                                        .color,
-                                                fontSize: "1.25rem",
-                                                lineHeight: "1.75rem",
-                                            }}
-                                            className="text-xl"
-                                        >
-                                            {categoryWithWeight.category.name}
-                                        </Chip>
-                                        <p className="text-xl">
-                                            {categoryWithWeight.weight}%
-                                        </p>
+                                        <TemplateCategory
+                                            income={income}
+                                            name={
+                                                categoryWithWeight.category.name
+                                            }
+                                            color={
+                                                categoryWithWeight.category
+                                                    .color
+                                            }
+                                            weight={categoryWithWeight.weight}
+                                        />
                                     </div>
                                 ),
                             )
@@ -282,7 +258,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                         value$={categoryWeight}
                         placeholder="40"
                         onChange={(e) =>
-                            setCategoryWeight(parseInt(e.target.value))
+                            setCategoryWeight(parseFloat(e.target.value))
                         }
                         tooltip="Percentage of your income this category should take"
                         muiOptions={{ required: true }}

@@ -5,6 +5,7 @@ import {
     Category,
     NewCategory,
     Series,
+    User,
 } from "../types";
 import { AxiosResponse } from "axios";
 import { UseBaseMutationResult } from "react-query";
@@ -34,7 +35,7 @@ interface BudgetPieProps {
         addMutation: UseBaseMutationResult<
             AxiosResponse<{ msg: string }>,
             unknown,
-            NewCategory,
+            { category: NewCategory; user: User },
             unknown
         >;
     };
@@ -47,17 +48,17 @@ const BudgetPie = ({
 }: BudgetPieProps) => {
     const { editMutation, deleteMutation, addMutation } = categoryMutations;
     const [series, setSeries] = useState<Series>([]);
-    const [seriesType, toggleSeriesType] = useReducer(
-        (seriesType) => !seriesType,
-        true,
-    );
+    const [pieHeader, setPieHeader] = useState("Budget Weights");
+    const [seriesNumber, setSeriesNumber] = useState<number>(1);
     const [open, setOpen] = useState<boolean>(false);
     const [mode, toggleMode] = useReducer((mode) => !mode, true);
 
     const userId = useStore((state) => state.user.id);
+    const user = useStore((state) => state.user);
 
     const [name, setName] = useState<string>("");
     const [color, setColor] = useState<string>("#000");
+    const [weight, setWeight] = useState<string>("0");
 
     const openModal: React.MouseEventHandler = (e) => {
         e.preventDefault();
@@ -74,9 +75,36 @@ const BudgetPie = ({
         setColor("#000");
     };
 
+    const changeSeriesNumber = () => {
+        setSeriesNumber((seriesNumber + 1) % 3);
+    };
+
+    // const generateSeries = () => {
+    //     let data: Series = [];
+    //     categories.forEach((category) => {
+    //         const count = budgets.filter(
+    //             (budget) => budget.categoryId === category.categoryId,
+    //         ).length;
+    //         let amount = 0;
+    // budgets.forEach((budget) => {
+    //     if (budget.categoryId === category.categoryId)
+    //         amount += Math.abs(budget.amount);
+    // });
+    //         data.push({
+    //             id: category.categoryId.toString(),
+    //             value: seriesType ? amount : count,
+    //             label: category.name,
+    //             color: category.color,
+    //         });
+    //     });
+    //     return data;
+    // };
+
     const generateSeries = () => {
         let data: Series = [];
+        let totalWeight = 0;
         categories.forEach((category) => {
+            totalWeight += parseFloat(category.weight);
             const count = budgets.filter(
                 (budget) => budget.categoryId === category.categoryId,
             ).length;
@@ -85,25 +113,58 @@ const BudgetPie = ({
                 if (budget.categoryId === category.categoryId)
                     amount += Math.abs(budget.amount);
             });
-            data.push({
+            let pushedData = {
                 id: category.categoryId.toString(),
-                value: seriesType ? amount : count,
+                value: 0,
                 label: category.name,
                 color: category.color,
-            });
+            };
+            switch (seriesNumber) {
+                case 1:
+                    setPieHeader("Budget Weights");
+                    pushedData = {
+                        ...pushedData,
+                        value: parseFloat(category.weight),
+                    };
+                    break;
+                case 2:
+                    setPieHeader("Amount breakdown");
+                    pushedData = {
+                        ...pushedData,
+                        value: amount,
+                    };
+                    break;
+                case 0:
+                    setPieHeader("Count breakdown");
+                    pushedData = {
+                        ...pushedData,
+                        value: count,
+                    };
+                    break;
+            }
+            data.push(pushedData);
         });
+        if (seriesNumber === 1 && totalWeight != 100) {
+            data.push({
+                id: "unaccounted",
+                value: 100 - totalWeight,
+                color: "#000",
+                label: "Unaccounted",
+            });
+        }
         return data;
     };
 
     useEffect(() => {
         setSeries(generateSeries());
-    }, [categories, budgets, seriesType]);
+    }, [categories, budgets, seriesNumber]);
 
     const generateCategory = () => {
         const category: NewCategory = {
             name: name,
             color: color,
             userId: userId,
+            weight: weight,
         };
 
         return category;
@@ -112,7 +173,7 @@ const BudgetPie = ({
     const onAddCategory: ButtonChangeHandler = (e) => {
         e.preventDefault();
         addMutation
-            .mutateAsync(generateCategory())
+            .mutateAsync({ user: user, category: generateCategory() })
             .then(() => {
                 resetState();
                 closeModal(e);
@@ -125,10 +186,10 @@ const BudgetPie = ({
             <div className="flex flex-col items-center self-center mb-24 w-[100vw] h-[40vh] min-h-fit">
                 <div className="w-full h-full">
                     <h1
-                        onClick={toggleSeriesType}
+                        onClick={changeSeriesNumber}
                         className="text-xl text-center sm:text-2xl hover:underline hover:cursor-pointer"
                     >
-                        {seriesType ? "Amount breakdown" : "Count breakdown"}
+                        {pieHeader}
                     </h1>
                     <p className="text-sm text-center text-gray-500">
                         (click to change)
@@ -213,6 +274,12 @@ const BudgetPie = ({
                     color: {
                         value: color,
                         onChange: (color) => setColor(color),
+                    },
+                    weight: {
+                        value$: weight,
+                        onChange: (e) => setWeight(e.target.value.toString()),
+                        label: "Weight",
+                        placeholder: "0.00",
                     },
                 }}
             />

@@ -24,6 +24,7 @@ const InputWrapper = ({
     labelClassName = "text-xl",
     muiOptions = {},
     tooltip = "",
+    disabled = false,
 }: {
     label: string;
     placeholder: string;
@@ -36,6 +37,7 @@ const InputWrapper = ({
     labelClassName?: string;
     muiOptions?: InputTypeMap["props"];
     tooltip?: string;
+    disabled?: boolean;
 }) => {
     const [pwdHidden, updatePwdState] = useReducer((hidden) => !hidden, true);
     const [mounted, setMounted] = useState<boolean>(false);
@@ -73,6 +75,7 @@ const InputWrapper = ({
                     <Input
                         {...defaultOptions}
                         {...muiOptions}
+                        disabled={disabled}
                         type={pwdHidden ? "password" : "text"}
                         endDecorator={
                             <IconButton
@@ -95,7 +98,7 @@ const InputWrapper = ({
     };
 
     return (
-        <FormControl>
+        <FormControl disabled={disabled}>
             <FormLabel className={`text-sm font-medium ${labelClassName}`}>
                 {label}
             </FormLabel>

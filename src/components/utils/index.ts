@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import usePersistantStore from "../stores/persistantStore";
+import { CURRENCIES } from "../constants";
 
 export const writeToLocalStore = (key: string, value: string) => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -87,4 +89,14 @@ export const useScrollEffect = (
             window.removeEventListener("scroll", fn);
         };
     }, []);
+};
+
+export const useCurrencyFormatter = () => {
+    const currency = usePersistantStore((state) => state.options.currency);
+    const formatter = Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: CURRENCIES.find((c) => c.sym === currency)?.name || "USD",
+    });
+
+    return { formatter };
 };

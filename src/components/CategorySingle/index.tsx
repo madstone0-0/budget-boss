@@ -44,10 +44,12 @@ const CategorySingle = ({
 
     const [name, setName] = useState<string>(category.name);
     const [color, setColor] = useState<string>(category.color);
+    const [weight, setWeight] = useState<string>(category.weight);
 
     const resetState = () => {
         setName("");
         setColor("#000");
+        setWeight("0");
     };
 
     const onDeleteCategory = (e: React.MouseEvent<Element, MouseEvent>) => {
@@ -60,6 +62,7 @@ const CategorySingle = ({
             name: name,
             color: color,
             userId: userId,
+            weight: weight,
         };
 
         console.log({ category });
@@ -67,6 +70,9 @@ const CategorySingle = ({
     };
 
     const onEditCategory = (e: React.MouseEvent<Element, MouseEvent>) => {
+        if (!name || !color || !weight) {
+            throw new Error("Missing required fields");
+        }
         e.preventDefault();
         editMutation
             .mutateAsync({
@@ -88,13 +94,17 @@ const CategorySingle = ({
                 sx={{
                     backgroundColor: category.color,
                     borderRadius: "2rem",
+                    height: "fit-content",
                     fontSize: {
                         xs: "0.7rem",
                         md: "1.5rem",
                     },
                 }}
             >
-                {category.name}
+                <div>
+                    <p>{category.name}</p>
+                    <p className="text-sm">{category.weight} %</p>
+                </div>
             </Button>
             <CategoryModal
                 open={open}
@@ -113,6 +123,12 @@ const CategorySingle = ({
                     color: {
                         value: color,
                         onChange: (color) => setColor(color),
+                    },
+                    weight: {
+                        value$: weight,
+                        onChange: (e) => setWeight(e.target.value.toString()),
+                        label: "Weight",
+                        placeholder: "0.00",
                     },
                 }}
             />

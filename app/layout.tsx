@@ -1,7 +1,7 @@
 import React from "react";
 import "./globals.css";
 import Theme from "../src/components/Theme";
-import { actor, inter } from "./fonts";
+// import { actor, inter } from "./fonts";
 import type { Metadata } from "next";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
     return (
         <html
-            className={`${inter.variable} ${actor.variable}`}
+            // className={`${inter.variable} ${actor.variable}`}
             suppressHydrationWarning={true}
             lang="en"
         >
