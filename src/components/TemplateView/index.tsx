@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEventHandler } from "react";
 import {
     BudgetOptions,
     ButtonChangeHandler,
@@ -77,9 +77,8 @@ const TemplateView = ({
                         fontWeight: "600",
                     }}
                     color="danger"
-                    onClick={(e) => {
+                    onClick={(_e) => {
                         hideModal();
-                        onCancel(e);
                     }}
                 >
                     Cancel
