@@ -40,4 +40,6 @@ export const API_DELETE_CATEGORY = "/category/delete/";
 export const CURRENCIES: { readonly sym: string; readonly name: string }[] = [
     { sym: "$", name: "USD" },
     { sym: "₵", name: "GHS" },
+    { sym: "$", name: "AUD" },
+    { sym: "¥", name: "CNY" },
 ];

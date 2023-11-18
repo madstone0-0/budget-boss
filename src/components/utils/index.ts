@@ -95,7 +95,8 @@ export const useCurrencyFormatter = () => {
     const currency = usePersistantStore((state) => state.options.currency);
     const formatter = Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: CURRENCIES.find((c) => c.sym === currency)?.name || "USD",
+        currency: CURRENCIES.find((c) => c.sym === currency)?.name || "GHS",
+        currencyDisplay: "narrowSymbol",
     });
 
     return { formatter };
