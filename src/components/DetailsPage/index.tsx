@@ -129,6 +129,7 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                     }
                 })
                 .catch((err) => {
+                    isLoading(false);
                     setAuth(false);
                     const msg =
                         err.response != undefined
@@ -154,7 +155,6 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
                         enqueueSnackbar(`Error: ${shownMsg}`, {
                             variant: "error",
                         });
-                        isLoading(false);
                     }
                 });
         } else {
