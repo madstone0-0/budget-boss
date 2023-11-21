@@ -260,7 +260,7 @@ const BudgetList = () => {
                 }
                 value={filterDate}
             />
-            <div className="self-center flex space-y-5 flex-col w-[40%]">
+            <div className="self-center flex space-y-5 flex-col sm:w-[40%]">
                 {categoryQuery.data?.categories.length !== 0 &&
                 budgetOptionQuery.data?.budgetOptions ? (
                     categoryQuery.data?.categories.map((category, key) => {
@@ -311,6 +311,13 @@ const BudgetList = () => {
                                 startDecorator={<AlertCircle />}
                                 key={key}
                                 color="danger"
+                                sx={{
+                                    fontSize: {
+                                        xs: "0.75rem",
+                                        md: "1rem",
+                                    },
+                                    minWidth: "min-content",
+                                }}
                             >
                                 {`You have exceeded your ${
                                     category.name
