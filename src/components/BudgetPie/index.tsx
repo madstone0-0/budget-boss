@@ -15,6 +15,7 @@ import { Plus, Pencil, Trash } from "lucide-react";
 import useStore from "../stores";
 import CategoryModal from "../CategoryModal";
 import CategorySingle from "../CategorySingle";
+import AddTooltip from "../AddTooltip";
 
 interface BudgetPieProps {
     categories: Category[];
@@ -221,19 +222,27 @@ const BudgetPie = ({
                     )}
                 </div>
                 <div className="flex flex-row justify-center items-center mt-5 h-auto sm:space-x-5">
-                    <IconButton
-                        className="mr-5"
-                        sx={{
-                            margin: {
-                                xs: "1.25rem",
-                                sm: "0",
-                            },
-                        }}
-                        variant="soft"
-                        onClick={toggleMode}
+                    <AddTooltip
+                        tooltip={
+                            mode
+                                ? "Edit categories (Click on category name)"
+                                : "Delete categories (Click on category name)"
+                        }
                     >
-                        {mode ? <Pencil /> : <Trash />}
-                    </IconButton>
+                        <IconButton
+                            className="mr-5"
+                            sx={{
+                                margin: {
+                                    xs: "1.25rem",
+                                    sm: "0",
+                                },
+                            }}
+                            variant="soft"
+                            onClick={toggleMode}
+                        >
+                            {mode ? <Pencil /> : <Trash />}
+                        </IconButton>
+                    </AddTooltip>
 
                     <div className="flex flex-row flex-wrap gap-2 justify-center items-center self-center space-x-2 sm:space-x-5">
                         {categories.map((category, key) => (
@@ -246,15 +255,17 @@ const BudgetPie = ({
                             />
                         ))}
                     </div>
-                    <IconButton
-                        sx={{
-                            margin: "1.25rem",
-                        }}
-                        variant="soft"
-                        onClick={openModal}
-                    >
-                        <Plus />
-                    </IconButton>
+                    <AddTooltip tooltip="Add category">
+                        <IconButton
+                            sx={{
+                                margin: "1.25rem",
+                            }}
+                            variant="soft"
+                            onClick={openModal}
+                        >
+                            <Plus />
+                        </IconButton>
+                    </AddTooltip>
                 </div>
             </div>
             <CategoryModal

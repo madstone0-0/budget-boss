@@ -12,26 +12,83 @@ import { useSnackbar } from "notistack";
 import { HexColorPicker } from "react-colorful";
 import { Plus } from "lucide-react";
 import { fetch } from "../utils/Fetch";
-import {
-    API_CREATE_BUDGET_OPTIONS,
-    API_USER_CREATED_TEMPLATE,
-} from "../constants";
+import { API_CREATE_BUDGET_OPTIONS } from "../constants";
 import { getJWTCookie } from "@/actions";
 import useStore from "../stores";
 import NumericFormatAdapter from "../NumericFormatAdapter";
 import { useRouter } from "next/navigation";
 import TemplateCategory from "../TemplateCategory";
+import AddTooltip from "../AddTooltip";
+import { useModal } from "react-modal-hook";
+import BaseModal from "../BaseModal";
+import { DialogTitle } from "@mui/joy";
 
 const OnBoarding = ({ id }: { id: string }) => {
     const user = useStore((state) => state.user);
     const setHasCreatedBudget = useStore((state) => state.setHasCreatedBudget);
     const router = useRouter();
+    const [showModal, hideModal] = useModal(() => (
+        <BaseModal open={true} onClose={hideModal}>
+            <DialogTitle>Save Changes?</DialogTitle>
+            <h2 className="text-xl">This action cannot be undone</h2>
+            <div className="flex justify-between width-full">
+                <Button
+                    sx={{
+                        width: "100%",
+                        fontSize: "1.5rem",
+                        borderRadius: "0",
+                        fontWeight: "600",
+                    }}
+                    onClick={(_e) => {
+                        // setConfirmed(true);
+                        const userBudgetOptions: NewUserBudgetOptions = {
+                            userId: id,
+                            budgetOptions: {
+                                income: income,
+                                options: [
+                                    ...categoriesWithWeights.map((item) => ({
+                                        category: {
+                                            ...item.category,
+                                        },
+                                        weight: item.weight,
+                                    })),
+                                ],
+                            },
+                        };
+
+                        onConfirmed(userBudgetOptions).catch((err) => {
+                            setLoading(false);
+                            console.log(err);
+                        });
+                        hideModal();
+                    }}
+                >
+                    Proceed
+                </Button>
+                <Button
+                    sx={{
+                        width: "100%",
+                        fontSize: "1.5rem",
+                        borderRadius: "0",
+                        fontWeight: "600",
+                    }}
+                    color="danger"
+                    onClick={(_e) => {
+                        hideModal();
+                    }}
+                >
+                    Cancel
+                </Button>
+            </div>
+        </BaseModal>
+    ));
 
     const { enqueueSnackbar } = useSnackbar();
     const [categoriesWithWeights, setCategoriesWithWeights] = useState<
         { category: NewCategory; weight: number }[]
     >([]);
     const [income, setIncome] = useState(0);
+    const [confirmed, setConfirmed] = useState(false);
 
     const [categoryName, setCategoryName] = useState("");
     const [categoryColor, setCategoryColor] = useState("#000000");
@@ -161,24 +218,7 @@ const OnBoarding = ({ id }: { id: string }) => {
             return;
         }
 
-        const userBudgetOptions: NewUserBudgetOptions = {
-            userId: id,
-            budgetOptions: {
-                income: income,
-                options: [
-                    ...categoriesWithWeights.map((item) => ({
-                        category: {
-                            ...item.category,
-                        },
-                        weight: item.weight,
-                    })),
-                ],
-            },
-        };
-        onConfirmed(userBudgetOptions).catch((err) => {
-            setLoading(false);
-            console.log(err);
-        });
+        showModal();
     };
 
     return (
@@ -270,10 +310,14 @@ const OnBoarding = ({ id }: { id: string }) => {
                         color={categoryColor}
                         onChange={(c) => setCategoryColor(c)}
                     />
-                    <Button type="submit">
-                        <Plus />
-                    </Button>
-                    <FormHelperText>Add category</FormHelperText>
+                    <FormHelperText>
+                        Pick a color to differenitate your categories
+                    </FormHelperText>
+                    <AddTooltip tooltip="Add category">
+                        <Button type="submit">
+                            <Plus />
+                        </Button>
+                    </AddTooltip>
                 </FormWrapper>
             </div>
             <Button

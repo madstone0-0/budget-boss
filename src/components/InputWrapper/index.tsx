@@ -3,6 +3,7 @@ import React, {
     useReducer,
     useEffect,
     HTMLInputTypeAttribute,
+    ReactNode,
 } from "react";
 import { InputChangeHandler } from "../types";
 import {
@@ -12,8 +13,10 @@ import {
     IconButton,
     InputTypeMap,
     FormHelperText,
+    Tooltip,
 } from "@mui/joy";
 import { EyeIcon, EyeOffIcon, Calendar } from "lucide-react";
+import AddTooltip from "../AddTooltip";
 
 const InputWrapper = ({
     label,
@@ -72,28 +75,36 @@ const InputWrapper = ({
         switch (type) {
             case "password":
                 return (
-                    <Input
-                        {...defaultOptions}
-                        {...muiOptions}
-                        disabled={disabled}
-                        type={pwdHidden ? "password" : "text"}
-                        endDecorator={
-                            <IconButton
-                                sx={(theme) => ({
-                                    color: theme.palette.text.primary,
-                                    backgroundColor:
-                                        theme.palette.background.body,
-                                })}
-                                variant="plain"
-                                onClick={updatePwdState}
-                            >
-                                {pwdHidden ? <EyeIcon /> : <EyeOffIcon />}
-                            </IconButton>
-                        }
-                    />
+                    <AddTooltip tooltip={tooltip}>
+                        <Input
+                            {...defaultOptions}
+                            {...muiOptions}
+                            disabled={disabled}
+                            type={pwdHidden ? "password" : "text"}
+                            endDecorator={
+                                <IconButton
+                                    sx={(theme) => ({
+                                        color: theme.palette.text.primary,
+                                        backgroundColor:
+                                            theme.palette.background.body,
+                                    })}
+                                    variant="plain"
+                                    onClick={updatePwdState}
+                                >
+                                    {pwdHidden ? <EyeIcon /> : <EyeOffIcon />}
+                                </IconButton>
+                            }
+                        />
+                    </AddTooltip>
                 );
             default:
-                return <Input {...defaultOptions} {...muiOptions} />;
+                return (
+                    <>
+                        <AddTooltip tooltip={tooltip}>
+                            <Input {...defaultOptions} {...muiOptions} />
+                        </AddTooltip>
+                    </>
+                );
         }
     };
 
@@ -103,7 +114,6 @@ const InputWrapper = ({
                 {label}
             </FormLabel>
             {renderInputType(type)}
-            {tooltip !== "" && <FormHelperText>{tooltip}</FormHelperText>}
         </FormControl>
     );
 };

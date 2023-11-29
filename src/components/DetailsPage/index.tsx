@@ -9,7 +9,7 @@ import {
     ValidationResponse,
 } from "../types";
 import useStore from "../stores";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import { API_LOG_IN, API_SIGN_UP } from "../constants";
 import { useSnackbar } from "notistack";
 import { createJWTCookie } from "../../../app/actions";
@@ -102,31 +102,31 @@ const DetailsPage = ({ login = false }: { login?: boolean }) => {
             detailFetch
                 .post<{ userDetails: UserDetails }>(API_LOG_IN, user)
                 .then(async (res) => {
-                    if (res.status == 200) {
-                        const {
-                            email,
-                            id,
-                            refreshToken,
-                            accessToken,
-                            hasCreatedBudget,
-                        } = res.data.userDetails;
-                        router.push(`/home/${id}`);
+                    const {
+                        email,
+                        id,
+                        refreshToken,
+                        accessToken,
+                        hasCreatedBudget,
+                    } = res.data.userDetails;
+                    router.prefetch(`/home/${id}`);
+                    router.push(`/home/${id}`);
 
-                        updateErrors([]);
+                    updateErrors([]);
 
-                        await createJWTCookie("token", accessToken);
-                        await createJWTCookie("refreshToken", refreshToken);
-                        setAuth(true);
-                        setHasCreatedBudget(hasCreatedBudget);
-                        updateEmail(email);
-                        updateId(id);
-                        enqueueSnackbar("Successfully logged in", {
-                            variant: "success",
-                        });
-                        isLoading(false);
-                        updatePassword("");
-                        updateFormEmail("");
-                    }
+                    await createJWTCookie("token", accessToken);
+                    await createJWTCookie("refreshToken", refreshToken);
+                    setAuth(true);
+                    setHasCreatedBudget(hasCreatedBudget);
+                    updateEmail(email);
+                    updateId(id);
+                    enqueueSnackbar("Successfully logged in", {
+                        variant: "success",
+                    });
+                    isLoading(false);
+                    updatePassword("");
+                    updateFormEmail("");
+                    router.refresh();
                 })
                 .catch((err) => {
                     isLoading(false);

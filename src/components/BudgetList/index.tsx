@@ -11,28 +11,9 @@ import {
 import { Alert, Button } from "@mui/joy";
 import { AlertCircle, MailWarning, Plus } from "lucide-react";
 import { getDateString, useCurrencyFormatter } from "../utils";
-import { fetch } from "../utils/Fetch";
 import useStore from "../stores";
-import {
-    API_ADD_BUDGET,
-    API_ADD_CATEGORY,
-    API_DELETE_BUDGET,
-    API_DELETE_CATEGORY,
-    API_GET_ALL_BUDGETS,
-    API_GET_ALL_CATEGORY,
-    API_UPDATE_BUDGET,
-    API_UPDATE_CATEGORY,
-} from "../constants";
 import { useSnackbar } from "notistack";
-import { getJWTCookie } from "../../../app/actions";
 import Unauthorized from "../utils/Unauthorized";
-import {
-    useQueryClient,
-    useQuery,
-    useMutation,
-    QueryKey,
-    UseQueryResult,
-} from "react-query";
 import { AxiosError, AxiosResponse } from "axios";
 import LoadingBar from "../LoadingBar";
 import BudgetModal from "../BudgetModal";
@@ -41,8 +22,7 @@ import BudgetPie from "../BudgetPie";
 import { Input } from "@mui/joy";
 import useQueriesAndMutations, { doOnError } from "../utils/queries";
 import { getBudgetTotal } from "../utils/api";
-import { stat, truncate } from "fs";
-import usePersistantStore from "../stores/persistantStore";
+import AddTooltip from "../AddTooltip";
 
 declare module "react-query" {
     interface Register {
@@ -302,6 +282,10 @@ const BudgetList = () => {
                             }
                             return false;
                         });
+                        const formattedPercent =
+                            percentExceeded > 100
+                                ? "100%+"
+                                : percentExceeded.toPrecision(2) + "%";
                         // return <></>;
                         if (!status) return <></>;
                         if (!found) return <></>;
@@ -321,9 +305,9 @@ const BudgetList = () => {
                             >
                                 {`You have exceeded your ${
                                     category.name
-                                } budget by ${percentExceeded.toPrecision(
-                                    2,
-                                )}% (${formatter.format(amountExceeded)})`}
+                                } budget by ${formattedPercent} (${formatter.format(
+                                    amountExceeded,
+                                )})`}
                             </Alert>
                         );
                     })
@@ -421,26 +405,28 @@ const BudgetList = () => {
                     },
                 }}
             />
-            <Button
-                onClick={openModal}
-                variant="soft"
-                sx={{
-                    position: "fixed",
-                    right: "2.5rem",
-                    bottom: "2.5rem",
-                    width: {
-                        xs: "4rem",
-                        md: "5rem",
-                    },
-                    height: {
-                        xs: "4rem",
-                        md: "5rem",
-                    },
-                    borderRadius: "0.75rem",
-                }}
-            >
-                <Plus />
-            </Button>
+            <AddTooltip tooltip="Add Record">
+                <Button
+                    onClick={openModal}
+                    variant="soft"
+                    sx={{
+                        position: "fixed",
+                        right: "2.5rem",
+                        bottom: "2.5rem",
+                        width: {
+                            xs: "4rem",
+                            md: "5rem",
+                        },
+                        height: {
+                            xs: "4rem",
+                            md: "5rem",
+                        },
+                        borderRadius: "0.75rem",
+                    }}
+                >
+                    <Plus />
+                </Button>
+            </AddTooltip>
         </div>
     );
 };

@@ -69,6 +69,7 @@ const BudgetModal = ({
                         required: true,
                     }}
                     labelClassName="text-sm"
+                    tooltip="Record Name"
                 />
                 <InputWrapper
                     {...amount}
@@ -81,6 +82,7 @@ const BudgetModal = ({
                         },
                     }}
                     labelClassName="text-sm"
+                    tooltip="Record amount"
                 />
                 <InputWrapper
                     muiOptions={{
@@ -89,6 +91,7 @@ const BudgetModal = ({
                     type="date"
                     labelClassName="text-sm"
                     {...dateAdded}
+                    tooltip="Record Date"
                 />
                 <Select
                     action={action}

@@ -8,14 +8,7 @@ import {
     User,
 } from "../types";
 import InputWrapper from "../InputWrapper";
-import {
-    Button,
-    DialogTitle,
-    FormControl,
-    FormLabel,
-    Input,
-    Stack,
-} from "@mui/joy";
+import { Button, DialogTitle } from "@mui/joy";
 import TemplateCategory from "../TemplateCategory";
 import NumericFormatAdapter from "../NumericFormatAdapter";
 import { useModal } from "react-modal-hook";
