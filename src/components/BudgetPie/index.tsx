@@ -244,7 +244,7 @@ const BudgetPie = ({
                         </IconButton>
                     </AddTooltip>
 
-                    <div className="flex flex-row flex-wrap gap-2 justify-center items-center self-center space-x-2 sm:space-x-5">
+                    <div className="flex flex-row flex-wrap gap-2 justify-center items-center self-center space-x-2 sm:mb-10 sm:space-x-5">
                         {categories.map((category, key) => (
                             <CategorySingle
                                 key={key}

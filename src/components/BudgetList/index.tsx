@@ -329,37 +329,39 @@ const BudgetList = () => {
                         addMutation: categoryAddMutation,
                     }}
                 />
-                {filteredBudgets.length !== 0 ? (
-                    budgetQuery.isFetching ? (
+                <div className="mt-20 sm:mt-0">
+                    {filteredBudgets.length !== 0 ? (
+                        budgetQuery.isFetching ? (
+                            <div className="flex flex-col justify-center items-center my-20 h-full text-center">
+                                <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
+                                    Refreshing...
+                                </h1>
+                            </div>
+                        ) : (
+                            filteredBudgets.map((budget) => (
+                                <BudgetSingle
+                                    key={budget.id}
+                                    budget={budget}
+                                    setTotals={setTotals}
+                                    generateTotals={generateTotals}
+                                    categories={
+                                        categoryQuery.data?.categories
+                                            ? categoryQuery.data.categories
+                                            : []
+                                    }
+                                    editMutation={budgetEditMutation}
+                                    deleteMutation={budgetDeleteMutation}
+                                />
+                            ))
+                        )
+                    ) : (
                         <div className="flex flex-col justify-center items-center my-20 h-full text-center">
                             <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                                Refreshing...
+                                No records for this month
                             </h1>
                         </div>
-                    ) : (
-                        filteredBudgets.map((budget) => (
-                            <BudgetSingle
-                                key={budget.id}
-                                budget={budget}
-                                setTotals={setTotals}
-                                generateTotals={generateTotals}
-                                categories={
-                                    categoryQuery.data?.categories
-                                        ? categoryQuery.data.categories
-                                        : []
-                                }
-                                editMutation={budgetEditMutation}
-                                deleteMutation={budgetDeleteMutation}
-                            />
-                        ))
-                    )
-                ) : (
-                    <div className="flex flex-col justify-center items-center my-20 h-full text-center">
-                        <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
-                            No records for this month
-                        </h1>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
             <BudgetModal
                 open={open}
