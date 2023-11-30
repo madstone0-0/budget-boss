@@ -329,7 +329,7 @@ const BudgetList = () => {
                         addMutation: categoryAddMutation,
                     }}
                 />
-                <div className="mt-20 sm:mt-0">
+                <div className="mt-0 sm:mt-20">
                     {filteredBudgets.length !== 0 ? (
                         budgetQuery.isFetching ? (
                             <div className="flex flex-col justify-center items-center my-20 h-full text-center">

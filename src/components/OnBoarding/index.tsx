@@ -226,22 +226,26 @@ const OnBoarding = ({ id }: { id: string }) => {
             <div className="flex flex-col justify-center items-center self-center max-w-5xl min-w-[35vw]">
                 <Box sx={{ maxWidth: "inherit", minWidth: "inherit" }}>
                     <Stack spacing={3}>
-                        <InputWrapper
-                            label="Your monthly income"
-                            value$={income}
-                            placeholder="4000"
-                            muiOptions={{
-                                required: true,
-                                slotProps: {
-                                    input: { component: NumericFormatAdapter },
-                                },
-                            }}
-                            tooltip="How much money you make per month"
-                            onChange={(e) =>
-                                setIncome(parseFloat(e.target.value))
-                            }
-                            labelClassName="text-xl"
-                        />
+                        <div className="max-w-[70%] self-center">
+                            <InputWrapper
+                                label="Your monthly income"
+                                value$={income}
+                                placeholder="4000"
+                                muiOptions={{
+                                    required: true,
+                                    slotProps: {
+                                        input: {
+                                            component: NumericFormatAdapter,
+                                        },
+                                    },
+                                }}
+                                tooltip="How much money you make per month"
+                                onChange={(e) =>
+                                    setIncome(parseFloat(e.target.value))
+                                }
+                                labelClassName="text-xl"
+                            />
+                        </div>
                         {categoriesWithWeights.length !== 0 ? (
                             categoriesWithWeights.map(
                                 (categoryWithWeight, key) => (
@@ -275,7 +279,7 @@ const OnBoarding = ({ id }: { id: string }) => {
                             )
                         ) : (
                             <div className="flex flex-col justify-center items-center my-52 h-full text-center">
-                                <h1 className="min-w-max text-2xl font-bold text-gray-500 sm:text-3xl">
+                                <h1 className="min-w-max font-bold text-gray-500 sm:text-3xl text-md">
                                     Add some categories with the form below
                                 </h1>
                             </div>
