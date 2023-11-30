@@ -99,11 +99,15 @@ const CategorySingle = ({
                         xs: "0.7rem",
                         md: "1.5rem",
                     },
+                    width: {
+                        xs: "min-content",
+                        md: "10rem",
+                    },
                 }}
             >
                 <div>
                     <p>{category.name}</p>
-                    <p className="text-sm">{category.weight} %</p>
+                    <p className="text-xs sm:text-sm">{category.weight} %</p>
                 </div>
             </Button>
             <CategoryModal
